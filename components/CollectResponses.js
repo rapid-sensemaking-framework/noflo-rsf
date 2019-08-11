@@ -5,7 +5,7 @@ all, string, number, int, object, array, boolean, color, date, bang, function, b
 
 
 const noflo = require('noflo')
-const contactable, { makeContactable } = require('rsf-contactable')
+const { init: contactableInit, makeContactable } = require('rsf-contactable')
 
 const DEFAULT_MAX_RESPONSES_TEXT = `You've reached the limit of responses. Thanks for participating. You will be notified when everyone has completed.`
 const DEFAULT_ALL_COMPLETED_TEXT = `Everyone has completed. Thanks for participating.`
@@ -37,7 +37,7 @@ const process = (input, output) => {
 
     let contactables
     try {
-        contactable.init(botConfigs.mattermostable, botConfigs.textable)
+        contactableInit(botConfigs.mattermostable, botConfigs.textable)
         contactables = contactableConfigs.map(makeContactable)
     } catch (e) {
         // Process data and send output
