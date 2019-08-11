@@ -1,6 +1,6 @@
 {
   "name": "noflo-rapid-sensemaking",
-  "version": "0.0.13",
+  "version": "0.0.14",
   "noflo": {
     "components": {
       "CollectResponses": "./components/CollectResponses.js"

@@ -6,10 +6,12 @@ all, string, number, int, object, array, boolean, color, date, bang, function, b
 
 const noflo = require('noflo')
 const { init: contactableInit, makeContactable } = require('rsf-contactable')
+const {
+    DEFAULT_ALL_COMPLETED_TEXT,
+    DEFAULT_TIMEOUT_TEXT
+} = require('../shared')
 
 const DEFAULT_MAX_RESPONSES_TEXT = `You've reached the limit of responses. Thanks for participating. You will be notified when everyone has completed.`
-const DEFAULT_ALL_COMPLETED_TEXT = `Everyone has completed. Thanks for participating.`
-const DEFAULT_TIMEOUT_TEXT = `The max time has been reached. Stopping now. Thanks for participating.`
 const rulesText = (maxTime, maxResponses) => 'Contribute one response per message. ' +
     `You can contribute up to ${maxResponses} responses. ` +
     `The process will stop automatically after ${maxTime / 1000} seconds.`
