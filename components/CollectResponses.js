@@ -5,7 +5,7 @@ all, string, number, int, object, array, boolean, color, date, bang, function, b
 
 
 const noflo = require('noflo')
-const { Mattermostable } = require('rsf-mattermostable')
+const contactable, { makeContactable } = require('rsf-contactable')
 
 const DEFAULT_MAX_RESPONSES_TEXT = `You've reached the limit of responses. Thanks for participating. You will be notified when everyone has completed.`
 const DEFAULT_ALL_COMPLETED_TEXT = `Everyone has completed. Thanks for participating.`
@@ -21,7 +21,7 @@ const UNLIMITED_CHAR = '*'
 const process = (input, output) => {
 
     // Check preconditions on input data
-    if (!input.hasData('prompt', 'contactable_configs', 'max_time')) {
+    if (!input.hasData('prompt', 'contactable_configs', 'max_time', 'bot_configs')) {
         return
     }
 
@@ -29,6 +29,7 @@ const process = (input, output) => {
     const maxResponses = input.getData('max_responses')
     const maxTime = input.getData('max_time')
     const prompt = input.getData('prompt')
+    const botConfigs = input.getData('bot_configs')
     const contactableConfigs = input.getData('contactable_configs')
     const maxResponsesText = input.getData('max_responses_text')
     const allCompletedText = input.getData('all_completed_text')
@@ -36,11 +37,8 @@ const process = (input, output) => {
 
     let contactables
     try {
-        // TODO 
-        // refactor this thing to be for Contactables not just Mattermost
-        contactables = contactableConfigs.map(config => {
-            return new Mattermostable(config.id, config.name)
-        })
+        contactable.init(botConfigs.mattermostable, botConfigs.textable)
+        contactables = contactableConfigs.map(makeContactable)
     } catch (e) {
         // Process data and send output
         output.send({
@@ -141,6 +139,11 @@ exports.getComponent = () => {
     c.inPorts.add('contactable_configs', {
         datatype: 'array',
         description: 'an array of rsf-contactable compatible config objects',
+        required: true
+    })
+    c.inPorts.add('bot_configs', {
+        datatype: 'array',
+        description: 'an array of rsf-contactable compatible bot config objects',
         required: true
     })
     c.inPorts.add('max_responses_text', {
