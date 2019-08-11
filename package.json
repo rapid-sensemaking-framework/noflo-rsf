@@ -1,6 +1,6 @@
 {
   "name": "noflo-rapid-sensemaking",
-  "version": "0.0.1",
+  "version": "0.0.11",
   "noflo": {
     "components": {
       "CollectResponses": "./components/CollectResponses.js"
@@ -14,6 +14,6 @@
   "license": "AGPL-3.0",
   "dependencies": {
     "noflo": "^1.1.3",
-    "rsf-contactable": "1.0.71"
+    "rsf-contactable": "1.0.72"
   }
 }
