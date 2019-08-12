@@ -7,5 +7,5 @@ rapid sensemaking being converted for use within the noflo flow based programmin
 
 **Next Up**
 - [ ] handle tearDown callbacks so that lifecycle is properly managed
-- [ ] components/PairwiseComparison
 - [ ] components/CollectParticipants
+- [x] components/PairwiseComparison
