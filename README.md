@@ -11,5 +11,5 @@ all, string, number, int, object, array, boolean, color, date, bang, function, b
 
 **Next Up**
 - [ ] handle tearDown callbacks so that lifecycle is properly managed
-- [ ] components/CollectParticipants
+- [x] components/CollectParticipants
 - [x] components/PairwiseComparison
