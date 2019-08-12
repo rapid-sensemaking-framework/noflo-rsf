@@ -1,25 +1,15 @@
-/*
-Valid port datatypes are:
-all, string, number, int, object, array, boolean, color, date, bang, function, buffer, stream
-*/
-
-
 const noflo = require('noflo')
 const { init: contactableInit, makeContactable } = require('rsf-contactable')
 const {
     DEFAULT_ALL_COMPLETED_TEXT,
-    DEFAULT_TIMEOUT_TEXT
+    DEFAULT_INVALID_RESPONSE_TEXT,
+    DEFAULT_MAX_RESPONSES_TEXT,
+    DEFAULT_TIMEOUT_TEXT,
+    rulesText
 } = require('../shared')
 
-// define constants or creator functions
+// define other constants or creator functions
 // of the strings for user interaction here
-const DEFAULT_INVALID_RESPONSE_TEXT = `That's not a valid response, please try again.`
-const DEFAULT_MAX_RESPONSES_TEXT = `You've responded to everything. Thanks for participating. You will be notified when everyone has completed.`
-const rulesText = (maxTime) => `The process will stop automatically after ${maxTime} milliseconds.` // TODO: improve the human readable time
-
-// a value that will mean any amount of responses can be collected
-// from each person, and that the process will guaranteed last until the maxTime comes to pass
-const UNLIMITED_CHAR = '*'
 
 const process = (input, output) => {
 

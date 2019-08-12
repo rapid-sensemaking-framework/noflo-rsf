@@ -1,19 +1,15 @@
-/*
-Valid port datatypes are:
-all, string, number, int, object, array, boolean, color, date, bang, function, buffer, stream
-*/
-
-
 const noflo = require('noflo')
 const { init: contactableInit, makeContactable } = require('rsf-contactable')
 const {
     DEFAULT_ALL_COMPLETED_TEXT,
-    DEFAULT_TIMEOUT_TEXT
+    DEFAULT_INVALID_RESPONSE_TEXT,
+    DEFAULT_MAX_RESPONSES_TEXT,
+    DEFAULT_TIMEOUT_TEXT,
+    rulesText
 } = require('../shared')
 
-const DEFAULT_INVALID_RESPONSE_TEXT = `That's not a valid response, please try again.`
-const DEFAULT_MAX_RESPONSES_TEXT = `You've responded to everything. Thanks for participating. You will be notified when everyone has completed.`
-const rulesText = (maxTime) => `The process will stop automatically after ${maxTime} milliseconds.` // TODO: improve the human readable time
+// define other constants or creator functions
+// of the strings for user interaction here
 const giveOptionsText = (options) => {
     return `The options for each statement are: ${options.map(o => `${o.text} (${o.triggers.join(', ')})`).join(', ')}`
 }
@@ -21,21 +17,6 @@ const giveOptionsText = (options) => {
 // use of this trigger will allow any response to match
 const WILDCARD_TRIGGER = '*'
 
-
-// needs
-// options : [Option], the available response options
-// Option.text : String, the human readable meaning of this response, such as 'Agree'
-// Options.triggers : [String], valid strings that will represent the selection of this option, such as `['a', 'A', 'agree']`, '*' will match any response
-// statements : [Statement], the statements to collect responses to. `Statement` is an object because it could optionally have an `id` property signifying the person who authored it
-// Statement.text : String, the text of this statement to give to partipants for responding to.
-// maxTime : Number, the number of milliseconds to wait until stopping this process automatically
-
-// gives
-// results : [Response], array of the responses collected
-// Response.statement : Statement, the same as the Statement objects given
-// Response.response : String, the text of the response
-// Response.id : String, the id of the agent who gave the response
-// Response.timestamp : Number, the unix timestamp of the moment the message was received
 const process = (input, output) => {
 
     // Check preconditions on input data
@@ -216,6 +197,13 @@ exports.getComponent = () => {
     /* OUT PORTS */
     c.outPorts.add('results', {
         datatype: 'array'
+        /*
+        [Response], array of the responses collected
+        Response.statement : Statement, the same as the Statement objects given
+        Response.response : String, the text of the response
+        Response.id : String, the id of the agent who gave the response
+        Response.timestamp : Number, the unix timestamp of the moment the message was received
+        */
     })
     c.outPorts.add('error', {
         datatype: 'all'

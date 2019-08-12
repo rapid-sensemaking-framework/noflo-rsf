@@ -1,9 +1,3 @@
-/*
-Valid port datatypes are:
-all, string, number, int, object, array, boolean, color, date, bang, function, buffer, stream
-*/
-
-
 const noflo = require('noflo')
 const { init: contactableInit, makeContactable } = require('rsf-contactable')
 const {
