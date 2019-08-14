@@ -10,6 +10,7 @@ all, string, number, int, object, array, boolean, color, date, bang, function, b
 
 
 **Next Up**
+- [ ] convert components to typescript
 - [ ] handle tearDown callbacks so that lifecycle is properly managed
 - [x] components/CollectParticipants
 - [x] components/PairwiseComparison
