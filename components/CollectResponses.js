@@ -8,7 +8,7 @@ const {
 const DEFAULT_MAX_RESPONSES_TEXT = `You've reached the limit of responses. Thanks for participating. You will be notified when everyone has completed.`
 const rulesText = (maxTime, maxResponses) => 'Contribute one response per message. ' +
     `You can contribute up to ${maxResponses} responses. ` +
-    `The process will stop automatically after ${maxTime / 1000} seconds.`
+    `The process will stop automatically after ${maxTime} seconds.`
 
 // a value that will mean any amount of responses can be collected
 // from each person, and that the process will guaranteed last until the maxTime comes to pass
@@ -56,7 +56,7 @@ const process = (input, output) => {
     const timeoutId = setTimeout(() => {
         // complete, saving whatever results we have
         complete(timeoutText || DEFAULT_TIMEOUT_TEXT)
-    }, maxTime)
+    }, maxTime * 1000)
 
     // setup a completion handler that
     // can only fire once
@@ -124,7 +124,7 @@ exports.getComponent = () => {
     })
     c.inPorts.add('max_time', {
         datatype: 'int',
-        description: 'the number of milliseconds to wait until stopping this process automatically',
+        description: 'the number of seconds to wait until stopping this process automatically',
         required: true
     })
     c.inPorts.add('prompt', {

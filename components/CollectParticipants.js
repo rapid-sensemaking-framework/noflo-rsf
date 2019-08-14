@@ -33,7 +33,7 @@ const process = (input, output) => {
     const timeoutId = setTimeout(() => {
         // complete, saving whatever results we have
         complete()
-    }, maxTime)
+    }, maxTime * 1000)
 
     // setup a completion handler that
     // can only fire once
@@ -96,7 +96,7 @@ exports.getComponent = () => {
     })
     c.inPorts.add('max_time', {
         datatype: 'int',
-        description: 'the number of milliseconds to wait until stopping this process automatically',
+        description: 'the number of seconds to wait until stopping this process automatically',
         required: true
     })
     c.inPorts.add('max_participants', {
