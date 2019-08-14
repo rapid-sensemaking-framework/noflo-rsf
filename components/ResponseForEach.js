@@ -27,7 +27,7 @@ const process = (input, output) => {
     // Read packets we need to process
     const maxTime = input.getData('max_time')
     const options = input.getData('options')
-    const statements = input.getData('statements')
+    const statements = input.getData('statements').slice(0) // make sure that this array is its own
     const botConfigs = input.getData('bot_configs')
     const contactableConfigs = input.getData('contactable_configs')
     const invalidResponseText = input.getData('invalid_response_text')
