@@ -1,5 +1,6 @@
 const http = require('http')
 const express = require('express')
+const mustacheExpress = require('mustache-express')
 const noflo = require('noflo')
 
 const validInput = (input) => {
@@ -12,7 +13,7 @@ const validInput = (input) => {
 const process = (input, output) => {
 
     // Check preconditions on input data
-    if (!input.hasData('port', 'max_time', 'max_participants')) {
+    if (!input.hasData('port', 'max_time', 'max_participants', 'process_description')) {
         return
     }
 
@@ -20,11 +21,17 @@ const process = (input, output) => {
     const port = input.getData('port')
     const maxTime = input.getData('max_time')
     const maxParticipants = parseInt(input.getData('max_participants'))
+    const processDescription = input.getData('process_description')
 
     // array to store the results
     const results = []
     const app = express()
+
+    app.engine('mustache', mustacheExpress())
     app.use(express.urlencoded({ extended: true }))
+    app.set('view engine', 'mustache')
+    app.set('views', __dirname + '/CollectParticipantsAssets')
+
     const server = http.createServer(app).listen(port, () => {
         console.log('starting http server to listen for new participants on port ' + port)
     })
@@ -57,7 +64,11 @@ const process = (input, output) => {
     }
 
     app.get('/', (req, res) => {
-        res.sendFile(__dirname + '/CollectParticipantsAssets/register.html')
+        res.render('register', {
+            processDescription,
+            maxTime,
+            maxParticipants
+        })
     })
 
     // setup web server... collect participant configs
@@ -104,6 +115,12 @@ exports.getComponent = () => {
         description: 'the number of participants to welcome to the process, default is unlimited',
         required: true
     })
+    c.inPorts.add('process_description', {
+        datatype: 'string',
+        description: 'the text to display to potential participants explaining the process',
+        required: true
+    })
+
 
     /* OUT PORTS */
     c.outPorts.add('results', {
