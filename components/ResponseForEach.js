@@ -72,6 +72,7 @@ const process = (input, output) => {
             // Deactivate
             output.done()
             calledComplete = true
+            contactables.forEach(contactable => contactable.stopListening())
         }
     }
 
