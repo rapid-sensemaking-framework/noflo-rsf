@@ -88,14 +88,14 @@ Operators are called operators because they perform operations. These operations
 An operator can do whatever it takes to ingest and coordinate this human input, which will very likely involve standing up web servers, and other connection/protocol variants.
 
 At the time of writing, just a few operators of interest have been developed, that are easily made to be compatible with one another.
-- [rsf-collect-responses](https://github.com/rapid-sensemaking-framework/noflo-rapid-sensemaking/blob/master/components/CollectResponses.js)
+- [CollectResponses](https://github.com/rapid-sensemaking-framework/noflo-rapid-sensemaking/blob/master/components/CollectResponses.js)
     - for a prompt, collect statements numbering up to a given maximum (or unlimited) from a list of participants
     - ![rsf collect responses v0.0.31 screenshot](./screenshots/rsf-collect-responses-v0.0.31.png)
-- [rsf-response-for-each](https://github.com/rapid-sensemaking-framework/noflo-rapid-sensemaking/blob/master/components/ResponseForEach.js)
+- [ResponseForEach](https://github.com/rapid-sensemaking-framework/noflo-rapid-sensemaking/blob/master/components/ResponseForEach.js)
     - for a list/array of statements, collect a response or vote (from a limited number of valid options, or unlimited) for each from a list of participants
-- [rsf-pairwise-comparison](https://github.com/rapid-sensemaking-framework/noflo-rapid-sensemaking/blob/master/components/PairwiseComparison.js)
+- [PairwiseComparison](https://github.com/rapid-sensemaking-framework/noflo-rapid-sensemaking/blob/master/components/PairwiseComparison.js)
     - input: a list of statements, process: have all participants choose preferences between pairs of statements, return the list of compared/ranked results.
-- [rsf-collect-participants](https://github.com/rapid-sensemaking-framework/noflo-rapid-sensemaking/blob/master/components/CollectParticipants.js)
+- [CollectParticipants](https://github.com/rapid-sensemaking-framework/noflo-rapid-sensemaking/blob/master/components/CollectParticipants.js)
     - input: nothing, process: spin up a web server with a form and collect peoples contact info that opt in to participate, output: a list of Contactable participantConfigs
     - ![rsf collect participants v0.0.13 screenshot](./screenshots/rsf-collect-participants-v0.0.13.png)
     
