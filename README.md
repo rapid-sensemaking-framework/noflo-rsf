@@ -5,7 +5,7 @@ Welcome to the Rapid Sensemaking Framework ecosystem entry point!
 - [Skip to `Non-technical Overview`](#non-technical-overview)
 - [Skip to `Principles`](#principles)
 - [Skip to `Technical Overview`](#technical-overview)
-- [Skip to `rsf-operators`](#rsf-operators)
+- [Skip to `RSF Components`](#rsf-components)
 - [Skip to `rsf-contactables`](#rsf-contactables)
 
 
@@ -91,13 +91,13 @@ The tools should offer participants in processes as much transparency into the p
 
 
 
-## RSF Operators
+## RSF Components
 
-Operators are called operators because they perform operations. These operations can either be very quick, just performing a very simple transformation on data, requiring no human input, or they can involve lots of human input, and be medium to long running operations, meaning they could take days or weeks.
+Components are little modules of code. These operations can either be very quick, just performing a very simple transformation on data, requiring no human input, or they can involve lots of human input, and be medium to long running operations, meaning they could take days or weeks.
 
-An operator can do whatever it takes to ingest and coordinate this human input, which will very likely involve standing up web servers, and other connection/protocol variants.
+A component can do whatever it takes to ingest and coordinate this human input, which will very likely involve standing up web servers, and other connection/protocol variants.
 
-At the time of writing, just a few operators of interest have been developed, that are easily made to be compatible with one another.
+At the time of writing, just a few components of interest have been developed, that are made to be plug and play with one another.
 - [CollectResponses](https://github.com/rapid-sensemaking-framework/noflo-rsf/blob/master/components/CollectResponses.js)
     - for a prompt, collect statements numbering up to a given maximum (or unlimited) from a list of participants
     - ![rsf collect responses v0.0.31 screenshot](./screenshots/rsf-collect-responses-v0.0.31.png)
@@ -115,7 +115,7 @@ At the time of writing, just a few operators of interest have been developed, th
 - [SendMessageToAll](https://github.com/rapid-sensemaking-framework/noflo-rsf/blob/master/components/SendMessageToAll.js)
     - Send a given string to a list of given people (by contactableConfigs). Useful in a wide array of circumstances.
     
-Lots of other Operators have already been considered for implementation, for example
+Lots of other Components have already been considered for implementation, for example
 - SortFullList
     - a 'social sort' algorithm
 - DotVote
@@ -123,21 +123,21 @@ Lots of other Operators have already been considered for implementation, for exa
 - PickFromFullList
     - select one, or a few, from a longer list
 
-The idea is that each operator should clearly define what properties or values it expects as input,
+The idea is that each component should clearly define what properties or values it expects as input,
 and what properties or values it returns as output, if its successful.
 
-By doing so, RSF Operators can build up as a library over time, and where outputs of one operator match the inputs of another,
-those operators can be strung together into more complex sequences. They could start to be combined in many different orders and in many different ways. For example, the output of `CollectResponses` feeds nicely into the `statements` input of `ResponseForEach`.
+By doing so, RSF Components can build up as a library over time, and where outputs of one component match the inputs of another,
+those components can be strung together into more complex sequences. They could start to be combined in many different orders and in many different ways. For example, the output of `CollectResponses` feeds nicely into the `statements` input of `ResponseForEach`.
 
 ## RSF Contactables
 
-Contactables are at the heart of the Rapid Sensemaking Framework. They represent a way to open up bi-directional channels of communication between a "bot"/operator, and a human, represented in the most basic form of digital communication, strings of text.
+Contactables are at the heart of the Rapid Sensemaking Framework. They represent a way to open up bi-directional channels of communication between a "bot", and a human, represented in the most basic form of digital communication, strings of text.
 
-A Contactable represents the idea that the Operator can "hear" a person, and a person can "hear" an Operator. Thus, the API for a Contactable is literally as simple in `node` as `.speak()`, `.listen()`. The full API will be defined soon.
+A Contactable represents the idea that the Component can "hear" a person, and a person can "hear" a Component. Thus, the API for a Contactable is literally as simple in `node` as `.speak()`, `.listen()`. The full API will be defined soon.
 
 Each Contactable will represent an ability to bi-directionally communicate with a human, via the same API, independent of what technology and protocol is carrying the communications.
 
-Configurations for people will be given as arrays in `participantsConfig`, and the Operators will carry out their operations, independent of what channels they are communicating via, thus enabling the full cross-platform cross-protocol solution.
+Configurations for people will be given as arrays in `participantsConfig`, and the Components will carry out their operations, independent of what channels they are communicating via, thus enabling the full cross-platform cross-protocol solution.
 
 A `personConfig` object will be at a minimum something like:
 ```json
@@ -148,9 +148,9 @@ A `personConfig` object will be at a minimum something like:
 ```
 `"name"` is treated as an optional property
 
-At the time of writing, Operators that use Contactables include [rsf-pairwise-comparison](https://github.com/rapid-sensemaking-framework/noflo-rapid-sensemaking/blob/master/components/PairwiseComparison.js), [rsf-collect-responses](https://github.com/rapid-sensemaking-framework/noflo-rapid-sensemaking/blob/master/components/CollectResponses.js) and [rsf-response-for-each](https://github.com/rapid-sensemaking-framework/noflo-rapid-sensemaking/blob/master/components/ResponseForEach.js).
+At the time of writing, Components that use Contactables include [PairwiseComparison](https://github.com/rapid-sensemaking-framework/noflo-rapid-sensemaking/blob/master/components/PairwiseComparison.js), [CollectResponses](https://github.com/rapid-sensemaking-framework/noflo-rapid-sensemaking/blob/master/components/CollectResponses.js) and [ResponseForEach](https://github.com/rapid-sensemaking-framework/noflo-rapid-sensemaking/blob/master/components/ResponseForEach.js).
 
-There is a module that collect a `participantsConfig` array as an output, which can then be fed in to another module. That is [rsf-collect-participants](https://github.com/rapid-sensemaking-framework/noflo-rapid-sensemaking/blob/master/components/CollectParticipants.js).
+There is a module that collect a `participantsConfig` array as an output, which can then be fed in to another module. That is [CollectParticipants](https://github.com/rapid-sensemaking-framework/noflo-rapid-sensemaking/blob/master/components/CollectParticipants.js).
 
 ### Implementations So Far
 
@@ -180,7 +180,7 @@ To get them fully implemented, please submit a PR to [rsf-contactable](https://g
 
 `id` : `String`, this value should represent the full information required to contact a person via the type of carrier it is over. For example, if `type` is `phone`, then `id` should be of the format `+12223334444`, but if `type` is `email` then `id` should be a valid email, e.g. `person@somesite.com`
 
-`name` : `String`, optional, a name which can be used throughout the Operators at times to address the person in a more congenial way, during communications with them, if appropriate.
+`name` : `String`, optional, a name which can be used throughout the Components at times to address the person in a more congenial way, during communications with them, if appropriate.
 
 #### `.speak(text: String)`
 Send a string of text to the person represented by the given Contactable.
@@ -189,7 +189,7 @@ Send a string of text to the person represented by the given Contactable.
 - [ ] update .speak API so that it returns a promise that resolves when confirmation that the message has successfully been sent and received occurs. this will allow finer control of flow important in modules.
 
 #### `.listen(callback(text: String))`
-Set a function which will be called any time that the person represented sends a string of text back to the Operator.
+Set a function which will be called any time that the person represented sends a string of text back to the Component.
 
 #### `.stopListening()`
 Calling this will prevent any and all callbacks passed to `listen` from firing again. Should be called as cleanup after use.
