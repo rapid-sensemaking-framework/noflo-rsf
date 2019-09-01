@@ -79,7 +79,7 @@ const process = (input, output) => {
     // a function to check the validity of a response
     // according to the options
     const validResponse = (text) => {
-        return text === '1' || text === 'A'
+        return text === '1' || text === 'A' || text === 'a'
     }
 
     // a function to check the completion conditions
@@ -120,7 +120,9 @@ const process = (input, output) => {
         // awaiting their response before sending the next
         let responseCount = 0
         const nextText = () => {
-            return `(${numPerPerson - 1 - responseCount} remaining) A) ${pairsTexts[responseCount]['A']} 1) ${pairsTexts[responseCount]['1']}`
+            return `(${numPerPerson - 1 - responseCount} remaining)
+A) ${pairsTexts[responseCount]['A']}
+1) ${pairsTexts[responseCount]['1']}`
         }
         contactable.listen(text => {
             // do we still accept this response?
@@ -131,7 +133,7 @@ const process = (input, output) => {
                 }
                 results.push({
                     choices: pairsTexts[responseCount],
-                    choice: text,
+                    choice: text.toUpperCase(),
                     id: contactable.id,
                     timestamp: Date.now()
                 })
