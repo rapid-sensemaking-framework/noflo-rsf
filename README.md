@@ -98,23 +98,30 @@ Operators are called operators because they perform operations. These operations
 An operator can do whatever it takes to ingest and coordinate this human input, which will very likely involve standing up web servers, and other connection/protocol variants.
 
 At the time of writing, just a few operators of interest have been developed, that are easily made to be compatible with one another.
-- [CollectResponses](https://github.com/rapid-sensemaking-framework/noflo-rapid-sensemaking/blob/master/components/CollectResponses.js)
+- [CollectResponses](https://github.com/rapid-sensemaking-framework/noflo-rsf/blob/master/components/CollectResponses.js)
     - for a prompt, collect statements numbering up to a given maximum (or unlimited) from a list of participants
     - ![rsf collect responses v0.0.31 screenshot](./screenshots/rsf-collect-responses-v0.0.31.png)
-- [ResponseForEach](https://github.com/rapid-sensemaking-framework/noflo-rapid-sensemaking/blob/master/components/ResponseForEach.js)
+- [ResponseForEach](https://github.com/rapid-sensemaking-framework/noflo-rsf/blob/master/components/ResponseForEach.js)
     - for a list/array of statements, collect a response or vote (from a limited number of valid options, or unlimited) for each from a list of participants
-- [PairwiseComparison](https://github.com/rapid-sensemaking-framework/noflo-rapid-sensemaking/blob/master/components/PairwiseComparison.js)
+- [PairwiseComparison](https://github.com/rapid-sensemaking-framework/noflo-rsf/blob/master/components/PairwiseComparison.js)
     - input: a list of statements, process: have all participants choose preferences between pairs of statements, return the list of compared/ranked results.
-- [CollectParticipants](https://github.com/rapid-sensemaking-framework/noflo-rapid-sensemaking/blob/master/components/CollectParticipants.js)
+- [CollectParticipants](https://github.com/rapid-sensemaking-framework/noflo-rsf/blob/master/components/CollectParticipants.js)
     - input: nothing, process: spin up a web server with a form and collect peoples contact info that opt in to participate, output: a list of Contactable participantConfigs
     - ![rsf collect participants v0.0.13 screenshot](./screenshots/rsf-collect-participants-v0.0.13.png)
+- [FormatReactionsList](https://github.com/rapid-sensemaking-framework/noflo-rsf/blob/master/components/FormatReactionsList.js)
+    - input: reactions list (from ResponseForEach), output: a string containing a nice, simple, human-readable version of the results
+- [FormatStatementList](https://github.com/rapid-sensemaking-framework/noflo-rsf/blob/master/components/FormatStatementList.js)
+    - input: statement list, output: a string containing a nice, simple, human-readable version of the results
+- [SendMessageToAll](https://github.com/rapid-sensemaking-framework/noflo-rsf/blob/master/components/SendMessageToAll.js)
+    - Send a given string to a list of given people (by contactableConfigs). Useful in a wide array of circumstances.
     
 Lots of other Operators have already been considered for implementation, for example
-- rsf-sort-full-list
-- rsf-dot-vote
-- rsf-pick-from-full-list
-- rsf-share-results
-    - input: anything + participantConfigs, process: share the input, which are likely results from a process, with people
+- SortFullList
+    - a 'social sort' algorithm
+- DotVote
+    - a classic dot vote process, where people have a designated number of 'dots' to distribute across a variety of options given
+- PickFromFullList
+    - select one, or a few, from a longer list
 
 The idea is that each operator should clearly define what properties or values it expects as input,
 and what properties or values it returns as output, if its successful.
