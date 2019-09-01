@@ -114,6 +114,8 @@ At the time of writing, just a few components of interest have been developed, t
     - input: statement list, output: a string containing a nice, simple, human-readable version of the results
 - [SendMessageToAll](https://github.com/rapid-sensemaking-framework/noflo-rsf/blob/master/components/SendMessageToAll.js)
     - Send a given string to a list of given people (by contactableConfigs). Useful in a wide array of circumstances.
+- [SortPairwiseResults](https://github.com/rapid-sensemaking-framework/noflo-rsf/blob/master/components/SortPairwiseResults.js)
+    - Take a list of `statements` and a list of votes from `PairwiseComparison` and sort the list by the votes.
     
 Lots of other Components have already been considered for implementation, for example
 - SortFullList
