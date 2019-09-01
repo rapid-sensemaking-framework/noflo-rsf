@@ -75,9 +75,21 @@ The tools should offer participants in processes as much transparency into the p
 
 ## Technical Overview
 
+- Use flowhub to design a process... you can actually run it that way too.
+- If you want to encode configuration for that process into an easier method, you can do the following
+    - create a Google Form, or some other system, that creates a nice interface for setting up an rsf process
+    - Make that form put its results into a Google Sheet
+    - Download the flow-based-programming (FBP) graph for that process
+    - Add it to the noflo-rsf-client repo
+    - Set up the translation from the form fields to the FBP graph inputs
+    - Redeploy the noflo-rsf-client server
+    - Set up a webhook, via Zapier or IFTTT, to trigger the FBP graph to run, based on the form inputs
+    - Run as many processes as you want!
 
 ![picture of an rsf graph workflow in noflo](./screenshots/big-rsf-graph.png)
 ![picture of an rsf graph workflow in noflo](./screenshots/rsf-graph.png)
+![picture of how to select download of a FBP graph from flowhub](./screenshots/graph-download.png)
+![picture of an example google form for configuring an rsf process](./screenshots/google-form.png)
 
 
 
