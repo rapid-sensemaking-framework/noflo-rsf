@@ -75,7 +75,9 @@ The tools should offer participants in processes as much transparency into the p
 
 ## Technical Overview
 
-Talk about noflo components and graphs.
+
+![picture of an rsf graph workflow in noflo](./screenshots/big-rsf-graph.png)
+![picture of an rsf graph workflow in noflo](./screenshots/rsf-graph.png)
 
 
 
