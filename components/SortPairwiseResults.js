@@ -24,7 +24,7 @@ exports.getComponent = () => {
     const statements = input.getData('statements')
     const rankings = input.getData('rankings')
     // Process data and send output
-	const withCounts = statements.map(statement => {
+    const withCounts = statements.map(statement => {
         return {
             ...statement,
             count: rankings.filter(vote => vote.choices[vote.choice] === statement.text).length
