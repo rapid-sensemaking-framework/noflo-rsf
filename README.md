@@ -81,7 +81,7 @@ The tools should offer participants in processes as much transparency into the p
     - Add it to the noflo-rsf-client repo
     - Set up the translation from the form fields to the FBP graph inputs
     - Redeploy the noflo-rsf-client server
-    - Set up a webhook, via Zapier or IFTTT, to trigger the FBP graph to run, based on the form inputs
+    - Set up an [event hook using Google Scripts](https://github.com/rapid-sensemaking-framework/noflo-rsf-client), to trigger the FBP graph to run, based on the form inputs
     - Run as many processes as you want!
 
 ![picture of an rsf graph workflow in noflo](./screenshots/big-rsf-graph.png)
