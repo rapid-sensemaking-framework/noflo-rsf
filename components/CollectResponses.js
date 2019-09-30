@@ -33,7 +33,7 @@ const process = (input, output) => {
 
     let contactables
     try {
-        contactableInit(botConfigs.mattermostable, botConfigs.textable)
+        contactableInit(botConfigs.mattermostable, botConfigs.textable, botConfigs.telegramable)
         contactables = contactableConfigs.map(makeContactable)
     } catch (e) {
         // Process data and send output
