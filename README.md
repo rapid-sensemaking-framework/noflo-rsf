@@ -159,15 +159,18 @@ There is a module that collect a `participantsConfig` array as an output, which 
 [rsf-contactable](https://github.com/rapid-sensemaking-framework/rsf-contactable) is the main source of information on implemented carrier types, but here is a short and simple list:
 
 - [rsf-textable](https://github.com/rapid-sensemaking-framework/rsf-textable) implements a texting carrier, via the [Twilio](https://www.twilio.com/) APIs
-    - the `type` to give as a `personConfig` JSON object is simply `phone` and the number must be formatted '+12223334444' (North American)
+    - the `type` to give as a `personConfig` JSON object is `phone` and the format of `id` must be like '+12223334444' (North American)
 - [rsf-mattermostable](https://github.com/rapid-sensemaking-framework/rsf-mattermostable) implements a [Mattermost](https://mattermost.com/) carrier, via the Mattermost APIs
-    - the `type` to give as a `personConfig` JSON object is simply `mattermost` and the format must be like 'username@https://mattermost-server.com'
+    - the `type` to give as a `personConfig` JSON object is `mattermost` and the format of `id` must be like 'username@https://mattermost-server.com'
+- [rsf-telegramable](https://github.com/rapid-sensemaking-framework/rsf-telegramable) implements a [Telegram](https://telegram.org/) carrier, via the Telegram APIs
+    - the `type` to give as a `personConfig` JSON object is `telegram` and the format of `id` must be like 'username'
 
 Implementations under consideration:
 - rsf-messenger (fb)
-- rsf-telegram
 - rsf-emailable
 - rsf-ssb (secure scuttlebutt)
+- rsf-matrix
+- rsf-twitter
 
 ### Challenges
 
@@ -209,10 +212,3 @@ ___
 
 Valid noflo port datatypes are:
 all, string, number, int, object, array, boolean, color, date, bang, function, buffer, stream
-
-
-**Next Up**
-- [ ] convert components to typescript
-- [ ] handle tearDown callbacks so that lifecycle is properly managed
-- [x] components/CollectParticipants
-- [x] components/PairwiseComparison
