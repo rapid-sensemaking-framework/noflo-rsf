@@ -1,5 +1,5 @@
 const noflo = require('noflo')
-const { init: contactableInit, makeContactable } = require('rsf-contactable')
+const { init: contactableInit, makeContactable, shutdown } = require('rsf-contactable')
 const {
     DEFAULT_ALL_COMPLETED_TEXT,
     DEFAULT_TIMEOUT_TEXT
@@ -14,12 +14,14 @@ const rulesText = (maxTime, maxResponses) => 'Contribute one response per messag
 // from each person, and that the process will guaranteed last until the maxTime comes to pass
 const UNLIMITED_CHAR = '*'
 
-const process = (input, output) => {
+const process = async (input, output) => {
 
     // Check preconditions on input data
     if (!input.hasData('prompt', 'contactable_configs', 'max_time', 'bot_configs')) {
         return
     }
+
+    console.log('collect responses starting')
 
     // Read packets we need to process
     const maxResponses = input.getData('max_responses')
@@ -33,9 +35,10 @@ const process = (input, output) => {
 
     let contactables
     try {
-        contactableInit(botConfigs.mattermostable, botConfigs.textable, botConfigs.telegramable)
+        await contactableInit(botConfigs.mattermostable, botConfigs.textable, botConfigs.telegramable)
         contactables = contactableConfigs.map(makeContactable)
     } catch (e) {
+        console.log('error initializing contactables', e)
         // Process data and send output
         output.send({
             error: e
@@ -61,18 +64,20 @@ const process = (input, output) => {
     // setup a completion handler that
     // can only fire once
     let calledComplete = false
-    const complete = (completionText) => {
+    const complete = async (completionText) => {
         if (!calledComplete) {
             contactables.forEach(contactable => contactable.speak(completionText))
             clearTimeout(timeoutId)
+            calledComplete = true
+            contactables.forEach(contactable => contactable.stopListening())
+            console.log('calling rsf-contactable shutdown from CollectResponses')
+            await shutdown() // rsf-contactable
             // Process data and send output
             output.send({
                 results
             })
             // Deactivate
             output.done()
-            calledComplete = true
-            contactables.forEach(contactable => contactable.stopListening())
         }
     }
 

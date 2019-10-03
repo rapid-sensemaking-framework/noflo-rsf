@@ -1,7 +1,7 @@
 const noflo = require('noflo')
-const { init: contactableInit, makeContactable } = require('rsf-contactable')
+const { init: contactableInit, makeContactable, shutdown } = require('rsf-contactable')
 
-const process = (input, output) => {
+const process = async (input, output) => {
 
     // Check preconditions on input data
     if (!input.hasData('message', 'contactable_configs', 'bot_configs')) {
@@ -15,7 +15,7 @@ const process = (input, output) => {
 
     let contactables
     try {
-        contactableInit(botConfigs.mattermostable, botConfigs.textable, botConfigs.telegramable)
+        await contactableInit(botConfigs.mattermostable, botConfigs.textable, botConfigs.telegramable)
         contactables = contactableConfigs.map(makeContactable)
     } catch (e) {
         // Process data and send output
@@ -30,6 +30,8 @@ const process = (input, output) => {
     contactables.forEach(contactable => {
         contactable.speak(message)
     })
+    console.log('calling rsf-contactable shutdown from SendMessageToAll')
+    await shutdown() // rsf-contactable
     // Deactivate
     output.done()
 }

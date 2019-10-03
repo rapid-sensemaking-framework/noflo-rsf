@@ -1,5 +1,5 @@
 const noflo = require('noflo')
-const { init: contactableInit, makeContactable } = require('rsf-contactable')
+const { init: contactableInit, makeContactable, shutdown } = require('rsf-contactable')
 const {
     DEFAULT_ALL_COMPLETED_TEXT,
     DEFAULT_INVALID_RESPONSE_TEXT,
@@ -11,7 +11,7 @@ const {
 // define other constants or creator functions
 // of the strings for user interaction here
 
-const process = (input, output) => {
+const process = async (input, output) => {
 
     // Check preconditions on input data
     if (!input.hasData('choice', 'statements', 'max_time', 'contactable_configs', 'bot_configs')) {
@@ -31,7 +31,7 @@ const process = (input, output) => {
 
     let contactables
     try {
-        contactableInit(botConfigs.mattermostable, botConfigs.textable, botConfigs.telegramable)
+        await contactableInit(botConfigs.mattermostable, botConfigs.textable, botConfigs.telegramable)
         contactables = contactableConfigs.map(makeContactable)
     } catch (e) {
         // Process data and send output
@@ -60,19 +60,20 @@ const process = (input, output) => {
     // setup a completion handler that
     // can only fire once
     let calledComplete = false
-    const complete = (completionText) => {
+    const complete = async (completionText) => {
         if (!calledComplete) {
             // It is good practice to inform participants the process is ending
             contactables.forEach(contactable => contactable.speak(completionText))
             clearTimeout(timeoutId)
+            calledComplete = true
+            contactables.forEach(contactable => contactable.stopListening())
+            await shutdown() // rsf-contactable
             // Process data and send output
             output.send({
                 results
             })
             // Deactivate
             output.done()
-            calledComplete = true
-            contactables.forEach(contactable => contactable.stopListening())
         }
     }
 
