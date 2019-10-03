@@ -24,7 +24,7 @@ const process = async (input, output) => {
     console.log('collect responses starting')
 
     // Read packets we need to process
-    const maxResponses = input.getData('max_responses')
+    let maxResponses = input.getData('max_responses')
     const maxTime = input.getData('max_time')
     const prompt = input.getData('prompt')
     const botConfigs = input.getData('bot_configs')
