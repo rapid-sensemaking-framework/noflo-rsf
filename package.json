@@ -1,6 +1,6 @@
 {
   "name": "noflo-rsf",
-  "version": "0.0.20",
+  "version": "0.0.21",
   "description": "a collection of modules for rapid collective text-driven sensemaking",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
