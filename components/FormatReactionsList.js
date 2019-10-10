@@ -18,9 +18,11 @@ const process = (input, output) => {
         */
     const reactions = input.getData('reactions')
 
+    const anonymize = input.getData('anonymize')
+
     const formatted = reactions.reduce((memo, r) => {
         return `${memo}
-${r.statement.text} : ${r.response} : ${r.id}`
+${r.statement.text} : ${r.response}` + (anonymize ? '' : ` : ${r.id}`)
     }, '')
 
     output.send({
@@ -41,6 +43,11 @@ exports.getComponent = () => {
         datatype: 'array',
         description: 'the list of reactions to format',
         required: true
+    })
+
+    c.inPorts.add('anonymize', {
+        datatype: 'boolean',
+        description: 'whether to remove the information associating votes with people'
     })
 
     /* OUT PORTS */
