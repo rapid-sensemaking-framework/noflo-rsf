@@ -111,15 +111,18 @@ const process = async (input, output) => {
         }
         contactable.listen(text => {
 
+            const matchedOption = validResponse(text)
+
             // do we still accept this response?
             if (responseCount < statements.length) {
-                if (!validResponse(text)) {
+                if (!matchedOption) {
                     contactable.speak(invalidResponseText || DEFAULT_INVALID_RESPONSE_TEXT)
                     return
                 }
                 results.push({
                     statement: statements[responseCount],
-                    response: text,
+                    response: matchedOption.text,
+                    responseTrigger: text,
                     id: contactable.id,
                     timestamp: Date.now()
                 })
@@ -202,7 +205,8 @@ exports.getComponent = () => {
         /*
         [Response], array of the responses collected
         Response.statement : Statement, the same as the Statement objects given
-        Response.response : String, the text of the response
+        Response.response : String, the text of the selected option
+        Response.responseTrigger : String, the original text of the response
         Response.id : String, the id of the agent who gave the response
         Response.timestamp : Number, the unix timestamp of the moment the message was received
         */
