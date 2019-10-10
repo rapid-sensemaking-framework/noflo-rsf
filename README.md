@@ -125,6 +125,12 @@ Lots of other Components have already been considered for implementation, for ex
 - PickFromFullList
     - select one, or a few, from a longer list
 
+Other ideas:
+- run results through analysis algorithms for useful stats
+- publish results to spreadsheets
+- publish results to api endpoint
+- export results for CSV download
+
 The idea is that each component should clearly define what properties or values it expects as input,
 and what properties or values it returns as output, if its successful.
 
