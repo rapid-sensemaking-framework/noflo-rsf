@@ -26,10 +26,8 @@ const process = async (input, output) => {
         output.done()
         return
     }
-            
-    contactables.forEach(contactable => {
-        contactable.speak(message)
-    })
+
+    await Promise.all(contactables.map(contactable => contactable.speak(message)))
     console.log('calling rsf-contactable shutdown from SendMessageToAll')
     await shutdown() // rsf-contactable
     // Deactivate
