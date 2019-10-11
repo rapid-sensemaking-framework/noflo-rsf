@@ -119,12 +119,16 @@ const process = async (input, output) => {
                     contactable.speak(invalidResponseText || DEFAULT_INVALID_RESPONSE_TEXT)
                     return
                 }
-                results.push({
-                    statement: statements[responseCount],
+                const newReaction = {
+                    statement: { ...statements[responseCount] }, // clone
                     response: matchedOption.text,
                     responseTrigger: text,
                     id: contactable.id,
                     timestamp: Date.now()
+                }
+                results.push(newReaction)
+                output.send({
+                    reaction: { ...newReaction } // clone
                 })
                 responseCount++
             }
@@ -200,9 +204,7 @@ exports.getComponent = () => {
     })
 
     /* OUT PORTS */
-    c.outPorts.add('results', {
-        datatype: 'array'
-        /*
+    /*
         [Response], array of the responses collected
         Response.statement : Statement, the same as the Statement objects given
         Response.response : String, the text of the selected option
@@ -210,6 +212,11 @@ exports.getComponent = () => {
         Response.id : String, the id of the agent who gave the response
         Response.timestamp : Number, the unix timestamp of the moment the message was received
         */
+    c.outPorts.add('reaction', {
+        datatype: 'object'
+    })
+    c.outPorts.add('results', {
+        datatype: 'array'
     })
     c.outPorts.add('error', {
         datatype: 'all'

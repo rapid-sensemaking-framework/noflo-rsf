@@ -17,7 +17,7 @@ const UNLIMITED_CHAR = '*'
 const process = async (input, output) => {
 
     // Check preconditions on input data
-    if (!input.hasData('prompt', 'contactable_configs', 'max_time', 'bot_configs')) {
+    if (!input.hasData('max_responses', 'prompt', 'contactable_configs', 'max_time', 'bot_configs')) {
         return
     }
 
@@ -94,10 +94,14 @@ const process = async (input, output) => {
         // as an input, up till the alotted amount
         contactable.listen(text => {
             if (responseCount < maxResponses) {
-                results.push({
+                const newResponse = {
                     text,
                     id: contactable.id,
                     timestamp: Date.now()
+                }
+                results.push(newResponse)
+                output.send({
+                    statement: { ...newResponse } // clone
                 })
                 responseCount++
             }
@@ -126,7 +130,8 @@ exports.getComponent = () => {
     /* IN PORTS */
     c.inPorts.add('max_responses', {
         datatype: 'all',
-        description: 'the number of responses to stop collecting at, don\'t set or use "*" for any amount'
+        description: 'the number of responses to stop collecting at, don\'t set or use "*" for any amount',
+        required: true
     })
     c.inPorts.add('max_time', {
         datatype: 'int',
@@ -162,6 +167,9 @@ exports.getComponent = () => {
     })
 
     /* OUT PORTS */
+    c.outPorts.add('statement', {
+        datatype: 'object'
+    })
     c.outPorts.add('results', {
         datatype: 'array'
     })
