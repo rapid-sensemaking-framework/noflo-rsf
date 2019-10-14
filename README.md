@@ -106,7 +106,7 @@ At the time of writing, just a few components of interest have been developed, t
 - [PairwiseComparison](https://github.com/rapid-sensemaking-framework/noflo-rsf/blob/master/components/PairwiseComparison.js)
     - input: a list of statements, process: have all participants choose preferences between pairs of statements, return the list of compared/ranked results.
 - [CollectParticipants](https://github.com/rapid-sensemaking-framework/noflo-rsf/blob/master/components/CollectParticipants.js)
-    - input: nothing, process: spin up a web server with a form and collect peoples contact info that opt in to participate, output: a list of Contactable participantConfigs
+    - input: nothing, process: spin up a form on a webserver and collect peoples contact info that opt in to participate, output: a list of Contactable participantConfigs
     - ![rsf collect participants v0.0.13 screenshot](./screenshots/rsf-collect-participants-v0.0.13.png)
 - [FormatReactionsList](https://github.com/rapid-sensemaking-framework/noflo-rsf/blob/master/components/FormatReactionsList.js)
     - input: reactions list (from ResponseForEach), output: a string containing a nice, simple, human-readable version of the results
