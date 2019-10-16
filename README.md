@@ -76,7 +76,7 @@ The tools should offer participants in processes as much transparency into the p
 
 - Use flowhub to design a process... you can actually run it that way too.
 - https://app.flowhub.io
-![picture of an rsf graph workflow in noflo](./screenshots/big-rsf-graph.png)
+![picture of an rsf graph workflow in noflo](./screenshots/colored-rsf-graph.png)
 
 
 ## RSF Components
