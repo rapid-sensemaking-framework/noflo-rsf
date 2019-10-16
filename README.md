@@ -60,10 +60,11 @@ Different stages of a process could have different participants. A different gro
 
 Finally, kickoff the process...
 
-Ideally, a live dashboard of events taking place in the process, and results coming in would be viewable, and even options for people playing facilitator type roles to add the human touch of fostering the social intelligence, and getting to great outcomes.
+A live dashboard of events taking place in the process, and results coming in are be viewable, and even options for people playing facilitator type roles to add the human touch of fostering the social intelligence, and getting to great outcomes.
 
-Once every step of the process has completed, the final results could be saved to the computer that was hosting the process, uploaded somewhere digitally available, or posted into a database for longevity.
+Once every step of the process has completed, the final results can be saved to the computer that was hosting the process, uploaded somewhere digitally available, or posted into a database for longevity.
 
+https://noflo-rsf-client.herokuapp.com/
 
 
 ## Principles
@@ -74,21 +75,8 @@ The tools should offer participants in processes as much transparency into the p
 ## Technical Overview
 
 - Use flowhub to design a process... you can actually run it that way too.
-- If you want to encode configuration for that process into an easier method, you can do the following
-    - create a Google Form, or some other system, that creates a nice interface for setting up an rsf process
-    - Make that form put its results into a Google Sheet
-    - Download the flow-based-programming (FBP) graph for that process
-    - Add it to the noflo-rsf-client repo
-    - Set up the translation from the form fields to the FBP graph inputs
-    - Redeploy the noflo-rsf-client server
-    - Set up an [event hook using Google Scripts](https://github.com/rapid-sensemaking-framework/noflo-rsf-client), to trigger the FBP graph to run, based on the form inputs
-    - Run as many processes as you want!
-
+- https://app.flowhub.io
 ![picture of an rsf graph workflow in noflo](./screenshots/big-rsf-graph.png)
-![picture of an rsf graph workflow in noflo](./screenshots/rsf-graph.png)
-![picture of how to select download of a FBP graph from flowhub](./screenshots/graph-download.png)
-![picture of an example google form for configuring an rsf process](./screenshots/google-form.png)
-
 
 
 ## RSF Components
