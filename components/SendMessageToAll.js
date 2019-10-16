@@ -1,5 +1,6 @@
 const noflo = require('noflo')
 const { init: contactableInit, makeContactable, shutdown } = require('rsf-contactable')
+const { whichToInit } = require('../shared')
 
 const process = async (input, output) => {
 
@@ -15,7 +16,7 @@ const process = async (input, output) => {
 
     let contactables
     try {
-        await contactableInit(botConfigs.mattermostable, botConfigs.textable, botConfigs.telegramable)
+        await contactableInit(whichToInit(contactableConfigs), botConfigs)
         contactables = contactableConfigs.map(makeContactable)
     } catch (e) {
         // Process data and send output

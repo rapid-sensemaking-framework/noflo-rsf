@@ -5,7 +5,8 @@ const {
     DEFAULT_INVALID_RESPONSE_TEXT,
     DEFAULT_MAX_RESPONSES_TEXT,
     DEFAULT_TIMEOUT_TEXT,
-    rulesText
+    rulesText,
+    whichToInit
 } = require('../shared')
 
 // define other constants or creator functions
@@ -31,7 +32,7 @@ const process = async (input, output) => {
 
     let contactables
     try {
-        await contactableInit(botConfigs.mattermostable, botConfigs.textable, botConfigs.telegramable)
+        await contactableInit(whichToInit(contactableConfigs), botConfigs)
         contactables = contactableConfigs.map(makeContactable)
     } catch (e) {
         // Process data and send output

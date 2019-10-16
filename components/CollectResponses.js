@@ -2,7 +2,8 @@ const noflo = require('noflo')
 const { init: contactableInit, makeContactable, shutdown } = require('rsf-contactable')
 const {
     DEFAULT_ALL_COMPLETED_TEXT,
-    DEFAULT_TIMEOUT_TEXT
+    DEFAULT_TIMEOUT_TEXT,
+    whichToInit
 } = require('../shared')
 
 const DEFAULT_MAX_RESPONSES_TEXT = `You've reached the limit of responses. Thanks for participating. You will be notified when everyone has completed.`
@@ -35,7 +36,7 @@ const process = async (input, output) => {
 
     let contactables
     try {
-        await contactableInit(botConfigs.mattermostable, botConfigs.textable, botConfigs.telegramable)
+        await contactableInit(whichToInit(contactableConfigs), botConfigs)
         contactables = contactableConfigs.map(makeContactable)
     } catch (e) {
         console.log('error initializing contactables', e)
