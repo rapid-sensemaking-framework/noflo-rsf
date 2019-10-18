@@ -60,7 +60,7 @@ Different stages of a process could have different participants. A different gro
 
 Finally, kickoff the process...
 
-A live dashboard of events taking place in the process, and results coming in are be viewable, and even options for people playing facilitator type roles to add the human touch of fostering the social intelligence, and getting to great outcomes.
+A live dashboard of events taking place in the process, and results coming in are viewable. There are options for people playing facilitator type roles to add the human touch of fostering the social intelligence, and getting to great outcomes.
 
 Once every step of the process has completed, the final results can be saved to the computer that was hosting the process, uploaded somewhere digitally available, or posted into a database for longevity.
 
