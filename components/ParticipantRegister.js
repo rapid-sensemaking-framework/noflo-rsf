@@ -10,20 +10,26 @@ const process = (input, output) => {
 
     // Read packets we need to process
     const socketUrl = input.getData('socket_url')
-    const isFacilitator = input.getData('is_facilitator')
     const maxTime = input.getData('max_time')
     const maxParticipants = parseInt(input.getData('max_participants'))
     const processDescription = input.getData('process_description')
 
     const socket = socketClient(socketUrl)
     socket.on('connect', () => {
-        socket.emit('participant_register', { isFacilitator, maxParticipants, maxTime, processDescription })
+        socket.emit('participant_register', { maxParticipants, maxTime, processDescription })
     })
     socket.on('participant_register_url', data => {
         output.send({
             register_url: data
         })
     })
+    // single one
+    socket.on('participant_register_result', result => {
+      output.send({
+          result
+      })
+    })
+    // all results
     socket.on('participant_register_results', results => {
         output.send({
             results
@@ -45,10 +51,6 @@ exports.getComponent = () => {
         description: 'the http url with websockets to connect to run this function',
         required: true
     })
-    c.inPorts.add('is_facilitator', {
-        datatype: 'boolean',
-        description: 'whether or not to enable closing registration whenever'
-    })
     c.inPorts.add('max_time', {
         datatype: 'int',
         description: 'the number of seconds to wait until stopping this process automatically',
@@ -69,6 +71,9 @@ exports.getComponent = () => {
     /* OUT PORTS */
     c.outPorts.add('register_url', {
         datatype: 'string'
+    })
+    c.outPorts.add('result', {
+      datatype: 'object' // ContactableConfig
     })
     c.outPorts.add('results', {
         datatype: 'array'
