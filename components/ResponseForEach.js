@@ -94,6 +94,9 @@ const process = async (input, output) => {
         }
     }
 
+    // beware 0 length case
+    checkCompletionCondition()
+
     contactables.forEach(contactable => {
 
         // initiate contact with the person
