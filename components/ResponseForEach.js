@@ -94,9 +94,6 @@ const process = async (input, output) => {
         }
     }
 
-    // beware 0 length case
-    checkCompletionCondition()
-
     contactables.forEach(contactable => {
 
         // initiate contact with the person
@@ -152,7 +149,7 @@ const process = async (input, output) => {
         })
         // send the first one
         setTimeout(() => {
-            contactable.speak(nextText())
+            if (statements.length) contactable.speak(nextText())
         }, 1000)
     })
 }
