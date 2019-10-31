@@ -160,7 +160,7 @@ There is a module that collect a `participantsConfig` array as an output, which 
     - the `type` to give as a `personConfig` JSON object is `telegram` and the format of `id` must be like 'username'
 
 Work In Progress
-- [rsf-ssb (secure scuttlebutt)](https://github.com/rapid-sensemaking-framework/rsf-ssb)
+- [rsf-ssbable (secure scuttlebutt)](https://github.com/rapid-sensemaking-framework/rsf-ssbable)
 
 Implementations under consideration:
 - rsf-messenger (fb)
