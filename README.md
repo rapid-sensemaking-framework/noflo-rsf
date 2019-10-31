@@ -159,10 +159,12 @@ There is a module that collect a `participantsConfig` array as an output, which 
 - [rsf-telegramable](https://github.com/rapid-sensemaking-framework/rsf-telegramable) implements a [Telegram](https://telegram.org/) carrier, via the Telegram APIs
     - the `type` to give as a `personConfig` JSON object is `telegram` and the format of `id` must be like 'username'
 
+Work In Progress
+- [rsf-ssb (secure scuttlebutt)](https://github.com/rapid-sensemaking-framework/rsf-ssb)
+
 Implementations under consideration:
 - rsf-messenger (fb)
 - rsf-emailable
-- rsf-ssb (secure scuttlebutt)
 - rsf-matrix
 - rsf-twitter
 
