@@ -12,9 +12,9 @@ import {
 } from '../libs/shared'
 import { Contactable, Statement, ContactableConfig, PairwiseVote, PairwiseChoice } from 'rsf-types'
 
-const defaultPairwiseVoteCb = (pairwiseVote: PairwiseVote) => { }
+const defaultPairwiseVoteCb = (pairwiseVote: PairwiseVote): void => { }
 
-const formatPairwiseChoice = (numPerPerson: number, numSoFar: number, pairwiseChoice: PairwiseChoice) => {
+const formatPairwiseChoice = (numPerPerson: number, numSoFar: number, pairwiseChoice: PairwiseChoice): string => {
   return `(${numPerPerson - 1 - numSoFar} remaining)
 A) ${pairwiseChoice['A'].text}
 1) ${pairwiseChoice['1'].text}`
