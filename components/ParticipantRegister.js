@@ -1,7 +1,18 @@
+/*
+ Built for compatibility with https://github.com/rapid-sensemaking-framework/rsf-http-register
+*/
+
 const noflo = require('noflo')
 const socketClient = require('socket.io-client')
 
+const guidGenerator = () => {
+  const S4 = () => (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1)
+  return (S4() + S4() + "-" + S4() + "-" + S4() + "-" + S4() + "-" + S4() + S4() + S4())
+}
+
 const process = (input, output) => {
+
+  // TODO set a timeout
 
   // Check preconditions on input data
   if (!input.hasData('socket_url', 'max_time', 'max_participants', 'process_description')) {
@@ -9,18 +20,20 @@ const process = (input, output) => {
   }
 
   // Read packets we need to process
+  const httpUrl = input.getData('http_url')
   const socketUrl = input.getData('socket_url')
   const maxTime = input.getData('max_time')
   const maxParticipants = parseInt(input.getData('max_participants'))
   const processDescription = input.getData('process_description')
+  // create a brand new id which will be used
+  // in the url address on the site, where people will register
+  const id = guidGenerator()
 
   const socket = socketClient(socketUrl)
   socket.on('connect', () => {
-    socket.emit('participant_register', { maxParticipants, maxTime, processDescription })
-  })
-  socket.on('participant_register_url', data => {
+    socket.emit('participant_register', { id, maxParticipants, maxTime, processDescription })
     output.send({
-      register_url: data
+      register_url: `${httpUrl}/register/${id}`
     })
   })
   // single one
@@ -46,9 +59,14 @@ exports.getComponent = () => {
   c.icon = 'compress'
 
   /* IN PORTS */
+  c.inPorts.add('http_url', {
+    datatype: 'string',
+    description: 'the http url used to determine the address for the register page',
+    required: true
+  })
   c.inPorts.add('socket_url', {
     datatype: 'string',
-    description: 'the http url with websockets to connect to run this function',
+    description: 'the url with websocket protocol to connect to run this function',
     required: true
   })
   c.inPorts.add('max_time', {
@@ -76,7 +94,7 @@ exports.getComponent = () => {
     datatype: 'object' // ContactableConfig
   })
   c.outPorts.add('results', {
-    datatype: 'array'
+    datatype: 'array' // ContactableConfig[]
   })
 
   /* DEFINE PROCESS */
