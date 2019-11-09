@@ -86,23 +86,23 @@ Components are little modules of code. These operations can either be very quick
 A component can do whatever it takes to ingest and coordinate this human input, which will very likely involve standing up web servers, and other connection/protocol variants.
 
 At the time of writing, just a few components of interest have been developed, that are made to be plug and play with one another.
-- [CollectResponses](https://github.com/rapid-sensemaking-framework/noflo-rsf/blob/master/components/CollectResponses.js)
+- [CollectResponses](https://github.com/rapid-sensemaking-framework/noflo-rsf/blob/master/ts-components/CollectResponses.ts)
     - for a prompt, collect statements numbering up to a given maximum (or unlimited) from a list of participants
     - ![rsf collect responses v0.0.31 screenshot](./screenshots/rsf-collect-responses-v0.0.31.png)
-- [ResponseForEach](https://github.com/rapid-sensemaking-framework/noflo-rsf/blob/master/components/ResponseForEach.js)
+- [ResponseForEach](https://github.com/rapid-sensemaking-framework/noflo-rsf/blob/master/ts-components/ResponseForEach.ts)
     - for a list/array of statements, collect a response or vote (from a limited number of valid options, or unlimited) for each from a list of participants
-- [PairwiseComparison](https://github.com/rapid-sensemaking-framework/noflo-rsf/blob/master/components/PairwiseComparison.js)
+- [PairwiseComparison](https://github.com/rapid-sensemaking-framework/noflo-rsf/blob/master/ts-components/PairwiseComparison.ts)
     - input: a list of statements, process: have all participants choose preferences between pairs of statements, return the list of compared/ranked results.
-- [CollectParticipants](https://github.com/rapid-sensemaking-framework/noflo-rsf/blob/master/components/CollectParticipants.js)
+- [CollectParticipants](https://github.com/rapid-sensemaking-framework/noflo-rsf/blob/master/ts-components/CollectParticipants.ts)
     - input: nothing, process: spin up a form on a webserver and collect peoples contact info that opt in to participate, output: a list of Contactable participantConfigs
     - ![rsf collect participants v0.0.13 screenshot](./screenshots/rsf-collect-participants-v0.0.13.png)
-- [FormatReactionsList](https://github.com/rapid-sensemaking-framework/noflo-rsf/blob/master/components/FormatReactionsList.js)
+- [FormatReactionsList](https://github.com/rapid-sensemaking-framework/noflo-rsf/blob/master/ts-components/FormatReactionsList.ts)
     - input: reactions list (from ResponseForEach), output: a string containing a nice, simple, human-readable version of the results
-- [FormatStatementList](https://github.com/rapid-sensemaking-framework/noflo-rsf/blob/master/components/FormatStatementList.js)
+- [FormatStatementList](https://github.com/rapid-sensemaking-framework/noflo-rsf/blob/master/ts-components/FormatStatementList.ts)
     - input: statement list, output: a string containing a nice, simple, human-readable version of the results
-- [SendMessageToAll](https://github.com/rapid-sensemaking-framework/noflo-rsf/blob/master/components/SendMessageToAll.js)
+- [SendMessageToAll](https://github.com/rapid-sensemaking-framework/noflo-rsf/blob/master/ts-components/SendMessageToAll.ts)
     - Send a given string to a list of given people (by contactableConfigs). Useful in a wide array of circumstances.
-- [SortPairwiseResults](https://github.com/rapid-sensemaking-framework/noflo-rsf/blob/master/components/SortPairwiseResults.js)
+- [SortPairwiseResults](https://github.com/rapid-sensemaking-framework/noflo-rsf/blob/master/ts-components/SortPairwiseResults.ts)
     - Take a list of `statements` and a list of votes from `PairwiseComparison` and sort the list by the votes.
     
 Lots of other Components have already been considered for implementation, for example
@@ -179,27 +179,27 @@ To get them fully implemented, please submit a PR to [rsf-contactable](https://g
 
 #### `constructor(id, name)`
 
-`id` : `String`, this value should represent the full information required to contact a person via the type of carrier it is over. For example, if `type` is `phone`, then `id` should be of the format `+12223334444`, but if `type` is `email` then `id` should be a valid email, e.g. `person@somesite.com`
+`id` : `string`, this value should represent the full information required to contact a person via the type of carrier it is over. For example, if `type` is `phone`, then `id` should be of the format `+12223334444`, but if `type` is `email` then `id` should be a valid email, e.g. `person@somesite.com`
 
-`name` : `String`, optional, a name which can be used throughout the Components at times to address the person in a more congenial way, during communications with them, if appropriate.
+`name` : `string`, optional, a name which can be used throughout the Components at times to address the person in a more congenial way, during communications with them, if appropriate.
 
-#### `.speak(text: String)`
+#### `.speak(text: string)`
 Send a string of text to the person represented by the given Contactable.
 
 **Todo**
 - [ ] update .speak API so that it returns a promise that resolves when confirmation that the message has successfully been sent and received occurs. this will allow finer control of flow important in modules.
 
-#### `.listen(callback(text: String))`
+#### `.listen(callback(text: string))`
 Set a function which will be called any time that the person represented sends a string of text back to the Component.
 
 #### `.stopListening()`
 Calling this will prevent any and all callbacks passed to `listen` from firing again. Should be called as cleanup after use.
 
 
-#### `.id` : `String`
+#### `.id` : `string`
 The `id` of the person given to the `constructor` function.
 
-#### `.name` : `String`
+#### `.name` : `string`
 The `name` of the person given to the `constructor` function.
 
 
