@@ -25,18 +25,18 @@ exports.getComponent = () => {
     const rankings = input.getData('rankings')
     // Process data and send output
     const withCounts = statements.map(statement => {
-        return {
-            ...statement,
-            count: rankings.filter(vote => vote.choices[vote.choice] === statement.text).length
-        }
+      return {
+        ...statement,
+        count: rankings.filter(vote => vote.choices[vote.choice] === statement.text).length
+      }
     })
-    
+
     const sorted = withCounts.sort((a, b) => {
       if (a.count > b.count) return -1
       else if (a.count === b.count) return 0
       else if (a.count < b.count) return 1
     })
-    
+
     output.send({
       sorted: sorted
     })

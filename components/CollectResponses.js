@@ -20,11 +20,11 @@ const coreLogic = (
   maxResponses,
   maxTime,
   prompt,
-  statementCb = () => {},
+  statementCb = () => { },
   maxResponsesText = DEFAULT_MAX_RESPONSES_TEXT,
   allCompletedText = DEFAULT_ALL_COMPLETED_TEXT,
   timeoutText = DEFAULT_TIMEOUT_TEXT
-  ) => {
+) => {
   return new Promise((resolve, reject) => {
     // array to store the results
     const results = []

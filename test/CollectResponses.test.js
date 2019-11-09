@@ -3,7 +3,7 @@ const sinon = require('sinon')
 const { coreLogic } = require('../components/CollectResponses')
 const { newMockMakeContactable } = require('rsf-contactable')
 
-describe('CollectResponses', function() {
+describe('CollectResponses', function () {
 
   context('when timeout is reached, regardless if no responses have been added', function () {
     it('should early exit and return 0 results', (done) => {
