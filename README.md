@@ -144,9 +144,9 @@ A `personConfig` object will be at a minimum something like:
 ```
 `"name"` is treated as an optional property
 
-At the time of writing, Components that use Contactables include [PairwiseComparison](https://github.com/rapid-sensemaking-framework/noflo-rapid-sensemaking/blob/master/components/PairwiseComparison.js), [CollectResponses](https://github.com/rapid-sensemaking-framework/noflo-rapid-sensemaking/blob/master/components/CollectResponses.js) and [ResponseForEach](https://github.com/rapid-sensemaking-framework/noflo-rapid-sensemaking/blob/master/components/ResponseForEach.js).
+At the time of writing, Components that use Contactables include [PairwiseComparison](https://github.com/rapid-sensemaking-framework/noflo-rapid-sensemaking/blob/master/ts-components/PairwiseComparison.ts), [CollectResponses](https://github.com/rapid-sensemaking-framework/noflo-rapid-sensemaking/blob/master/ts-components/CollectResponses.ts) and [ResponseForEach](https://github.com/rapid-sensemaking-framework/noflo-rapid-sensemaking/blob/master/ts-components/ResponseForEach.ts).
 
-There is a module that collect a `participantsConfig` array as an output, which can then be fed in to another module. That is [CollectParticipants](https://github.com/rapid-sensemaking-framework/noflo-rapid-sensemaking/blob/master/components/CollectParticipants.js).
+There is a module that collect a `participantsConfig` array as an output, which can then be fed in to another module. That is [ParticipantRegister](https://github.com/rapid-sensemaking-framework/noflo-rapid-sensemaking/blob/master/ts-components/ParticipantRegister.ts).
 
 ### Implementations So Far
 
@@ -183,16 +183,16 @@ To get them fully implemented, please submit a PR to [rsf-contactable](https://g
 
 `name` : `string`, optional, a name which can be used throughout the Components at times to address the person in a more congenial way, during communications with them, if appropriate.
 
-#### `.speak(text: string)`
+#### `.speak(text: string): Promise<void>`
 Send a string of text to the person represented by the given Contactable.
 
 **Todo**
 - [ ] update .speak API so that it returns a promise that resolves when confirmation that the message has successfully been sent and received occurs. this will allow finer control of flow important in modules.
 
-#### `.listen(callback(text: string))`
+#### `.listen(callback(text: string) => void): void`
 Set a function which will be called any time that the person represented sends a string of text back to the Component.
 
-#### `.stopListening()`
+#### `.stopListening(): void`
 Calling this will prevent any and all callbacks passed to `listen` from firing again. Should be called as cleanup after use.
 
 
