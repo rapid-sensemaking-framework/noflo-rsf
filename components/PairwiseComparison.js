@@ -148,7 +148,6 @@ var process = function (input, output) { return __awaiter(void 0, void 0, void 0
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                // Check preconditions on input data
                 if (!input.hasData('choice', 'statements', 'max_time', 'contactable_configs', 'bot_configs')) {
                     return [2 /*return*/];
                 }
@@ -171,23 +170,18 @@ var process = function (input, output) { return __awaiter(void 0, void 0, void 0
                 return [3 /*break*/, 4];
             case 3:
                 e_1 = _a.sent();
-                // Process data and send output
                 output.send({
                     error: e_1
                 });
-                // Deactivate
                 output.done();
                 return [2 /*return*/];
             case 4:
                 _a.trys.push([4, 6, , 7]);
                 return [4 /*yield*/, coreLogic(contactables, statements, choice, maxTime, function (pairwiseVote) {
                         output.send({ pairwise_vote: pairwiseVote });
-                    }, maxResponsesText, allCompletedText, timeoutText, invalidResponseText)
-                    // Process data and send output
-                ];
+                    }, maxResponsesText, allCompletedText, timeoutText, invalidResponseText)];
             case 5:
                 results = _a.sent();
-                // Process data and send output
                 output.send({
                     results: results
                 });
@@ -198,12 +192,9 @@ var process = function (input, output) { return __awaiter(void 0, void 0, void 0
                     error: e_2
                 });
                 return [3 /*break*/, 7];
-            case 7: return [4 /*yield*/, rsf_contactable_1.shutdown()
-                // Deactivate
-            ];
+            case 7: return [4 /*yield*/, rsf_contactable_1.shutdown()];
             case 8:
                 _a.sent();
-                // Deactivate
                 output.done();
                 return [2 /*return*/];
         }

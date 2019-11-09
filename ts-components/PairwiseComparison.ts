@@ -113,7 +113,6 @@ const coreLogic = async (
 
 const process = async (input, output) => {
 
-  // Check preconditions on input data
   if (!input.hasData('choice', 'statements', 'max_time', 'contactable_configs', 'bot_configs')) {
     return
   }
@@ -133,11 +132,9 @@ const process = async (input, output) => {
     await contactableInit(whichToInit(contactableConfigs), botConfigs)
     contactables = contactableConfigs.map(makeContactable)
   } catch (e) {
-    // Process data and send output
     output.send({
       error: e
     })
-    // Deactivate
     output.done()
     return
   }
@@ -156,7 +153,6 @@ const process = async (input, output) => {
       timeoutText,
       invalidResponseText
     )
-    // Process data and send output
     output.send({
       results
     })
@@ -166,7 +162,6 @@ const process = async (input, output) => {
     })
   }
   await contactableShutdown()
-  // Deactivate
   output.done()
 }
 

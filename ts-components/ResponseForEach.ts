@@ -6,7 +6,7 @@ import {
   Option,
   Reaction
 } from 'rsf-types'
-import { init as contactableInit, makeContactable, shutdown } from 'rsf-contactable'
+import { init as contactableInit, makeContactable, shutdown as contactableShutdown } from 'rsf-contactable'
 import {
   DEFAULT_ALL_COMPLETED_TEXT,
   DEFAULT_INVALID_RESPONSE_TEXT,
@@ -114,12 +114,10 @@ const coreLogic = async (
 
 const process = async (input, output) => {
 
-  // Check preconditions on input data
   if (!input.hasData('options', 'statements', 'max_time', 'contactable_configs', 'bot_configs')) {
     return
   }
 
-  // Read packets we need to process
   const maxTime: number = input.getData('max_time')
   const options: Option[] = input.getData('options')
   const statements: Statement[] = input.getData('statements').slice(0) // make sure that this array is its own
@@ -135,11 +133,9 @@ const process = async (input, output) => {
     await contactableInit(whichToInit(contactableConfigs), botConfigs)
     contactables = contactableConfigs.map(makeContactable)
   } catch (e) {
-    // Process data and send output
     output.send({
       error: e
     })
-    // Deactivate
     output.done()
     return
   }
@@ -158,7 +154,6 @@ const process = async (input, output) => {
       timeoutText,
       invalidResponseText
     )
-    // Process data and send output
     output.send({
       results
     })
@@ -167,8 +162,7 @@ const process = async (input, output) => {
       error: e
     })
   }
-  await shutdown() // rsf-contactable
-  // Deactivate
+  await contactableShutdown()
   output.done()
 }
 

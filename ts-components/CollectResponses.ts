@@ -1,14 +1,16 @@
 import noflo from 'noflo'
-import { init as contactableInit, makeContactable, shutdown } from 'rsf-contactable'
+import { init as contactableInit, makeContactable, shutdown as contactableShutdown } from 'rsf-contactable'
 import {
   DEFAULT_ALL_COMPLETED_TEXT,
   DEFAULT_TIMEOUT_TEXT,
   whichToInit,
-  collectFromContactables
+  collectFromContactables,
+  timer
 } from '../libs/shared'
+import { ContactableConfig, Contactable, Statement } from 'rsf-types'
 
 const DEFAULT_MAX_RESPONSES_TEXT = `You've reached the limit of responses. Thanks for participating. You will be notified when everyone has completed.`
-const rulesText = (maxTime, maxResponses) => 'Contribute one response per message. ' +
+const rulesText = (maxTime: number, maxResponses: number) => 'Contribute one response per message. ' +
   `You can contribute up to ${maxResponses} responses. ` +
   `The process will stop automatically after ${maxTime} seconds.`
 
@@ -16,56 +18,72 @@ const rulesText = (maxTime, maxResponses) => 'Contribute one response per messag
 // from each person, and that the process will guaranteed last until the maxTime comes to pass
 const UNLIMITED_CHAR = '*'
 
+const defaultStatementCb = (statement: Statement): void => { }
+
 const coreLogic = async (
-  contactables,
-  maxResponses,
-  maxTime,
-  prompt,
-  statementCb = (newResult) => { },
+  contactables: Contactable[],
+  maxResponses: number,
+  maxTime: number,
+  prompt: string,
+  statementCb: (statement: Statement) => void = defaultStatementCb,
   maxResponsesText = DEFAULT_MAX_RESPONSES_TEXT,
   allCompletedText = DEFAULT_ALL_COMPLETED_TEXT,
   timeoutText = DEFAULT_TIMEOUT_TEXT
-) => {
+): Promise<Statement[]> => {
   // initiate contact with each person
   // and set context, and "rules"
-  contactables.forEach(contactable => {
-    contactable.speak(prompt)
-    setTimeout(() => contactable.speak(rulesText(maxTime, maxResponses)), 500)
+  contactables.forEach(async (contactable) => {
+    await contactable.speak(prompt)
+    await timer(500)
+    await contactable.speak(rulesText(maxTime, maxResponses))
   })
+
+  const validate = () => true
+  const onInvalid = () => {}
+  const isPersonalComplete = (personalResultsSoFar: Statement[]) => {
+    return personalResultsSoFar.length === maxResponses
+  }
+  const onPersonalComplete = (personalResultsSoFar: Statement[], contactable: Contactable) => {
+    contactable.speak(maxResponsesText)
+  }
+  const convertToResult = (msg: string, personalResultsSoFar: Statement[], contactable: Contactable) => {
+    return { text: msg, id: contactable.id, timestamp: Date.now() }
+  }
+  const onResult = statementCb
+  const isTotalComplete = (allResultsSoFar: Statement[]) => {
+    return allResultsSoFar.length === contactables.length * maxResponses
+  }
+
   const { timeoutComplete, results } = await collectFromContactables(
     contactables,
     maxTime,
-    (msg: string) => true, // validate
-    (msg: string) => {}, // onInvalid
-    (personalResultsSoFar: any[]) => personalResultsSoFar.length === maxResponses, // isPersonalComplete
-    (personalResultsSoFar: any[], contactable) => { contactable.speak(maxResponsesText) }, // onPersonalComplete
-    (msg: string, personalResultsSoFar: any[], contactable: any) => ({ text: msg, id: contactable.id, timestamp: Date.now() }), // convertToResult
-    statementCb, // onResult
-    (allResultsSoFar: any[]) => allResultsSoFar.length === contactables.length * maxResponses // isTotalComplete
+    validate,
+    onInvalid,
+    isPersonalComplete,
+    onPersonalComplete,
+    convertToResult,
+    onResult,
+    isTotalComplete
   )
   await Promise.all(contactables.map(contactable => contactable.speak(timeoutComplete ? timeoutText : allCompletedText)))
   return results
 }
 
-
 const process = async (input, output) => {
 
-  // Check preconditions on input data
   if (!input.hasData('max_responses', 'prompt', 'contactable_configs', 'max_time', 'bot_configs')) {
     return
   }
 
-  console.log('collect responses starting')
-
-  // Read packets we need to process
-  let maxResponses = input.getData('max_responses')
-  const maxTime = input.getData('max_time')
-  const prompt = input.getData('prompt')
+  const maxResponsesInput = input.getData('max_responses')
+  const maxResponses: number = maxResponsesInput === UNLIMITED_CHAR ? Infinity : maxResponsesInput
+  const maxTime: number = input.getData('max_time')
+  const prompt: string = input.getData('prompt')
   const botConfigs = input.getData('bot_configs')
-  const contactableConfigs = input.getData('contactable_configs')
-  const maxResponsesText = input.getData('max_responses_text')
-  const allCompletedText = input.getData('all_completed_text')
-  const timeoutText = input.getData('timeout_text')
+  const contactableConfigs: ContactableConfig[] = input.getData('contactable_configs')
+  const maxResponsesText: string | undefined = input.getData('max_responses_text')
+  const allCompletedText: string | undefined = input.getData('all_completed_text')
+  const timeoutText: string | undefined = input.getData('timeout_text')
 
   let contactables
   try {
@@ -73,17 +91,11 @@ const process = async (input, output) => {
     contactables = contactableConfigs.map(makeContactable)
   } catch (e) {
     console.log('error initializing contactables', e)
-    // Process data and send output
     output.send({
       error: e
     })
-    // Deactivate
     output.done()
     return
-  }
-
-  if (!maxResponses || maxResponses === UNLIMITED_CHAR) {
-    maxResponses = Infinity
   }
 
   try {
@@ -92,12 +104,13 @@ const process = async (input, output) => {
       maxResponses,
       maxTime,
       prompt,
-      (statement) => { output.send({ statement }) },
+      (statement) => {
+        output.send({ statement })
+      },
       maxResponsesText,
       allCompletedText,
       timeoutText
     )
-    // Process data and send output
     output.send({
       results
     })
@@ -106,9 +119,7 @@ const process = async (input, output) => {
       error: e
     })
   }
-  console.log('calling rsf-contactable shutdown from CollectResponses')
-  await shutdown() // rsf-contactable
-  // Deactivate
+  await contactableShutdown()
   output.done()
 }
 
@@ -121,8 +132,8 @@ const getComponent = () => {
 
   /* IN PORTS */
   c.inPorts.add('max_responses', {
-    datatype: 'all',
-    description: 'the number of responses to stop collecting at, don\'t set or use "*" for any amount',
+    datatype: 'all', // string or number
+    description: 'the number of responses to stop collecting at, use "*" for any amount',
     required: true
   })
   c.inPorts.add('max_time', {
@@ -136,7 +147,7 @@ const getComponent = () => {
     required: true
   })
   c.inPorts.add('contactable_configs', {
-    datatype: 'array',
+    datatype: 'array', // rsf-types/ContactableConfig[]
     description: 'an array of rsf-contactable compatible config objects',
     required: true
   })
@@ -160,10 +171,10 @@ const getComponent = () => {
 
   /* OUT PORTS */
   c.outPorts.add('statement', {
-    datatype: 'object'
+    datatype: 'object' // rsf-types/Statement
   })
   c.outPorts.add('results', {
-    datatype: 'array'
+    datatype: 'array' // rsf-types/Statement[]
   })
   c.outPorts.add('error', {
     datatype: 'all'
