@@ -1,0 +1,8 @@
+{
+  "files": [],
+  "include": [],
+  "references": [
+      { "path": "./ts-components" },
+      { "path": "./ts-libs" }
+  ]
+}

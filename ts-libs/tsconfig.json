@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "outDir": "../libs",
+    "composite": true
+  },
+  "include": [
+    "shared.ts"
+  ]
+}

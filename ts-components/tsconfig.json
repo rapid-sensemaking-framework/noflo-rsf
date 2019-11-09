@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "outDir": "../components"
+  },
+  "include": [
+    "*"
+  ],
+  "references": [
+    {
+      "path": "../ts-libs"
+    }
+  ]
+}
