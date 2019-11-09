@@ -1,16 +1,115 @@
 import noflo from 'noflo'
-import { init as contactableInit, makeContactable, shutdown } from 'rsf-contactable'
+import { init as contactableInit, makeContactable, shutdown as contactableShutdown } from 'rsf-contactable'
 import {
   DEFAULT_ALL_COMPLETED_TEXT,
   DEFAULT_INVALID_RESPONSE_TEXT,
   DEFAULT_MAX_RESPONSES_TEXT,
   DEFAULT_TIMEOUT_TEXT,
   rulesText,
-  whichToInit
+  whichToInit,
+  collectFromContactables,
+  timer
 } from '../libs/shared'
+import { Contactable, Statement, ContactableConfig, PairwiseVote, PairwiseChoice } from 'rsf-types'
 
-// define other constants or creator functions
-// of the strings for user interaction here
+const defaultPairwiseVoteCb = (pairwiseVote: PairwiseVote) => { }
+
+const formatPairwiseChoice = (numPerPerson: number, numSoFar: number, pairwiseChoice: PairwiseChoice) => {
+  return `(${numPerPerson - 1 - numSoFar} remaining)
+A) ${pairwiseChoice['A'].text}
+1) ${pairwiseChoice['1'].text}`
+}
+
+const coreLogic = async (
+  contactables: Contactable[],
+  statements: Statement[],
+  choice: string,
+  maxTime: number,
+  pairwiseVoteCb: (pairwiseVote: PairwiseVote) => void = defaultPairwiseVoteCb,
+  maxResponsesText: string = DEFAULT_MAX_RESPONSES_TEXT,
+  allCompletedText: string = DEFAULT_ALL_COMPLETED_TEXT,
+  timeoutText: string = DEFAULT_TIMEOUT_TEXT,
+  invalidResponseText: string = DEFAULT_INVALID_RESPONSE_TEXT
+): Promise<PairwiseVote[]> => {
+
+  // create a list of all the pairs
+  const pairsTexts: PairwiseChoice[] = []
+  statements.forEach((statement: Statement, index: number) => {
+    for (let i: number = index + 1; i < statements.length; i++) {
+      let pairedStatement = statements[i]
+      // use A and 1 to try to minimize preference
+      // bias for 1 vs 2, or A vs B
+      pairsTexts.push({
+        A: statement,
+        1: pairedStatement
+      })
+    }
+  })
+
+  // initiate contact with each person
+  // and set context, and "rules"
+  contactables.forEach(async (contactable: Contactable): Promise<void> => {
+    await contactable.speak(rulesText(maxTime))
+    await timer(500)
+    await contactable.speak(choice)
+    // send the first one
+    if (statements.length) {
+      await timer(500)
+      const first = formatPairwiseChoice(pairsTexts.length, 0, pairsTexts[0])
+      await contactable.speak(first)
+    }
+  })
+
+  const validate = (text: string): boolean => {
+    return text === '1' || text === 'A' || text === 'a'
+  }
+  const onInvalid = (msg: string, contactable: Contactable): void => {
+    contactable.speak(invalidResponseText)
+  }
+  const isPersonalComplete = (personalResultsSoFar: PairwiseVote[]): boolean => {
+    return personalResultsSoFar.length === pairsTexts.length
+  }
+  const onPersonalComplete = (personalResultsSoFar: PairwiseVote[], contactable: Contactable): void => {
+    contactable.speak(maxResponsesText)
+  }
+  const convertToResult = (msg: string, personalResultsSoFar: PairwiseVote[], contactable: any): PairwiseVote => {
+    const responsesSoFar = personalResultsSoFar.length
+    return {
+      choices: pairsTexts[responsesSoFar],
+      choice: msg.toUpperCase(),
+      id: contactable.id,
+      timestamp: Date.now()
+    }
+  }
+  const onResult = (pairwiseVote: PairwiseVote, personalResultsSoFar: PairwiseVote[], contactable: Contactable): void => {
+    // each time it gets one, send the next one
+    // until they're all responded to!
+    const responsesSoFar = personalResultsSoFar.length
+    if (pairsTexts[responsesSoFar]) {
+      const next = formatPairwiseChoice(pairsTexts.length, responsesSoFar, pairsTexts[responsesSoFar])
+      contactable.speak(next)
+    }
+    pairwiseVoteCb(pairwiseVote)
+  }
+  const isTotalComplete = (allResultsSoFar: PairwiseVote[]): boolean => {
+    // exit when everyone has responded to everything
+    return allResultsSoFar.length === contactables.length * pairsTexts.length
+  }
+
+  const { timeoutComplete, results }: { timeoutComplete: boolean, results: PairwiseVote[] } = await collectFromContactables(
+    contactables,
+    maxTime,
+    validate,
+    onInvalid,
+    isPersonalComplete,
+    onPersonalComplete,
+    convertToResult,
+    onResult,
+    isTotalComplete
+  )
+  await Promise.all(contactables.map((contactable: Contactable): Promise<void> => contactable.speak(timeoutComplete ? timeoutText : allCompletedText)))
+  return results
+}
 
 const process = async (input, output) => {
 
@@ -19,18 +118,17 @@ const process = async (input, output) => {
     return
   }
 
-  // Read packets we need to process
-  const choice = input.getData('choice')
-  const statements = input.getData('statements')
-  const maxTime = input.getData('max_time')
+  const choice: string = input.getData('choice')
+  const statements: Statement[] = input.getData('statements')
+  const maxTime: number = input.getData('max_time')
   const botConfigs = input.getData('bot_configs')
-  const contactableConfigs = input.getData('contactable_configs')
-  const maxResponsesText = input.getData('max_responses_text')
-  const allCompletedText = input.getData('all_completed_text')
-  const invalidResponseText = input.getData('invalid_response_text')
-  const timeoutText = input.getData('timeout_text')
+  const contactableConfigs: ContactableConfig[] = input.getData('contactable_configs')
+  const maxResponsesText: string = input.getData('max_responses_text')
+  const allCompletedText: string = input.getData('all_completed_text')
+  const invalidResponseText: string = input.getData('invalid_response_text')
+  const timeoutText: string = input.getData('timeout_text')
 
-  let contactables
+  let contactables: Contactable[]
   try {
     await contactableInit(whichToInit(contactableConfigs), botConfigs)
     contactables = contactableConfigs.map(makeContactable)
@@ -44,123 +142,32 @@ const process = async (input, output) => {
     return
   }
 
-  // array to store the results
-  const results = []
-
-  // number of results to expect, per contactable
-  // the number of possible pairs
-  const n = statements.length
-  const numPerPerson = n * (n - 1) / 2
-
-  // stop the process after a maximum amount of time
-  const timeoutId = setTimeout(() => {
-    // complete, saving whatever results we have
-    complete(timeoutText || DEFAULT_TIMEOUT_TEXT)
-  }, maxTime * 1000)
-
-  // setup a completion handler that
-  // can only fire once
-  let calledComplete = false
-  const complete = async (completionText) => {
-    if (!calledComplete) {
-      // It is good practice to inform participants the process is ending
-      contactables.forEach(contactable => contactable.speak(completionText))
-      clearTimeout(timeoutId)
-      calledComplete = true
-      contactables.forEach(contactable => contactable.stopListening())
-      await shutdown() // rsf-contactable
-      // Process data and send output
-      output.send({
-        results
-      })
-      // Deactivate
-      output.done()
-    }
-  }
-
-  // a function to check the validity of a response
-  // according to the options
-  const validResponse = (text) => {
-    return text === '1' || text === 'A' || text === 'a'
-  }
-
-  // a function to check the completion conditions
-  const checkCompletionCondition = () => {
-    // exit when everyone has responded to everything
-    if (results.length === contactables.length * numPerPerson) {
-      complete(allCompletedText || DEFAULT_ALL_COMPLETED_TEXT)
-    }
-  }
-
-  // create a list of all the pairs
-  const pairsTexts = []
-  statements.forEach((statement, index) => {
-    for (let i = index + 1; i < statements.length; i++) {
-      let pairedStatement = statements[i]
-      // use A and 1 to try to minimize preference
-      // bias for 1 vs 2, or A vs B
-      pairsTexts.push({
-        A: statement.text,
-        1: pairedStatement.text
-      })
-    }
-  })
-
-  // The "rules" of the game should be conveyed here
-  // Make sure people fully understand the process
-  contactables.forEach(contactable => {
-
-    // initiate contact with the person
-    // and set context, and "rules"
-    // contactable.speak(prompt)
-    contactable.speak(rulesText(maxTime))
-    setTimeout(() => {
-      contactable.speak(choice)
-    }, 500)
-
-    // send them one message per pair,
-    // awaiting their response before sending the next
-    let responseCount = 0
-    const nextText = () => {
-      return `(${numPerPerson - 1 - responseCount} remaining)
-A) ${pairsTexts[responseCount]['A']}
-1) ${pairsTexts[responseCount]['1']}`
-    }
-    contactable.listen(text => {
-      // do we still accept this response?
-      if (responseCount < numPerPerson) {
-        if (!validResponse(text)) {
-          contactable.speak(invalidResponseText || DEFAULT_INVALID_RESPONSE_TEXT)
-          return
-        }
-        results.push({
-          choices: pairsTexts[responseCount],
-          choice: text.toUpperCase(),
-          id: contactable.id,
-          timestamp: Date.now()
-        })
-        responseCount++
-      }
-
-      // is there anything else we should say?
-      if (responseCount === numPerPerson) {
-        // remind them they've responded to everything
-        contactable.speak(maxResponsesText || DEFAULT_MAX_RESPONSES_TEXT)
-      } else {
-        // still haven't reached the end,
-        // so send the next one
-        contactable.speak(nextText())
-      }
-
-      // are we done?
-      checkCompletionCondition()
+  try {
+    const results: PairwiseVote[] = await coreLogic(
+      contactables,
+      statements,
+      choice,
+      maxTime,
+      (pairwiseVote: PairwiseVote): void => {
+        output.send({ pairwise_vote: pairwiseVote })
+      },
+      maxResponsesText,
+      allCompletedText,
+      timeoutText,
+      invalidResponseText
+    )
+    // Process data and send output
+    output.send({
+      results
     })
-    // send the first one
-    setTimeout(() => {
-      contactable.speak(nextText())
-    }, 1000)
-
-  })
+  } catch (e) {
+    output.send({
+      error: e
+    })
+  }
+  await contactableShutdown()
+  // Deactivate
+  output.done()
 }
 
 const getComponent = () => {
@@ -177,7 +184,7 @@ const getComponent = () => {
     required: true
   })
   c.inPorts.add('statements', {
-    datatype: 'array',
+    datatype: 'array', // rsf-types/Statement[]
     description: 'the list of statements (as objects with property "text") to create all possible pairs out of, and make choices between',
     required: true
   })
@@ -187,7 +194,7 @@ const getComponent = () => {
     required: true
   })
   c.inPorts.add('contactable_configs', {
-    datatype: 'array',
+    datatype: 'array', // rsf-types/ContactableConfig[]
     description: 'an array of rsf-contactable compatible config objects',
     required: true
   })
@@ -214,19 +221,11 @@ const getComponent = () => {
   })
 
   /* OUT PORTS */
-
+  c.outPorts.add('pairwise_vote', {
+    datatype: 'object' // rsf-types/PairwiseVote
+  })
   c.outPorts.add('results', {
-    datatype: 'array'
-    /*
-    RESULTS:
-    [Choice], array of Choice
-    Choice.choices : ChoiceObject, the choices being chosen between
-    ChoiceObject.A : String, the text of the choice associated with key A
-    ChoiceObject.1 : String, the text of the choice associated with key 1
-    Choice.choice : String, 1 or A, whichever was chosen
-    Choice.id : String, the id of the contactable who chose
-    Choice.timestamp : Number, the unix timestamp specifying when the choice was made
-    */
+    datatype: 'array' // rsf-types/PairwiseVote[]
   })
   c.outPorts.add('error', {
     datatype: 'all'
@@ -240,5 +239,6 @@ const getComponent = () => {
 }
 
 export {
+  coreLogic,
   getComponent
 }

@@ -7,7 +7,11 @@ describe('CollectResponses', function () {
 
   context('when timeout is reached, regardless if no responses have been added', function () {
     it('should early exit and return 0 results', (done) => {
-      coreLogic([], 2, 1, '').then(results => {
+      const contactables = []
+      const maxResponses = 2
+      const maxSeconds = 1
+      const prompt = ''
+      coreLogic(contactables, maxResponses, maxSeconds, prompt).then(results => {
         expect(results.length).to.equal(0)
         done()
       })
@@ -20,7 +24,8 @@ describe('CollectResponses', function () {
       const contactables = [{ id: 'dude' }].map(mockMakeContactable)
       const maxResponses = 2
       const maxSeconds = 4
-      coreLogic(contactables, maxResponses, maxSeconds, '').then(results => {
+      const prompt = ''
+      coreLogic(contactables, maxResponses, maxSeconds, prompt).then(results => {
         expect(results.length).to.equal(2)
         expect(results[0].text).to.equal('hi')
         expect(results[1].text).to.equal('hi again')
@@ -37,7 +42,8 @@ describe('CollectResponses', function () {
       const contactables = [{ id: 'p1' }, { id: 'p2' }].map(mockMakeContactable)
       const maxResponses = 2
       const maxSeconds = 4
-      coreLogic(contactables, maxResponses, maxSeconds, '').then(results => {
+      const prompt = ''
+      coreLogic(contactables, maxResponses, maxSeconds, prompt).then(results => {
         expect(results.length).to.equal(4)
         expect(results[0].text).to.equal('hi')
         expect(results[1].text).to.equal('hi again')
@@ -58,7 +64,8 @@ describe('CollectResponses', function () {
       const contactables = [{ id: 'dude' }].map(mockMakeContactable)
       const maxResponses = 3
       const maxSeconds = 1
-      coreLogic(contactables, maxResponses, maxSeconds, 'prompt').then(() => {
+      const prompt = 'prompt'
+      coreLogic(contactables, maxResponses, maxSeconds, prompt).then(() => {
         const spoken = contactables[0].speak
         expect(spoken.getCall(0).args[0]).to.equal('prompt')
         expect(spoken.getCall(1).args[0]).to.equal('Contribute one response per message. You can contribute up to 3 responses. The process will stop automatically after 1 seconds.')

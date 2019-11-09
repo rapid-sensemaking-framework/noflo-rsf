@@ -3,15 +3,14 @@ const sinon = require('sinon')
 const { coreLogic } = require('../components/ResponseForEach')
 const { newMockMakeContactable } = require('rsf-contactable')
 
-
 describe('ResponseForEach', () => {
   context('when timeout is reached, regardless if no responses have been added', function () {
     it('should early exit and return 0 results', done => {
       const contactables = []
       const statements = []
       const options = []
-      const maxTime = 1 // seconds
-      coreLogic(contactables, statements, options, maxTime).then(results => {
+      const maxSeconds = 1
+      coreLogic(contactables, statements, options, maxSeconds).then(results => {
         expect(results.length).to.equal(0)
         done()
       })
@@ -40,8 +39,8 @@ describe('ResponseForEach', () => {
           triggers: ['d']
         }
       ]
-      const maxTime = 1 // seconds
-      coreLogic(contactables, statements, options, maxTime).then(results => {
+      const maxSeconds = 1
+      coreLogic(contactables, statements, options, maxSeconds).then(results => {
         expect(results.length).to.equal(contactables.length * statements.length) // 4
         done()
       })

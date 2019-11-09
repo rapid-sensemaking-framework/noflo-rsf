@@ -74,19 +74,26 @@ var coreLogic = function (contactables, statements, options, maxTime, reactionCb
                     contactables.forEach(function (contactable) { return __awaiter(void 0, void 0, void 0, function () {
                         return __generator(this, function (_a) {
                             switch (_a.label) {
-                                case 0:
-                                    contactable.speak(shared_1.rulesText(maxTime));
-                                    return [4 /*yield*/, shared_1.timer(500)];
+                                case 0: return [4 /*yield*/, contactable.speak(shared_1.rulesText(maxTime))];
                                 case 1:
                                     _a.sent();
-                                    contactable.speak(giveOptionsText(options));
-                                    if (!statements.length) return [3 /*break*/, 3];
                                     return [4 /*yield*/, shared_1.timer(500)];
                                 case 2:
                                     _a.sent();
-                                    contactable.speak("(" + (statements.length - 1) + " remaining) " + statements[0].text);
-                                    _a.label = 3;
-                                case 3: return [2 /*return*/];
+                                    return [4 /*yield*/, contactable.speak(giveOptionsText(options))
+                                        // send the first one
+                                    ];
+                                case 3:
+                                    _a.sent();
+                                    if (!statements.length) return [3 /*break*/, 6];
+                                    return [4 /*yield*/, shared_1.timer(500)];
+                                case 4:
+                                    _a.sent();
+                                    return [4 /*yield*/, contactable.speak("(" + (statements.length - 1) + " remaining) " + statements[0].text)];
+                                case 5:
+                                    _a.sent();
+                                    _a.label = 6;
+                                case 6: return [2 /*return*/];
                             }
                         });
                     }); });
@@ -199,11 +206,9 @@ var process = function (input, output) { return __awaiter(void 0, void 0, void 0
                     error: e_2
                 });
                 return [3 /*break*/, 7];
-            case 7:
-                console.log('calling rsf-contactable shutdown from CollectResponses');
-                return [4 /*yield*/, rsf_contactable_1.shutdown()
-                    // Deactivate
-                ]; // rsf-contactable
+            case 7: return [4 /*yield*/, rsf_contactable_1.shutdown()
+                // Deactivate
+            ]; // rsf-contactable
             case 8:
                 _a.sent(); // rsf-contactable
                 // Deactivate
@@ -260,19 +265,11 @@ var getComponent = function () {
         description: 'msg override: the message sent to all participants when the process completes because the timeout is reached'
     });
     /* OUT PORTS */
-    /*
-        [Response], array of the responses collected
-        Response.statement : Statement, the same as the Statement objects given
-        Response.response : String, the text of the selected option
-        Response.responseTrigger : String, the original text of the response
-        Response.id : String, the id of the agent who gave the response
-        Response.timestamp : Number, the unix timestamp of the moment the message was received
-        */
     c.outPorts.add('reaction', {
-        datatype: 'object'
+        datatype: 'object' // rsf-types/Reaction
     });
     c.outPorts.add('results', {
-        datatype: 'array'
+        datatype: 'array' // rsf-types/Reaction[]
     });
     c.outPorts.add('error', {
         datatype: 'all'

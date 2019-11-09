@@ -39,10 +39,112 @@ exports.__esModule = true;
 var noflo_1 = require("noflo");
 var rsf_contactable_1 = require("rsf-contactable");
 var shared_1 = require("../libs/shared");
-// define other constants or creator functions
-// of the strings for user interaction here
+var defaultPairwiseVoteCb = function (pairwiseVote) { };
+var formatPairwiseChoice = function (numPerPerson, numSoFar, pairwiseChoice) {
+    return "(" + (numPerPerson - 1 - numSoFar) + " remaining)\nA) " + pairwiseChoice['A'].text + "\n1) " + pairwiseChoice['1'].text;
+};
+var coreLogic = function (contactables, statements, choice, maxTime, pairwiseVoteCb, maxResponsesText, allCompletedText, timeoutText, invalidResponseText) {
+    if (pairwiseVoteCb === void 0) { pairwiseVoteCb = defaultPairwiseVoteCb; }
+    if (maxResponsesText === void 0) { maxResponsesText = shared_1.DEFAULT_MAX_RESPONSES_TEXT; }
+    if (allCompletedText === void 0) { allCompletedText = shared_1.DEFAULT_ALL_COMPLETED_TEXT; }
+    if (timeoutText === void 0) { timeoutText = shared_1.DEFAULT_TIMEOUT_TEXT; }
+    if (invalidResponseText === void 0) { invalidResponseText = shared_1.DEFAULT_INVALID_RESPONSE_TEXT; }
+    return __awaiter(void 0, void 0, void 0, function () {
+        var pairsTexts, validate, onInvalid, isPersonalComplete, onPersonalComplete, convertToResult, onResult, isTotalComplete, _a, timeoutComplete, results;
+        return __generator(this, function (_b) {
+            switch (_b.label) {
+                case 0:
+                    pairsTexts = [];
+                    statements.forEach(function (statement, index) {
+                        for (var i = index + 1; i < statements.length; i++) {
+                            var pairedStatement = statements[i];
+                            // use A and 1 to try to minimize preference
+                            // bias for 1 vs 2, or A vs B
+                            pairsTexts.push({
+                                A: statement,
+                                1: pairedStatement
+                            });
+                        }
+                    });
+                    // initiate contact with each person
+                    // and set context, and "rules"
+                    contactables.forEach(function (contactable) { return __awaiter(void 0, void 0, void 0, function () {
+                        var first;
+                        return __generator(this, function (_a) {
+                            switch (_a.label) {
+                                case 0: return [4 /*yield*/, contactable.speak(shared_1.rulesText(maxTime))];
+                                case 1:
+                                    _a.sent();
+                                    return [4 /*yield*/, shared_1.timer(500)];
+                                case 2:
+                                    _a.sent();
+                                    return [4 /*yield*/, contactable.speak(choice)
+                                        // send the first one
+                                    ];
+                                case 3:
+                                    _a.sent();
+                                    if (!statements.length) return [3 /*break*/, 6];
+                                    return [4 /*yield*/, shared_1.timer(500)];
+                                case 4:
+                                    _a.sent();
+                                    first = formatPairwiseChoice(pairsTexts.length, 0, pairsTexts[0]);
+                                    return [4 /*yield*/, contactable.speak(first)];
+                                case 5:
+                                    _a.sent();
+                                    _a.label = 6;
+                                case 6: return [2 /*return*/];
+                            }
+                        });
+                    }); });
+                    validate = function (text) {
+                        return text === '1' || text === 'A' || text === 'a';
+                    };
+                    onInvalid = function (msg, contactable) {
+                        contactable.speak(invalidResponseText);
+                    };
+                    isPersonalComplete = function (personalResultsSoFar) {
+                        return personalResultsSoFar.length === pairsTexts.length;
+                    };
+                    onPersonalComplete = function (personalResultsSoFar, contactable) {
+                        contactable.speak(maxResponsesText);
+                    };
+                    convertToResult = function (msg, personalResultsSoFar, contactable) {
+                        var responsesSoFar = personalResultsSoFar.length;
+                        return {
+                            choices: pairsTexts[responsesSoFar],
+                            choice: msg.toUpperCase(),
+                            id: contactable.id,
+                            timestamp: Date.now()
+                        };
+                    };
+                    onResult = function (pairwiseVote, personalResultsSoFar, contactable) {
+                        // each time it gets one, send the next one
+                        // until they're all responded to!
+                        var responsesSoFar = personalResultsSoFar.length;
+                        if (pairsTexts[responsesSoFar]) {
+                            var next = formatPairwiseChoice(pairsTexts.length, responsesSoFar, pairsTexts[responsesSoFar]);
+                            contactable.speak(next);
+                        }
+                        pairwiseVoteCb(pairwiseVote);
+                    };
+                    isTotalComplete = function (allResultsSoFar) {
+                        // exit when everyone has responded to everything
+                        return allResultsSoFar.length === contactables.length * pairsTexts.length;
+                    };
+                    return [4 /*yield*/, shared_1.collectFromContactables(contactables, maxTime, validate, onInvalid, isPersonalComplete, onPersonalComplete, convertToResult, onResult, isTotalComplete)];
+                case 1:
+                    _a = _b.sent(), timeoutComplete = _a.timeoutComplete, results = _a.results;
+                    return [4 /*yield*/, Promise.all(contactables.map(function (contactable) { return contactable.speak(timeoutComplete ? timeoutText : allCompletedText); }))];
+                case 2:
+                    _b.sent();
+                    return [2 /*return*/, results];
+            }
+        });
+    });
+};
+exports.coreLogic = coreLogic;
 var process = function (input, output) { return __awaiter(void 0, void 0, void 0, function () {
-    var choice, statements, maxTime, botConfigs, contactableConfigs, maxResponsesText, allCompletedText, invalidResponseText, timeoutText, contactables, e_1, results, n, numPerPerson, timeoutId, calledComplete, complete, validResponse, checkCompletionCondition, pairsTexts;
+    var choice, statements, maxTime, botConfigs, contactableConfigs, maxResponsesText, allCompletedText, invalidResponseText, timeoutText, contactables, e_1, results, e_2;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -77,110 +179,32 @@ var process = function (input, output) { return __awaiter(void 0, void 0, void 0
                 output.done();
                 return [2 /*return*/];
             case 4:
-                results = [];
-                n = statements.length;
-                numPerPerson = n * (n - 1) / 2;
-                timeoutId = setTimeout(function () {
-                    // complete, saving whatever results we have
-                    complete(timeoutText || shared_1.DEFAULT_TIMEOUT_TEXT);
-                }, maxTime * 1000);
-                calledComplete = false;
-                complete = function (completionText) { return __awaiter(void 0, void 0, void 0, function () {
-                    return __generator(this, function (_a) {
-                        switch (_a.label) {
-                            case 0:
-                                if (!!calledComplete) return [3 /*break*/, 2];
-                                // It is good practice to inform participants the process is ending
-                                contactables.forEach(function (contactable) { return contactable.speak(completionText); });
-                                clearTimeout(timeoutId);
-                                calledComplete = true;
-                                contactables.forEach(function (contactable) { return contactable.stopListening(); });
-                                return [4 /*yield*/, rsf_contactable_1.shutdown()
-                                    // Process data and send output
-                                ]; // rsf-contactable
-                            case 1:
-                                _a.sent(); // rsf-contactable
-                                // Process data and send output
-                                output.send({
-                                    results: results
-                                });
-                                // Deactivate
-                                output.done();
-                                _a.label = 2;
-                            case 2: return [2 /*return*/];
-                        }
-                    });
-                }); };
-                validResponse = function (text) {
-                    return text === '1' || text === 'A' || text === 'a';
-                };
-                checkCompletionCondition = function () {
-                    // exit when everyone has responded to everything
-                    if (results.length === contactables.length * numPerPerson) {
-                        complete(allCompletedText || shared_1.DEFAULT_ALL_COMPLETED_TEXT);
-                    }
-                };
-                pairsTexts = [];
-                statements.forEach(function (statement, index) {
-                    for (var i = index + 1; i < statements.length; i++) {
-                        var pairedStatement = statements[i];
-                        // use A and 1 to try to minimize preference
-                        // bias for 1 vs 2, or A vs B
-                        pairsTexts.push({
-                            A: statement.text,
-                            1: pairedStatement.text
-                        });
-                    }
+                _a.trys.push([4, 6, , 7]);
+                return [4 /*yield*/, coreLogic(contactables, statements, choice, maxTime, function (pairwiseVote) {
+                        output.send({ pairwise_vote: pairwiseVote });
+                    }, maxResponsesText, allCompletedText, timeoutText, invalidResponseText)
+                    // Process data and send output
+                ];
+            case 5:
+                results = _a.sent();
+                // Process data and send output
+                output.send({
+                    results: results
                 });
-                // The "rules" of the game should be conveyed here
-                // Make sure people fully understand the process
-                contactables.forEach(function (contactable) {
-                    // initiate contact with the person
-                    // and set context, and "rules"
-                    // contactable.speak(prompt)
-                    contactable.speak(shared_1.rulesText(maxTime));
-                    setTimeout(function () {
-                        contactable.speak(choice);
-                    }, 500);
-                    // send them one message per pair,
-                    // awaiting their response before sending the next
-                    var responseCount = 0;
-                    var nextText = function () {
-                        return "(" + (numPerPerson - 1 - responseCount) + " remaining)\nA) " + pairsTexts[responseCount]['A'] + "\n1) " + pairsTexts[responseCount]['1'];
-                    };
-                    contactable.listen(function (text) {
-                        // do we still accept this response?
-                        if (responseCount < numPerPerson) {
-                            if (!validResponse(text)) {
-                                contactable.speak(invalidResponseText || shared_1.DEFAULT_INVALID_RESPONSE_TEXT);
-                                return;
-                            }
-                            results.push({
-                                choices: pairsTexts[responseCount],
-                                choice: text.toUpperCase(),
-                                id: contactable.id,
-                                timestamp: Date.now()
-                            });
-                            responseCount++;
-                        }
-                        // is there anything else we should say?
-                        if (responseCount === numPerPerson) {
-                            // remind them they've responded to everything
-                            contactable.speak(maxResponsesText || shared_1.DEFAULT_MAX_RESPONSES_TEXT);
-                        }
-                        else {
-                            // still haven't reached the end,
-                            // so send the next one
-                            contactable.speak(nextText());
-                        }
-                        // are we done?
-                        checkCompletionCondition();
-                    });
-                    // send the first one
-                    setTimeout(function () {
-                        contactable.speak(nextText());
-                    }, 1000);
+                return [3 /*break*/, 7];
+            case 6:
+                e_2 = _a.sent();
+                output.send({
+                    error: e_2
                 });
+                return [3 /*break*/, 7];
+            case 7: return [4 /*yield*/, rsf_contactable_1.shutdown()
+                // Deactivate
+            ];
+            case 8:
+                _a.sent();
+                // Deactivate
+                output.done();
                 return [2 /*return*/];
         }
     });
@@ -233,18 +257,11 @@ var getComponent = function () {
         description: 'msg override: the message sent to all participants when the process completes because the timeout is reached'
     });
     /* OUT PORTS */
+    c.outPorts.add('pairwise_vote', {
+        datatype: 'object' // rsf-types/PairwiseVote
+    });
     c.outPorts.add('results', {
-        datatype: 'array'
-        /*
-        RESULTS:
-        [Choice], array of Choice
-        Choice.choices : ChoiceObject, the choices being chosen between
-        ChoiceObject.A : String, the text of the choice associated with key A
-        ChoiceObject.1 : String, the text of the choice associated with key 1
-        Choice.choice : String, 1 or A, whichever was chosen
-        Choice.id : String, the id of the contactable who chose
-        Choice.timestamp : Number, the unix timestamp specifying when the choice was made
-        */
+        datatype: 'array' // rsf-types/PairwiseVote[]
     });
     c.outPorts.add('error', {
         datatype: 'all'

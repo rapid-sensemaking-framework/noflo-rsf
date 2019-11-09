@@ -39,17 +39,17 @@ const coreLogic = async (
   allCompletedText: string = DEFAULT_ALL_COMPLETED_TEXT,
   timeoutText: string = DEFAULT_TIMEOUT_TEXT,
   invalidResponseText: string = DEFAULT_INVALID_RESPONSE_TEXT
-) => {
+): Promise<Reaction[]> => {
   // initiate contact with each person
   // and set context, and "rules"
-  contactables.forEach(async (contactable: Contactable) => {
-    contactable.speak(rulesText(maxTime))
+  contactables.forEach(async (contactable: Contactable): Promise<void> => {
+    await contactable.speak(rulesText(maxTime))
     await timer(500)
-    contactable.speak(giveOptionsText(options))
+    await contactable.speak(giveOptionsText(options))
     // send the first one
     if (statements.length) {
       await timer(500)
-      contactable.speak(`(${statements.length - 1} remaining) ${statements[0].text}`)
+      await contactable.speak(`(${statements.length - 1} remaining) ${statements[0].text}`)
     }
   })
 
@@ -63,7 +63,7 @@ const coreLogic = async (
   const validate = (msg: string): boolean => {
     return !!matchOption(msg)
   }
-  const onInvalid = (msg: string, contactable): void => {
+  const onInvalid = (msg: string, contactable: Contactable): void => {
     contactable.speak(invalidResponseText)
   }
   const isPersonalComplete = (personalResultsSoFar: Reaction[]): boolean => {
@@ -97,7 +97,7 @@ const coreLogic = async (
     return allResultsSoFar.length === contactables.length * statements.length
   }
 
-  const { timeoutComplete, results } = await collectFromContactables(
+  const { timeoutComplete, results }: { timeoutComplete: boolean, results: Reaction[] } = await collectFromContactables(
     contactables,
     maxTime,
     validate,
@@ -108,7 +108,7 @@ const coreLogic = async (
     onResult,
     isTotalComplete
   )
-  await Promise.all(contactables.map(contactable => contactable.speak(timeoutComplete ? timeoutText : allCompletedText)))
+  await Promise.all(contactables.map((contactable: Contactable): Promise<void> => contactable.speak(timeoutComplete ? timeoutText : allCompletedText)))
   return results
 }
 
@@ -145,7 +145,7 @@ const process = async (input, output) => {
   }
 
   try {
-    const results = await coreLogic(
+    const results: Reaction[] = await coreLogic(
       contactables,
       statements,
       options,
@@ -167,7 +167,6 @@ const process = async (input, output) => {
       error: e
     })
   }
-  console.log('calling rsf-contactable shutdown from CollectResponses')
   await shutdown() // rsf-contactable
   // Deactivate
   output.done()
@@ -182,12 +181,12 @@ const getComponent = () => {
 
   /* IN PORTS */
   c.inPorts.add('options', {
-    datatype: 'array',
+    datatype: 'array', // rsf-types/Option[]
     description: 'a list containing the options (as objects with properties "triggers": "array" and "text": "string") people have to respond with',
     required: true
   })
   c.inPorts.add('statements', {
-    datatype: 'array',
+    datatype: 'array', // rsf-types/Statement[]
     description: 'the list of statements (as objects with property "text") to gather responses to',
     required: true
   })
@@ -197,7 +196,7 @@ const getComponent = () => {
     required: true
   })
   c.inPorts.add('contactable_configs', {
-    datatype: 'array',
+    datatype: 'array', // rsf-types/ContactableConfig[]
     description: 'an array of rsf-contactable compatible config objects',
     required: true
   })
@@ -224,19 +223,11 @@ const getComponent = () => {
   })
 
   /* OUT PORTS */
-  /*
-      [Response], array of the responses collected
-      Response.statement : Statement, the same as the Statement objects given
-      Response.response : String, the text of the selected option
-      Response.responseTrigger : String, the original text of the response
-      Response.id : String, the id of the agent who gave the response
-      Response.timestamp : Number, the unix timestamp of the moment the message was received
-      */
   c.outPorts.add('reaction', {
-    datatype: 'object'
+    datatype: 'object' // rsf-types/Reaction
   })
   c.outPorts.add('results', {
-    datatype: 'array'
+    datatype: 'array' // rsf-types/Reaction[]
   })
   c.outPorts.add('error', {
     datatype: 'all'
