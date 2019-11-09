@@ -85,7 +85,7 @@ const process = async (input, output) => {
   const allCompletedText: string | undefined = input.getData('all_completed_text')
   const timeoutText: string | undefined = input.getData('timeout_text')
 
-  let contactables
+  let contactables: Contactable[]
   try {
     await contactableInit(whichToInit(contactableConfigs), botConfigs)
     contactables = contactableConfigs.map(makeContactable)
@@ -99,7 +99,7 @@ const process = async (input, output) => {
   }
 
   try {
-    const results = await coreLogic(
+    const results: Statement[] = await coreLogic(
       contactables,
       maxResponses,
       maxTime,
