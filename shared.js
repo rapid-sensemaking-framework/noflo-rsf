@@ -13,11 +13,14 @@ const whichToInit = (contactableConfigs) => {
     }, {})
 }
 
+const timer = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
+
 module.exports = {
     DEFAULT_ALL_COMPLETED_TEXT,
     DEFAULT_INVALID_RESPONSE_TEXT,
     DEFAULT_MAX_RESPONSES_TEXT,
     DEFAULT_TIMEOUT_TEXT,
     rulesText,
-    whichToInit
+    whichToInit,
+    timer
 }
