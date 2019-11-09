@@ -103,7 +103,7 @@ const process = async (input, output) => {
       maxResponses,
       maxTime,
       prompt,
-      (statement) => {
+      (statement: Statement): void => {
         output.send({ statement })
       },
       maxResponsesText,

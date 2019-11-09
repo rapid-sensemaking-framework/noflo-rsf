@@ -129,7 +129,6 @@ var process = function (input, output) { return __awaiter(void 0, void 0, void 0
                 return [3 /*break*/, 4];
             case 3:
                 e_1 = _a.sent();
-                console.log('error initializing contactables', e_1);
                 output.send({
                     error: e_1
                 });
