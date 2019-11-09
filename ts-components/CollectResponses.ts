@@ -90,7 +90,6 @@ const process = async (input, output) => {
     await contactableInit(whichToInit(contactableConfigs), botConfigs)
     contactables = contactableConfigs.map(makeContactable)
   } catch (e) {
-    console.log('error initializing contactables', e)
     output.send({
       error: e
     })
