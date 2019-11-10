@@ -1,3 +1,5 @@
+[![CircleCI](https://circleci.com/gh/rapid-sensemaking-framework/noflo-rsf.svg?style=svg)](https://circleci.com/gh/rapid-sensemaking-framework/noflo-rsf)
+
 # noflo-rsf
 
 Welcome to the Rapid Sensemaking Framework ecosystem entry point!
