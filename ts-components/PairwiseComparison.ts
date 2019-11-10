@@ -96,7 +96,7 @@ const coreLogic = async (
     return allResultsSoFar.length === contactables.length * pairsTexts.length
   }
 
-  const { timeoutComplete, results }: { timeoutComplete: boolean, results: PairwiseVote[] } = await collectFromContactables(
+  const { timeoutComplete, results }: { timeoutComplete: boolean, results: PairwiseVote[] } = await collectFromContactables<PairwiseVote>(
     contactables,
     maxTime,
     validate,

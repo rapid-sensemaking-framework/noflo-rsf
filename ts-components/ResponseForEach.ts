@@ -27,7 +27,7 @@ const giveOptionsText = (options: Option[]) => {
 // use of this trigger will allow any response to match
 const WILDCARD_TRIGGER = '*'
 
-const defaultReactionCb = (reaction: Reaction) => { }
+const defaultReactionCb = (reaction: Reaction): void => { }
 
 const coreLogic = async (
   contactables: Contactable[],
@@ -97,7 +97,7 @@ const coreLogic = async (
     return allResultsSoFar.length === contactables.length * statements.length
   }
 
-  const { timeoutComplete, results }: { timeoutComplete: boolean, results: Reaction[] } = await collectFromContactables(
+  const { timeoutComplete, results }: { timeoutComplete: boolean, results: Reaction[] } = await collectFromContactables<Reaction>(
     contactables,
     maxTime,
     validate,

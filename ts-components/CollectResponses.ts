@@ -54,7 +54,7 @@ const coreLogic = async (
     return allResultsSoFar.length === contactables.length * maxResponses
   }
 
-  const { timeoutComplete, results } = await collectFromContactables(
+  const { timeoutComplete, results } = await collectFromContactables<Statement>(
     contactables,
     maxTime,
     validate,

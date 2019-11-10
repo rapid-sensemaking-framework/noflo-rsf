@@ -1,3 +1,5 @@
+import { Contactable } from 'rsf-types'
+
 const DEFAULT_ALL_COMPLETED_TEXT = `Everyone has completed. Thanks for participating.`
 const DEFAULT_TIMEOUT_TEXT = `The max time has been reached. Stopping now. Thanks for participating.`
 const DEFAULT_INVALID_RESPONSE_TEXT = `That's not a valid response, please try again.`
@@ -15,20 +17,20 @@ const whichToInit = (contactableConfigs) => {
 
 const timer = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
 
-const collectFromContactables = async (
-  contactables: any[],
+const collectFromContactables = async <T>(
+  contactables: Contactable[],
   maxTime: number,
   validate: (msg: string) => boolean,
-  onInvalid: (msg: string, contactable: any) => void,
-  isPersonalComplete: (personalResultsSoFar: any[]) => boolean,
-  onPersonalComplete: (personalResultsSoFar: any[], contactable: any) => void, // will only be called once
-  convertToResult: (msg: string, personalResultsSoFar: any[], contactable: any) => any,
-  onResult: (result: any, personalResultsSoFar: any[], contactable: any) => void,
-  isTotalComplete: (allResultsSoFar: any[]) => boolean
-): Promise<{ timeoutComplete: boolean, results: any[] }> => {
+  onInvalid: (msg: string, contactable: Contactable) => void,
+  isPersonalComplete: (personalResultsSoFar: T[]) => boolean,
+  onPersonalComplete: (personalResultsSoFar: T[], contactable: Contactable) => void, // will only be called once
+  convertToResult: (msg: string, personalResultsSoFar: T[], contactable: Contactable) => T,
+  onResult: (result: any, personalResultsSoFar: T[], contactable: Contactable) => void,
+  isTotalComplete: (allResultsSoFar: T[]) => boolean
+): Promise<{ timeoutComplete: boolean, results: T[] }> => {
   return new Promise((resolve) => {
     // array to store the results
-    const results: any[] = []
+    const results: T[] = []
 
     // setup a completion handler that
     // can only fire once
@@ -53,7 +55,7 @@ const collectFromContactables = async (
 
     contactables.forEach(contactable => {
       // keep track of the results from this person
-      const personalResults: any[] = []
+      const personalResults: T[] = []
 
       // listen for messages from them, and treat each one
       // as an input, up till the alotted amount
