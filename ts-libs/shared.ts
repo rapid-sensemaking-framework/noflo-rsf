@@ -1,4 +1,4 @@
-import { Contactable } from 'rsf-types'
+import { Contactable, ContactableConfig } from 'rsf-types'
 
 const DEFAULT_ALL_COMPLETED_TEXT = `Everyone has completed. Thanks for participating.`
 const DEFAULT_TIMEOUT_TEXT = `The max time has been reached. Stopping now. Thanks for participating.`
@@ -7,7 +7,7 @@ const DEFAULT_MAX_RESPONSES_TEXT = `You've responded to everything. Thanks for p
 // TODO: improve the human readable time
 const rulesText = (maxTime) => `The process will stop automatically after ${maxTime} seconds.`
 
-const whichToInit = (contactableConfigs) => {
+const whichToInit = (contactableConfigs: ContactableConfig[]) => {
   return contactableConfigs.reduce((memo, value) => {
     const uppercased = value.type.charAt(0).toUpperCase() + value.type.slice(1)
     memo[`do${uppercased}`] = true
