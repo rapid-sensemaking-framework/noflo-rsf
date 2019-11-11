@@ -3,14 +3,16 @@
 */
 
 import noflo from 'noflo'
-import socketClient from 'socket.io-client'
+import * as socketClient from 'socket.io-client'
+import { ProcessHandler, NofloComponent } from '../libs/noflo-types'
+import { ContactableConfig } from 'rsf-types'
 
 const guidGenerator = () => {
   const S4 = () => (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1)
   return (S4() + S4() + "-" + S4() + "-" + S4() + "-" + S4() + "-" + S4() + S4() + S4())
 }
 
-const process = (input, output) => {
+const process: ProcessHandler = (input, output) => {
 
   // TODO set a timeout
 
@@ -20,11 +22,11 @@ const process = (input, output) => {
   }
 
   // Read packets we need to process
-  const httpUrl = input.getData('http_url')
-  const socketUrl = input.getData('socket_url')
-  const maxTime = input.getData('max_time')
-  const maxParticipants = parseInt(input.getData('max_participants'))
-  const processDescription = input.getData('process_description')
+  const httpUrl: string = input.getData('http_url')
+  const socketUrl: string = input.getData('socket_url')
+  const maxTime: number = input.getData('max_time')
+  const maxParticipants: number = parseInt(input.getData('max_participants'))
+  const processDescription: string = input.getData('process_description')
   // create a brand new id which will be used
   // in the url address on the site, where people will register
   const id = guidGenerator()
@@ -37,13 +39,13 @@ const process = (input, output) => {
     })
   })
   // single one
-  socket.on('participant_register_result', result => {
+  socket.on('participant_register_result', (result: ContactableConfig) => {
     output.send({
       result
     })
   })
   // all results
-  socket.on('participant_register_results', results => {
+  socket.on('participant_register_results', (results: ContactableConfig[]) => {
     output.send({
       results
     })
@@ -51,8 +53,8 @@ const process = (input, output) => {
   })
 }
 
-const getComponent = () => {
-  const c = new noflo.Component()
+const getComponent = (): NofloComponent => {
+  const c: NofloComponent = new noflo.Component()
 
   /* META */
   c.description = 'Spins up a web server to collect participant configs that are rsf-contactable compatible'
@@ -100,7 +102,6 @@ const getComponent = () => {
   /* DEFINE PROCESS */
   c.process(process)
 
-  /* return */
   return c
 }
 

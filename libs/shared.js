@@ -66,7 +66,7 @@ var whichToInit = function (contactableConfigs) {
     }, {});
 };
 exports.whichToInit = whichToInit;
-var timer = function (ms) { return new Promise(function (resolve) { return setTimeout(resolve, ms); }); };
+var timer = function (ms) { return new Promise(function (resolve) { setTimeout(resolve, ms); }); };
 exports.timer = timer;
 var collectFromContactables = function (contactables, maxTime, validate, onInvalid, isPersonalComplete, onPersonalComplete, // will only be called once
 convertToResult, onResult, isTotalComplete) { return __awaiter(void 0, void 0, void 0, function () {

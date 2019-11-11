@@ -4,7 +4,7 @@
 */
 exports.__esModule = true;
 var noflo_1 = require("noflo");
-var socket_io_client_1 = require("socket.io-client");
+var socketClient = require("socket.io-client");
 var guidGenerator = function () {
     var S4 = function () { return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1); };
     return (S4() + S4() + "-" + S4() + "-" + S4() + "-" + S4() + "-" + S4() + S4() + S4());
@@ -24,7 +24,7 @@ var process = function (input, output) {
     // create a brand new id which will be used
     // in the url address on the site, where people will register
     var id = guidGenerator();
-    var socket = socket_io_client_1["default"](socketUrl);
+    var socket = socketClient(socketUrl);
     socket.on('connect', function () {
         socket.emit('participant_register', { id: id, maxParticipants: maxParticipants, maxTime: maxTime, processDescription: processDescription });
         output.send({
@@ -88,7 +88,6 @@ var getComponent = function () {
     });
     /* DEFINE PROCESS */
     c.process(process);
-    /* return */
     return c;
 };
 exports.getComponent = getComponent;

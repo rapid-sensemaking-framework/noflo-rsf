@@ -11,6 +11,7 @@ import {
   timer
 } from '../libs/shared'
 import { Contactable, Statement, ContactableConfig, PairwiseVote, PairwiseChoice } from 'rsf-types'
+import { ProcessHandler, NofloComponent } from '../libs/noflo-types'
 
 const defaultPairwiseVoteCb = (pairwiseVote: PairwiseVote): void => { }
 
@@ -111,7 +112,7 @@ const coreLogic = async (
   return results
 }
 
-const process = async (input, output) => {
+const process: ProcessHandler = async (input, output) => {
 
   if (!input.hasData('choice', 'statements', 'max_time', 'contactable_configs', 'bot_configs')) {
     return
@@ -165,8 +166,8 @@ const process = async (input, output) => {
   output.done()
 }
 
-const getComponent = () => {
-  const c = new noflo.Component()
+const getComponent = (): NofloComponent => {
+  const c: NofloComponent = new noflo.Component()
 
   /* META */
   c.description = 'Iterate through all the combinations in a list of statements getting peoples choices on them'
@@ -229,7 +230,6 @@ const getComponent = () => {
   /* DEFINE PROCESS */
   c.process(process)
 
-  /* return */
   return c
 }
 

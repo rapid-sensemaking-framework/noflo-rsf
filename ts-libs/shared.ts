@@ -15,7 +15,7 @@ const whichToInit = (contactableConfigs: ContactableConfig[]) => {
   }, {})
 }
 
-const timer = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
+const timer = (ms: number): Promise<void> => new Promise((resolve) => { setTimeout(resolve, ms) })
 
 const collectFromContactables = async <T>(
   contactables: Contactable[],

@@ -8,6 +8,7 @@ import {
   timer
 } from '../libs/shared'
 import { ContactableConfig, Contactable, Statement } from 'rsf-types'
+import { NofloComponent, ProcessHandler } from '../libs/noflo-types'
 
 const DEFAULT_MAX_RESPONSES_TEXT = `You've reached the limit of responses. Thanks for participating. You will be notified when everyone has completed.`
 const rulesText = (maxTime: number, maxResponses: number) => 'Contribute one response per message. ' +
@@ -69,7 +70,7 @@ const coreLogic = async (
   return results
 }
 
-const process = async (input, output) => {
+const process: ProcessHandler = async (input, output) => {
 
   if (!input.hasData('max_responses', 'prompt', 'contactable_configs', 'max_time', 'bot_configs')) {
     return
@@ -122,8 +123,8 @@ const process = async (input, output) => {
   output.done()
 }
 
-const getComponent = () => {
-  const c = new noflo.Component()
+const getComponent = (): NofloComponent => {
+  const c: NofloComponent = new noflo.Component()
 
   /* META */
   c.description = 'For a prompt, collect statements numbering up to a given maximum (or unlimited) from a list of participants'
@@ -182,7 +183,6 @@ const getComponent = () => {
   /* DEFINE PROCESS */
   c.process(process)
 
-  /* return */
   return c
 }
 

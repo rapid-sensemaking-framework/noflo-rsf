@@ -1,42 +1,36 @@
 import noflo from 'noflo'
-import { init as contactableInit, makeContactable, shutdown } from 'rsf-contactable'
+import { init as contactableInit, makeContactable, shutdown as contactableShutdown } from 'rsf-contactable'
 import { whichToInit } from '../libs/shared'
+import { ProcessHandler, NofloComponent } from '../libs/noflo-types'
+import { Contactable, ContactableConfig } from 'rsf-types'
 
-const process = async (input, output) => {
-
-  // Check preconditions on input data
+const process: ProcessHandler = async (input, output) => {
   if (!input.hasData('message', 'contactable_configs', 'bot_configs')) {
     return
   }
-
-  // Read packets we need to process
-  const message = input.getData('message')
+  const message: string = input.getData('message')
   const botConfigs = input.getData('bot_configs')
-  const contactableConfigs = input.getData('contactable_configs')
+  const contactableConfigs: ContactableConfig[] = input.getData('contactable_configs')
 
-  let contactables
+  let contactables: Contactable[]
   try {
     await contactableInit(whichToInit(contactableConfigs), botConfigs)
     contactables = contactableConfigs.map(makeContactable)
   } catch (e) {
-    // Process data and send output
     output.send({
       error: e
     })
-    // Deactivate
     output.done()
     return
   }
 
   await Promise.all(contactables.map(contactable => contactable.speak(message)))
-  console.log('calling rsf-contactable shutdown from SendMessageToAll')
-  await shutdown() // rsf-contactable
-  // Deactivate
+  await contactableShutdown()
   output.done()
 }
 
-const getComponent = () => {
-  const c = new noflo.Component()
+const getComponent = (): NofloComponent => {
+  const c: NofloComponent = new noflo.Component()
 
   /* META */
   c.description = 'Send a message to a list of people'
@@ -67,7 +61,6 @@ const getComponent = () => {
   /* DEFINE PROCESS */
   c.process(process)
 
-  /* return */
   return c
 }
 

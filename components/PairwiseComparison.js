@@ -259,7 +259,6 @@ var getComponent = function () {
     });
     /* DEFINE PROCESS */
     c.process(process);
-    /* return */
     return c;
 };
 exports.getComponent = getComponent;

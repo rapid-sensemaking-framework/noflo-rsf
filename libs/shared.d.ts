@@ -5,7 +5,7 @@ declare const DEFAULT_INVALID_RESPONSE_TEXT = "That's not a valid response, plea
 declare const DEFAULT_MAX_RESPONSES_TEXT = "You've responded to everything. Thanks for participating. You will be notified when everyone has completed.";
 declare const rulesText: (maxTime: any) => string;
 declare const whichToInit: (contactableConfigs: ContactableConfig[]) => {};
-declare const timer: (ms: any) => Promise<unknown>;
+declare const timer: (ms: number) => Promise<void>;
 declare const collectFromContactables: <T>(contactables: Contactable[], maxTime: number, validate: (msg: string) => boolean, onInvalid: (msg: string, contactable: Contactable) => void, isPersonalComplete: (personalResultsSoFar: T[]) => boolean, onPersonalComplete: (personalResultsSoFar: T[], contactable: Contactable) => void, convertToResult: (msg: string, personalResultsSoFar: T[], contactable: Contactable) => T, onResult: (result: any, personalResultsSoFar: T[], contactable: Contactable) => void, isTotalComplete: (allResultsSoFar: T[]) => boolean) => Promise<{
     timeoutComplete: boolean;
     results: T[];

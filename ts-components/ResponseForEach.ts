@@ -17,6 +17,7 @@ import {
   collectFromContactables,
   timer
 } from '../libs/shared'
+import { ProcessHandler, NofloComponent } from '../libs/noflo-types'
 
 // define other constants or creator functions
 // of the strings for user interaction here
@@ -112,7 +113,7 @@ const coreLogic = async (
   return results
 }
 
-const process = async (input, output) => {
+const process: ProcessHandler = async (input, output) => {
 
   if (!input.hasData('options', 'statements', 'max_time', 'contactable_configs', 'bot_configs')) {
     return
@@ -166,8 +167,8 @@ const process = async (input, output) => {
   output.done()
 }
 
-const getComponent = () => {
-  const c = new noflo.Component()
+const getComponent = (): NofloComponent => {
+  const c: NofloComponent = new noflo.Component()
 
   /* META */
   c.description = 'For a list/array of statements, collect a response or vote for each from a list of participants'
@@ -230,7 +231,6 @@ const getComponent = () => {
   /* DEFINE PROCESS */
   c.process(process)
 
-  /* return */
   return c
 }
 

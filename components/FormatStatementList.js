@@ -2,11 +2,9 @@
 exports.__esModule = true;
 var noflo_1 = require("noflo");
 var process = function (input, output) {
-    // Check preconditions on input data
     if (!input.hasData('statements')) {
         return;
     }
-    // Read packets we need to process
     var statements = input.getData('statements');
     var formatted = statements.reduce(function (memo, s) {
         return memo + "\n" + s.text;

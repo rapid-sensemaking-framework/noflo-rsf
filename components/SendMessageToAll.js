@@ -44,7 +44,6 @@ var process = function (input, output) { return __awaiter(void 0, void 0, void 0
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                // Check preconditions on input data
                 if (!input.hasData('message', 'contactable_configs', 'bot_configs')) {
                     return [2 /*return*/];
                 }
@@ -61,23 +60,17 @@ var process = function (input, output) { return __awaiter(void 0, void 0, void 0
                 return [3 /*break*/, 4];
             case 3:
                 e_1 = _a.sent();
-                // Process data and send output
                 output.send({
                     error: e_1
                 });
-                // Deactivate
                 output.done();
                 return [2 /*return*/];
             case 4: return [4 /*yield*/, Promise.all(contactables.map(function (contactable) { return contactable.speak(message); }))];
             case 5:
                 _a.sent();
-                console.log('calling rsf-contactable shutdown from SendMessageToAll');
-                return [4 /*yield*/, rsf_contactable_1.shutdown()
-                    // Deactivate
-                ]; // rsf-contactable
+                return [4 /*yield*/, rsf_contactable_1.shutdown()];
             case 6:
-                _a.sent(); // rsf-contactable
-                // Deactivate
+                _a.sent();
                 output.done();
                 return [2 /*return*/];
         }
@@ -110,7 +103,6 @@ var getComponent = function () {
     });
     /* DEFINE PROCESS */
     c.process(process);
-    /* return */
     return c;
 };
 exports.getComponent = getComponent;

@@ -1,28 +1,24 @@
 import noflo from 'noflo'
+import { NofloComponent, ProcessHandler } from '../libs/noflo-types'
+import { Statement } from 'rsf-types'
 
-const process = (input, output) => {
-
-  // Check preconditions on input data
+const process: ProcessHandler = (input, output) => {
   if (!input.hasData('statements')) {
     return
   }
-
-  // Read packets we need to process
-  const statements = input.getData('statements')
-
-  const formatted = statements.reduce((memo, s) => {
+  const statements: Statement[] = input.getData('statements')
+  const formatted: string = statements.reduce((memo: string, s: Statement) => {
     return `${memo}
 ${s.text}`
   }, '')
-
   output.send({
     formatted
   })
   output.done()
 }
 
-const getComponent = () => {
-  const c = new noflo.Component()
+const getComponent = (): NofloComponent => {
+  const c: NofloComponent = new noflo.Component()
 
   /* META */
   c.description = 'Format a list of statements into a single string message, separated to new lines'

@@ -4,6 +4,6 @@
     "composite": true
   },
   "include": [
-    "shared.ts"
+    "*"
   ]
 }
