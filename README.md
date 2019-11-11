@@ -66,8 +66,6 @@ A live dashboard of events taking place in the process, and results coming in ar
 
 Once every step of the process has completed, the final results can be saved to the computer that was hosting the process, uploaded somewhere digitally available, or posted into a database for longevity.
 
-https://noflo-rsf-client.herokuapp.com/
-
 
 ## Principles
 
