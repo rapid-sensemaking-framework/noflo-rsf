@@ -51,9 +51,48 @@ describe('ResponseForEach', () => {
     })
   })
 
-  // TODO: invalid responses
-
-  // TODO: rules and context
+  context('context and rules should be conveyed', function () {
+    it('should convey useful feedback and statements to respond to, to the participants', (done) => {
+      const mockMakeContactable = newMockMakeContactable(sinon.spy)
+      const contactables = [{ id: 'p1' }].map(mockMakeContactable)
+      const statements = [
+        {
+          text: 'great idea'
+        },
+        {
+          text: 'great idea 2'
+        }
+      ]
+      const options = [
+        {
+          text: 'Agree',
+          triggers: ['a']
+        },
+        {
+          text: 'Disagree',
+          triggers: ['d']
+        }
+      ]
+      const maxSeconds = 2
+      coreLogic(contactables, statements, options, maxSeconds).then((results) => {
+        const spoken = contactables[0].speak
+        expect(spoken.getCall(0).args[0]).to.equal('The process will stop automatically after 2 seconds.')
+        expect(spoken.getCall(1).args[0]).to.equal('The options for each statement are: Agree (a), Disagree (d)')
+        expect(spoken.getCall(2).args[0]).to.equal('(1 remaining) great idea')
+        expect(spoken.getCall(3).args[0]).to.equal('That\'s not a valid response, please try again.')
+        expect(spoken.getCall(4).args[0]).to.equal('(0 remaining) great idea 2')
+        expect(spoken.getCall(5).args[0]).to.equal('You\'ve responded to everything. Thanks for participating. You will be notified when everyone has completed.')
+        expect(spoken.getCall(6).args[0]).to.equal('Everyone has completed. Thanks for participating.')
+        expect(results.length).to.equal(2)
+        done()
+      })
+      setTimeout(() => {
+        contactables[0].trigger('y')
+        contactables[0].trigger('a')
+        contactables[0].trigger('a')
+      }, 1500)
+    })
+  })
 
   // TODO: wildcard trigger
 })

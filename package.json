@@ -4,7 +4,8 @@
   "description": "a collection of modules for rapid collective text-driven sensemaking",
   "scripts": {
     "test": "mocha",
-    "build": "tsc --build --watch ts-components"
+    "build": "tsc --build ts-components",
+    "build-watch": "tsc --build --watch ts-components"
   },
   "author": "Connor Turland <connorturland@gmail.com>",
   "license": "AGPL-3.0",
