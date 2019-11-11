@@ -5,7 +5,7 @@
 import noflo from 'noflo'
 import * as socketClient from 'socket.io-client'
 import { ProcessHandler, NofloComponent } from '../libs/noflo-types'
-import { ContactableConfig } from 'rsf-types'
+import { ContactableConfig, ParticipantRegisterData } from 'rsf-types'
 
 const guidGenerator = () => {
   const S4 = () => (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1)
@@ -30,10 +30,16 @@ const process: ProcessHandler = (input, output) => {
   // create a brand new id which will be used
   // in the url address on the site, where people will register
   const id = guidGenerator()
+  const participantRegisterData: ParticipantRegisterData = {
+    id,
+    maxParticipants,
+    maxTime,
+    processDescription
+  }
 
   const socket = socketClient(socketUrl)
   socket.on('connect', () => {
-    socket.emit('participant_register', { id, maxParticipants, maxTime, processDescription })
+    socket.emit('participant_register', participantRegisterData)
     output.send({
       register_url: `${httpUrl}/register/${id}`
     })
