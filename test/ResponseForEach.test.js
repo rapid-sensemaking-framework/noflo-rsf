@@ -86,6 +86,7 @@ describe('ResponseForEach', () => {
         expect(results.length).to.equal(2)
         done()
       })
+      // wait till the instructions have been sent (1 second)
       setTimeout(() => {
         contactables[0].trigger('y')
         contactables[0].trigger('a')
