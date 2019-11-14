@@ -2,14 +2,14 @@ import noflo from 'noflo'
 import { init as contactableInit, makeContactable, shutdown as contactableShutdown } from 'rsf-contactable'
 import { whichToInit } from '../libs/shared'
 import { ProcessHandler, NofloComponent } from '../libs/noflo-types'
-import { Contactable, ContactableConfig } from 'rsf-types'
+import { Contactable, ContactableConfig, ContactableInitConfig } from 'rsf-types'
 
 const process: ProcessHandler = async (input, output) => {
   if (!input.hasData('message', 'contactable_configs', 'bot_configs')) {
     return
   }
   const message: string = input.getData('message')
-  const botConfigs = input.getData('bot_configs')
+  const botConfigs: ContactableInitConfig = input.getData('bot_configs')
   const contactableConfigs: ContactableConfig[] = input.getData('contactable_configs')
 
   let contactables: Contactable[]

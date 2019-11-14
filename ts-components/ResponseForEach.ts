@@ -4,7 +4,8 @@ import {
   Contactable,
   Statement,
   Option,
-  Reaction
+  Reaction,
+  ContactableInitConfig
 } from 'rsf-types'
 import { init as contactableInit, makeContactable, shutdown as contactableShutdown } from 'rsf-contactable'
 import {
@@ -122,7 +123,7 @@ const process: ProcessHandler = async (input, output) => {
   const maxTime: number = input.getData('max_time')
   const options: Option[] = input.getData('options')
   const statements: Statement[] = input.getData('statements').slice(0) // make sure that this array is its own
-  const botConfigs = input.getData('bot_configs')
+  const botConfigs: ContactableInitConfig = input.getData('bot_configs')
   const contactableConfigs: ContactableConfig[] = input.getData('contactable_configs')
   const invalidResponseText: string | undefined = input.getData('invalid_response_text')
   const maxResponsesText: string | undefined = input.getData('max_responses_text')

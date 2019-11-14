@@ -10,7 +10,7 @@ import {
   collectFromContactables,
   timer
 } from '../libs/shared'
-import { Contactable, Statement, ContactableConfig, PairwiseVote, PairwiseChoice } from 'rsf-types'
+import { Contactable, Statement, ContactableConfig, PairwiseVote, PairwiseChoice, ContactableInitConfig } from 'rsf-types'
 import { ProcessHandler, NofloComponent } from '../libs/noflo-types'
 
 const defaultPairwiseVoteCb = (pairwiseVote: PairwiseVote): void => { }
@@ -121,7 +121,7 @@ const process: ProcessHandler = async (input, output) => {
   const choice: string = input.getData('choice')
   const statements: Statement[] = input.getData('statements')
   const maxTime: number = input.getData('max_time')
-  const botConfigs = input.getData('bot_configs')
+  const botConfigs: ContactableInitConfig = input.getData('bot_configs')
   const contactableConfigs: ContactableConfig[] = input.getData('contactable_configs')
   const maxResponsesText: string = input.getData('max_responses_text')
   const allCompletedText: string = input.getData('all_completed_text')

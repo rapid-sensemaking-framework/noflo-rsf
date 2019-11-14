@@ -7,7 +7,7 @@ import {
   collectFromContactables,
   timer
 } from '../libs/shared'
-import { ContactableConfig, Contactable, Statement } from 'rsf-types'
+import { ContactableConfig, Contactable, Statement, ContactableInitConfig } from 'rsf-types'
 import { NofloComponent, ProcessHandler } from '../libs/noflo-types'
 
 const DEFAULT_MAX_RESPONSES_TEXT = `You've reached the limit of responses. Thanks for participating. You will be notified when everyone has completed.`
@@ -80,7 +80,7 @@ const process: ProcessHandler = async (input, output) => {
   const maxResponses: number = maxResponsesInput === UNLIMITED_CHAR ? Infinity : maxResponsesInput
   const maxTime: number = input.getData('max_time')
   const prompt: string = input.getData('prompt')
-  const botConfigs = input.getData('bot_configs')
+  const botConfigs: ContactableInitConfig = input.getData('bot_configs')
   const contactableConfigs: ContactableConfig[] = input.getData('contactable_configs')
   const maxResponsesText: string | undefined = input.getData('max_responses_text')
   const allCompletedText: string | undefined = input.getData('all_completed_text')

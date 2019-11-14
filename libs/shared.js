@@ -59,11 +59,18 @@ exports.DEFAULT_MAX_RESPONSES_TEXT = DEFAULT_MAX_RESPONSES_TEXT;
 var rulesText = function (maxTime) { return "The process will stop automatically after " + maxTime + " seconds."; };
 exports.rulesText = rulesText;
 var whichToInit = function (contactableConfigs) {
+    var specifyDefault = {
+        doTelegram: false,
+        doMattermost: false,
+        doText: false
+    };
+    // change to true if there is an instance of a ContactableConfig with the relevant
+    // type
     return contactableConfigs.reduce(function (memo, value) {
         var uppercased = value.type.charAt(0).toUpperCase() + value.type.slice(1);
         memo["do" + uppercased] = true;
         return memo;
-    }, {});
+    }, specifyDefault);
 };
 exports.whichToInit = whichToInit;
 var timer = function (ms) { return new Promise(function (resolve) { setTimeout(resolve, ms); }); };

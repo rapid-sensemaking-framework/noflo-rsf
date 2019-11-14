@@ -24,9 +24,15 @@ var process = function (input, output) {
     // create a brand new id which will be used
     // in the url address on the site, where people will register
     var id = guidGenerator();
+    var participantRegisterData = {
+        id: id,
+        maxParticipants: maxParticipants,
+        maxTime: maxTime,
+        processDescription: processDescription
+    };
     var socket = socketClient(socketUrl);
     socket.on('connect', function () {
-        socket.emit('participant_register', { id: id, maxParticipants: maxParticipants, maxTime: maxTime, processDescription: processDescription });
+        socket.emit('participant_register', participantRegisterData);
         output.send({
             register_url: httpUrl + "/register/" + id
         });
