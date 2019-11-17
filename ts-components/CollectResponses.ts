@@ -88,7 +88,9 @@ const process: ProcessHandler = async (input, output) => {
 
   let contactables: Contactable[]
   try {
-    await contactableInit(whichToInit(contactableConfigs), botConfigs)
+    const which = whichToInit(contactableConfigs)
+    console.log('whichToInit', which)
+    await contactableInit(which, botConfigs)
     contactables = contactableConfigs.map(makeContactable)
   } catch (e) {
     output.send({

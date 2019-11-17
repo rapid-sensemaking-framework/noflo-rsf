@@ -62,7 +62,7 @@ var whichToInit = function (contactableConfigs) {
     var specifyDefault = {
         doTelegram: false,
         doMattermost: false,
-        doText: false
+        doSms: false
     };
     // change to true if there is an instance of a ContactableConfig with the relevant
     // type
