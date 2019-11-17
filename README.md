@@ -138,7 +138,7 @@ Configurations for people will be given as arrays in `participantsConfig`, and t
 A `personConfig` object will be at a minimum something like:
 ```json
 {
-    "type": "phone",
+    "type": "sms",
     "id": "+12223334444"
 }
 ```
