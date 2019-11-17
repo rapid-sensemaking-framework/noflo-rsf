@@ -1,4 +1,4 @@
-import noflo from 'noflo'
+import * as noflo from 'noflo'
 import { NofloComponent, ProcessHandler } from '../libs/noflo-types'
 import { Statement } from 'rsf-types'
 

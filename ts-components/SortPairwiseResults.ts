@@ -1,4 +1,4 @@
-import noflo from 'noflo'
+import * as noflo from 'noflo'
 import { ProcessHandler, ProcessInput, ProcessOutput, NofloComponent } from '../libs/noflo-types'
 import { PairwiseVote, Statement } from 'rsf-types'
 

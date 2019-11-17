@@ -36,7 +36,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 exports.__esModule = true;
-var noflo_1 = require("noflo");
+var noflo = require("noflo");
 var rsf_contactable_1 = require("rsf-contactable");
 var shared_1 = require("../libs/shared");
 var DEFAULT_MAX_RESPONSES_TEXT = "You've reached the limit of responses. Thanks for participating. You will be notified when everyone has completed.";
@@ -160,7 +160,7 @@ var process = function (input, output) { return __awaiter(void 0, void 0, void 0
     });
 }); };
 var getComponent = function () {
-    var c = new noflo_1["default"].Component();
+    var c = new noflo.Component();
     /* META */
     c.description = 'For a prompt, collect statements numbering up to a given maximum (or unlimited) from a list of participants';
     c.icon = 'compress';

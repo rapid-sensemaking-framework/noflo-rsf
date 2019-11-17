@@ -2,7 +2,7 @@
  Built for compatibility with https://github.com/rapid-sensemaking-framework/rsf-http-register
 */
 
-import noflo from 'noflo'
+import * as noflo from 'noflo'
 import * as socketClient from 'socket.io-client'
 import { ProcessHandler, NofloComponent } from '../libs/noflo-types'
 import { ContactableConfig, ParticipantRegisterData } from 'rsf-types'

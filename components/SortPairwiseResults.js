@@ -11,7 +11,7 @@ var __assign = (this && this.__assign) || function () {
     return __assign.apply(this, arguments);
 };
 exports.__esModule = true;
-var noflo_1 = require("noflo");
+var noflo = require("noflo");
 var process = function (input, output) {
     if (!input.hasData('statements', 'rankings')) {
         return;
@@ -35,7 +35,7 @@ var process = function (input, output) {
     output.done();
 };
 var getComponent = function () {
-    var c = new noflo_1["default"].Component();
+    var c = new noflo.Component();
     c.description = '';
     c.icon = 'handshake-o';
     c.inPorts.add('statements', {

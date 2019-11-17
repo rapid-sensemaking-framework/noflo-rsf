@@ -1,4 +1,4 @@
-import noflo from 'noflo'
+import * as noflo from 'noflo'
 import { init as contactableInit, makeContactable, shutdown as contactableShutdown } from 'rsf-contactable'
 import {
   DEFAULT_ALL_COMPLETED_TEXT,

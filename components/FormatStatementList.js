@@ -1,6 +1,6 @@
 "use strict";
 exports.__esModule = true;
-var noflo_1 = require("noflo");
+var noflo = require("noflo");
 var process = function (input, output) {
     if (!input.hasData('statements')) {
         return;
@@ -15,7 +15,7 @@ var process = function (input, output) {
     output.done();
 };
 var getComponent = function () {
-    var c = new noflo_1["default"].Component();
+    var c = new noflo.Component();
     /* META */
     c.description = 'Format a list of statements into a single string message, separated to new lines';
     c.icon = 'compress';

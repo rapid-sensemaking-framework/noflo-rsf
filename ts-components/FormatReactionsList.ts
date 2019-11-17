@@ -1,4 +1,4 @@
-import noflo from 'noflo'
+import * as noflo from 'noflo'
 import { Reaction } from 'rsf-types'
 import {
   NofloComponent, ProcessHandler

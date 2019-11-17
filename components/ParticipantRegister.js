@@ -3,7 +3,7 @@
  Built for compatibility with https://github.com/rapid-sensemaking-framework/rsf-http-register
 */
 exports.__esModule = true;
-var noflo_1 = require("noflo");
+var noflo = require("noflo");
 var socketClient = require("socket.io-client");
 var guidGenerator = function () {
     var S4 = function () { return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1); };
@@ -52,7 +52,7 @@ var process = function (input, output) {
     });
 };
 var getComponent = function () {
-    var c = new noflo_1["default"].Component();
+    var c = new noflo.Component();
     /* META */
     c.description = 'Spins up a web server to collect participant configs that are rsf-contactable compatible';
     c.icon = 'compress';

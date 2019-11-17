@@ -1,9 +1,9 @@
 "use strict";
 exports.__esModule = true;
-var noflo_1 = require("noflo");
+var noflo = require("noflo");
 var mongodb_1 = require("mongodb");
 var getComponent = function () {
-    var c = new noflo_1["default"].Component();
+    var c = new noflo.Component();
     c.description = '';
     c.icon = 'handshake-o';
     c.inPorts.add('mongo_uri', {
