@@ -24,6 +24,7 @@ Inspirations and related projects include the likes of
     - tool to engage in thoughtful discussion, understand different points of view, and help with collaborative decision-making
 - [Pol.is](https://pol.is/home)
     - helps organizations understand themselves by visualizing what their members think. Get a clear picture of all the points of view to help move a conversation forward.
+- [Twitter Polls](https://help.twitter.com/en/using-twitter/twitter-polls)
 - [Groupmap](https://www.groupmap.com/)
     - capturing individual thinking, revealing the group perspective, all in real-time. Collaborative decision making.
 - [All Our Ideas](https://www.allourideas.org/)
@@ -138,7 +139,7 @@ Configurations for people will be given as arrays in `participantsConfig`, and t
 A `personConfig` object will be at a minimum something like:
 ```json
 {
-    "type": "phone",
+    "type": "sms",
     "id": "+12223334444"
 }
 ```
