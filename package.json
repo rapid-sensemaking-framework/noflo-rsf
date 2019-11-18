@@ -1,6 +1,6 @@
 {
   "name": "noflo-rsf",
-  "version": "0.0.39",
+  "version": "0.0.40",
   "description": "a collection of modules for rapid collective text-driven sensemaking",
   "scripts": {
     "test": "mocha",
