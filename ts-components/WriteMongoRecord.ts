@@ -1,5 +1,6 @@
 import * as noflo from 'noflo'
 import{ MongoClient } from 'mongodb'
+import { ProcessInput, ProcessOutput } from '../libs/noflo-types'
 
 const getComponent = () => {
   const c = new noflo.Component()
@@ -29,8 +30,8 @@ const getComponent = () => {
     datatype: 'all'
   })
 
-  let mongoUri, databaseName, collectionName
-  c.process((input, output) => {
+  let mongoUri: string, databaseName: string, collectionName: string
+  c.process((input: ProcessInput, output: ProcessOutput) => {
     console.log('calling WriteMongoRecord')
     if (input.hasData('mongo_uri', 'database_name', 'collection_name')) {
       databaseName = input.getData('database_name')
