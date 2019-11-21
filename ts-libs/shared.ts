@@ -62,24 +62,13 @@ const collectFromContactables = async <T>(
     // array to store the results
     const results: T[] = []
 
-    // setup a completion handler that
-    // can only fire once
-    let calledComplete = false
-    const complete = (timeoutComplete: boolean): void => {
-      if (!calledComplete) {
-        clearTimeout(timeoutId)
-        calledComplete = true
-        contactables.forEach(contactable => contactable.stopListening())
-        resolve({ timeoutComplete, results })
-      }
-    }
-
     // stop the process after a maximum amount of time
     // maxTime is passed in as seconds, and setTimeout accepts milliseconds,
     // so multiply by a thousand
     const timeoutId = setTimeout(() => {
       // complete, saving whatever results we have
-      complete(true)
+      contactables.forEach(contactable => contactable.stopListening())
+      resolve({ timeoutComplete: true, results })
     }, maxTime * 1000)
 
 
@@ -106,7 +95,9 @@ const collectFromContactables = async <T>(
           contactable.stopListening()
         }
         if (isTotalComplete(results)) {
-          complete(false)
+          clearTimeout(timeoutId)
+          contactables.forEach(contactable => contactable.stopListening())
+          resolve({ timeoutComplete: false, results })
         }
       })
     })

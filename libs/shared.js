@@ -81,23 +81,13 @@ convertToResult, onResult, isTotalComplete) { return __awaiter(void 0, void 0, v
         return [2 /*return*/, new Promise(function (resolve) {
                 // array to store the results
                 var results = [];
-                // setup a completion handler that
-                // can only fire once
-                var calledComplete = false;
-                var complete = function (timeoutComplete) {
-                    if (!calledComplete) {
-                        clearTimeout(timeoutId);
-                        calledComplete = true;
-                        contactables.forEach(function (contactable) { return contactable.stopListening(); });
-                        resolve({ timeoutComplete: timeoutComplete, results: results });
-                    }
-                };
                 // stop the process after a maximum amount of time
                 // maxTime is passed in as seconds, and setTimeout accepts milliseconds,
                 // so multiply by a thousand
                 var timeoutId = setTimeout(function () {
                     // complete, saving whatever results we have
-                    complete(true);
+                    contactables.forEach(function (contactable) { return contactable.stopListening(); });
+                    resolve({ timeoutComplete: true, results: results });
                 }, maxTime * 1000);
                 contactables.forEach(function (contactable) {
                     // keep track of the results from this person
@@ -121,7 +111,9 @@ convertToResult, onResult, isTotalComplete) { return __awaiter(void 0, void 0, v
                             contactable.stopListening();
                         }
                         if (isTotalComplete(results)) {
-                            complete(false);
+                            clearTimeout(timeoutId);
+                            contactables.forEach(function (contactable) { return contactable.stopListening(); });
+                            resolve({ timeoutComplete: false, results: results });
                         }
                     });
                 });
