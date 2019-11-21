@@ -94,6 +94,8 @@ At the time of writing, just a few components of interest have been developed, t
     - for a list/array of statements, collect a response or vote (from a limited number of valid options, or unlimited) for each from a list of participants
 - [PairwiseComparison](https://github.com/rapid-sensemaking-framework/noflo-rsf/blob/master/ts-components/PairwiseComparison.ts)
     - input: a list of statements, process: have all participants choose preferences between pairs of statements, return the list of compared/ranked results.
+- [PairwiseComparisonQual](https://github.com/rapid-sensemaking-framework/noflo-rsf/blob/master/ts-components/PairwiseComparisonQual.ts)
+    - like PairwiseComparison, but allows for freeform response to the relationship between the two compared elements
 - [ParticipantRegister](https://github.com/rapid-sensemaking-framework/noflo-rsf/blob/master/ts-components/ParticipantRegister.ts)
     - input: nothing, process: spin up a form on a webserver and collect peoples contact info that opt in to participate, output: a list of Contactable participantConfigs
     - ![rsf collect participants v0.0.13 screenshot](./screenshots/rsf-collect-participants-v0.0.13.png)
