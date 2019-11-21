@@ -47,13 +47,10 @@ const coreLogic = async (
   const onPersonalComplete = (personalResultsSoFar: Statement[], contactable: Contactable) => {
     contactable.speak(maxResponsesText)
   }
-  const convertToResult = (msg: string, personalResultsSoFar: Statement[], contactable: Contactable) => {
+  const convertToResult = (msg: string, personalResultsSoFar: Statement[], contactable: Contactable): Statement => {
     return {
       text: msg,
-      id: { // TODO: convert to contactable.config()
-        type: "",
-        id: contactable.id
-      },
+      contact: contactable.config(),
       timestamp: Date.now() }
   }
   const onResult = statementCb
@@ -94,9 +91,7 @@ const process: ProcessHandler = async (input, output) => {
 
   let contactables: Contactable[]
   try {
-    const which = whichToInit(contactableConfigs)
-    console.log('whichToInit', which)
-    await contactableInit(which, botConfigs)
+    await contactableInit(whichToInit(contactableConfigs), botConfigs)
     contactables = contactableConfigs.map(makeContactable)
   } catch (e) {
     output.send({

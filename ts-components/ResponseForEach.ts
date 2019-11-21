@@ -82,10 +82,7 @@ const coreLogic = async (
       statement: { ...statements[responsesSoFar] }, // clone
       response: matchedOption.text,
       responseTrigger: msg,
-      id: {
-        type: "", // TODO: fix this with contactable.config()
-        id: contactable.id
-      },
+      contact: contactable.config(),
       timestamp: Date.now()
     }
   }

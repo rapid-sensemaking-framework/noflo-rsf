@@ -124,7 +124,7 @@ exports.collectFromContactables = collectFromContactables;
 var formatPairwiseChoice = function (numPerPerson, numSoFar, pairwiseChoice) {
     return "(" + (numPerPerson - 1 - numSoFar) + " remaining)\n0) " + pairwiseChoice[0].text + "\n1) " + pairwiseChoice[1].text;
 };
-var genericPairwise = function (contactables, statements, choice, maxTime, eachCb, validate, convertToPairwiseResult, maxResponsesText, allCompletedText, timeoutText, invalidResponseText) {
+var genericPairwise = function (contactables, statements, contextMsg, maxTime, eachCb, validate, convertToPairwiseResult, maxResponsesText, allCompletedText, timeoutText, invalidResponseText) {
     if (maxResponsesText === void 0) { maxResponsesText = DEFAULT_MAX_RESPONSES_TEXT; }
     if (allCompletedText === void 0) { allCompletedText = DEFAULT_ALL_COMPLETED_TEXT; }
     if (timeoutText === void 0) { timeoutText = DEFAULT_TIMEOUT_TEXT; }
@@ -158,7 +158,7 @@ var genericPairwise = function (contactables, statements, choice, maxTime, eachC
                                     return [4 /*yield*/, timer(500)];
                                 case 2:
                                     _a.sent();
-                                    return [4 /*yield*/, contactable.speak(choice)
+                                    return [4 /*yield*/, contactable.speak(contextMsg)
                                         // send the first one
                                     ];
                                 case 3:

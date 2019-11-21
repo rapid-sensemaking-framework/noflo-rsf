@@ -86,10 +86,7 @@ var coreLogic = function (contactables, maxResponses, maxTime, prompt, statement
                     convertToResult = function (msg, personalResultsSoFar, contactable) {
                         return {
                             text: msg,
-                            id: {
-                                type: "",
-                                id: contactable.id
-                            },
+                            contact: contactable.config(),
                             timestamp: Date.now()
                         };
                     };
@@ -110,7 +107,7 @@ var coreLogic = function (contactables, maxResponses, maxTime, prompt, statement
 };
 exports.coreLogic = coreLogic;
 var process = function (input, output) { return __awaiter(void 0, void 0, void 0, function () {
-    var maxResponsesInput, maxResponses, maxTime, prompt, botConfigs, contactableConfigs, maxResponsesText, allCompletedText, timeoutText, contactables, which, e_1, results, e_2;
+    var maxResponsesInput, maxResponses, maxTime, prompt, botConfigs, contactableConfigs, maxResponsesText, allCompletedText, timeoutText, contactables, e_1, results, e_2;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -129,9 +126,7 @@ var process = function (input, output) { return __awaiter(void 0, void 0, void 0
                 _a.label = 1;
             case 1:
                 _a.trys.push([1, 3, , 4]);
-                which = shared_1.whichToInit(contactableConfigs);
-                console.log('whichToInit', which);
-                return [4 /*yield*/, rsf_contactable_1.init(which, botConfigs)];
+                return [4 /*yield*/, rsf_contactable_1.init(shared_1.whichToInit(contactableConfigs), botConfigs)];
             case 2:
                 _a.sent();
                 contactables = contactableConfigs.map(rsf_contactable_1.makeContactable);

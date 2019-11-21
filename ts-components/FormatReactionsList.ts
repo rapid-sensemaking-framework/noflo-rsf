@@ -12,7 +12,7 @@ const process: ProcessHandler = (input, output) => {
   const anonymize: boolean = input.getData('anonymize')
   const formatted: string = reactions.reduce((memo, r) => {
     return `${memo}
-${r.statement.text} : ${r.response}` + (anonymize ? '' : ` : ${r.id}`)
+${r.statement.text} : ${r.response} : ${r.responseTrigger}` + (anonymize || !r.contact ? '' : ` : ${JSON.stringify(r.contact)}`)
   }, '')
   output.send({
     formatted

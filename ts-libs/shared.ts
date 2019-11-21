@@ -113,7 +113,7 @@ const formatPairwiseChoice: FormatPairwiseFn = (numPerPerson: number, numSoFar: 
 const genericPairwise = async <T>(
   contactables: Contactable[],
   statements: Statement[],
-  choice: string,
+  contextMsg: string,
   maxTime: number,
   eachCb: (el: T) => void,
   validate: ValidateFn,
@@ -142,7 +142,7 @@ const genericPairwise = async <T>(
   contactables.forEach(async (contactable: Contactable): Promise<void> => {
     await contactable.speak(rulesText(maxTime))
     await timer(500)
-    await contactable.speak(choice)
+    await contactable.speak(contextMsg)
     // send the first one
     if (statements.length) {
       await timer(500)

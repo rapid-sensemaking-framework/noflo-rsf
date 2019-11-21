@@ -55,10 +55,7 @@ var coreLogic = function (contactables, statements, choice, maxTime, eachCb, max
                         return {
                             choices: pairsTexts[responsesSoFar],
                             choice: parseInt(msg),
-                            id: {
-                                type: '',
-                                id: contactable.id
-                            },
+                            contact: contactable.config(),
                             timestamp: Date.now()
                         };
                     };

@@ -35,10 +35,7 @@ const coreLogic = async (
     return {
       choices: pairsTexts[responsesSoFar],
       choice: parseInt(msg),
-      id: {
-        type: '',  // TODO: update this to use contactable.config()
-        id: contactable.id
-      },
+      contact: contactable.config(),
       timestamp: Date.now()
     }
   }

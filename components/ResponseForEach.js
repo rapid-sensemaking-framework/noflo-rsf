@@ -121,10 +121,7 @@ var coreLogic = function (contactables, statements, options, maxTime, reactionCb
                             statement: __assign({}, statements[responsesSoFar]),
                             response: matchedOption.text,
                             responseTrigger: msg,
-                            id: {
-                                type: "",
-                                id: contactable.id
-                            },
+                            contact: contactable.config(),
                             timestamp: Date.now()
                         };
                     };

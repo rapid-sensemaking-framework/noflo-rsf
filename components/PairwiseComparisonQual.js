@@ -40,7 +40,7 @@ var noflo = require("noflo");
 var rsf_contactable_1 = require("rsf-contactable");
 var shared_1 = require("../libs/shared");
 var defaultPairwiseQualifiedCb = function (pairwiseQualified) { };
-var coreLogic = function (contactables, statements, choice, maxTime, eachCb, maxResponsesText, allCompletedText, timeoutText, invalidResponseText) {
+var coreLogic = function (contactables, statements, question, maxTime, eachCb, maxResponsesText, allCompletedText, timeoutText, invalidResponseText) {
     if (eachCb === void 0) { eachCb = defaultPairwiseQualifiedCb; }
     return __awaiter(void 0, void 0, void 0, function () {
         var validate, convertToPairwiseResult;
@@ -55,14 +55,11 @@ var coreLogic = function (contactables, statements, choice, maxTime, eachCb, max
                         return {
                             choices: pairsTexts[responsesSoFar],
                             quality: msg,
-                            id: {
-                                type: '',
-                                id: contactable.id
-                            },
+                            contact: contactable.config(),
                             timestamp: Date.now()
                         };
                     };
-                    return [4 /*yield*/, shared_1.genericPairwise(contactables, statements, choice, maxTime, eachCb, validate, convertToPairwiseResult, maxResponsesText, allCompletedText, timeoutText, invalidResponseText)];
+                    return [4 /*yield*/, shared_1.genericPairwise(contactables, statements, question, maxTime, eachCb, validate, convertToPairwiseResult, maxResponsesText, allCompletedText, timeoutText, invalidResponseText)];
                 case 1: return [2 /*return*/, _a.sent()];
             }
         });
@@ -70,14 +67,14 @@ var coreLogic = function (contactables, statements, choice, maxTime, eachCb, max
 };
 exports.coreLogic = coreLogic;
 var process = function (input, output) { return __awaiter(void 0, void 0, void 0, function () {
-    var choice, statements, maxTime, botConfigs, contactableConfigs, maxResponsesText, allCompletedText, invalidResponseText, timeoutText, contactables, e_1, results, e_2;
+    var question, statements, maxTime, botConfigs, contactableConfigs, maxResponsesText, allCompletedText, invalidResponseText, timeoutText, contactables, e_1, results, e_2;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                if (!input.hasData('choice', 'statements', 'max_time', 'contactable_configs', 'bot_configs')) {
+                if (!input.hasData('question', 'statements', 'max_time', 'contactable_configs', 'bot_configs')) {
                     return [2 /*return*/];
                 }
-                choice = input.getData('choice');
+                question = input.getData('question');
                 statements = input.getData('statements');
                 maxTime = input.getData('max_time');
                 botConfigs = input.getData('bot_configs');
@@ -103,8 +100,8 @@ var process = function (input, output) { return __awaiter(void 0, void 0, void 0
                 return [2 /*return*/];
             case 4:
                 _a.trys.push([4, 6, , 7]);
-                return [4 /*yield*/, coreLogic(contactables, statements, choice, maxTime, function (pairwiseQualified) {
-                        output.send({ pairwise_vote: pairwiseQualified });
+                return [4 /*yield*/, coreLogic(contactables, statements, question, maxTime, function (pairwiseQualified) {
+                        output.send({ pairwise_qual: pairwiseQualified });
                     }, maxResponsesText, allCompletedText, timeoutText, invalidResponseText)];
             case 5:
                 results = _a.sent();
@@ -129,17 +126,17 @@ var process = function (input, output) { return __awaiter(void 0, void 0, void 0
 var getComponent = function () {
     var c = new noflo.Component();
     /* META */
-    c.description = 'Iterate through all the combinations in a list of statements getting peoples choices on them';
+    c.description = 'Iterate through all the combinations in a list of statements getting peoples to free relate them';
     c.icon = 'compress';
     /* IN PORTS */
-    c.inPorts.add('choice', {
+    c.inPorts.add('question', {
         datatype: 'string',
-        description: 'a human readable string clarifying what a choice for either of any two options means',
+        description: 'a human readable string clarifying what you would like them to consider about a pair and respond to',
         required: true
     });
     c.inPorts.add('statements', {
         datatype: 'array',
-        description: 'the list of statements (as objects with property "text") to create all possible pairs out of, and make choices between',
+        description: 'the list of statements (as objects with property "text") to create all possible pairs out of, and relate',
         required: true
     });
     c.inPorts.add('max_time', {
@@ -174,7 +171,7 @@ var getComponent = function () {
         description: 'msg override: the message sent to all participants when the process completes because the timeout is reached'
     });
     /* OUT PORTS */
-    c.outPorts.add('pairwise_vote', {
+    c.outPorts.add('pairwise_qual', {
         datatype: 'object' // rsf-types/PairwiseQualified
     });
     c.outPorts.add('results', {

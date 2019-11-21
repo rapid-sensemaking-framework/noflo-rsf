@@ -14,7 +14,7 @@ const defaultPairwiseQualifiedCb = (pairwiseQualified: PairwiseQualified): void 
 const coreLogic = async (
   contactables: Contactable[],
   statements: Statement[],
-  choice: string,
+  question: string,
   maxTime: number,
   eachCb: (pairwiseQualified: PairwiseQualified) => void = defaultPairwiseQualifiedCb,
   maxResponsesText: string,
@@ -37,10 +37,7 @@ const coreLogic = async (
     return {
       choices: pairsTexts[responsesSoFar],
       quality: msg,
-      id: {
-        type: '',  // TODO: update this to use contactable.config()
-        id: contactable.id
-      },
+      contact: contactable.config(),
       timestamp: Date.now()
     }
   }
@@ -48,7 +45,7 @@ const coreLogic = async (
   return await genericPairwise<PairwiseQualified>(
     contactables,
     statements,
-    choice,
+    question,
     maxTime,
     eachCb,
     validate,
@@ -62,11 +59,11 @@ const coreLogic = async (
 
 const process: ProcessHandler = async (input, output) => {
 
-  if (!input.hasData('choice', 'statements', 'max_time', 'contactable_configs', 'bot_configs')) {
+  if (!input.hasData('question', 'statements', 'max_time', 'contactable_configs', 'bot_configs')) {
     return
   }
 
-  const choice: string = input.getData('choice')
+  const question: string = input.getData('question')
   const statements: Statement[] = input.getData('statements')
   const maxTime: number = input.getData('max_time')
   const botConfigs: ContactableInitConfig = input.getData('bot_configs')
@@ -92,10 +89,10 @@ const process: ProcessHandler = async (input, output) => {
     const results: PairwiseQualified[] = await coreLogic(
       contactables,
       statements,
-      choice,
+      question,
       maxTime,
       (pairwiseQualified: PairwiseQualified): void => {
-        output.send({ pairwise_vote: pairwiseQualified })
+        output.send({ pairwise_qual: pairwiseQualified })
       },
       maxResponsesText,
       allCompletedText,
@@ -118,18 +115,18 @@ const getComponent = (): NofloComponent => {
   const c: NofloComponent = new noflo.Component()
 
   /* META */
-  c.description = 'Iterate through all the combinations in a list of statements getting peoples choices on them'
+  c.description = 'Iterate through all the combinations in a list of statements getting peoples to free relate them'
   c.icon = 'compress'
 
   /* IN PORTS */
-  c.inPorts.add('choice', {
+  c.inPorts.add('question', {
     datatype: 'string',
-    description: 'a human readable string clarifying what a choice for either of any two options means',
+    description: 'a human readable string clarifying what you would like them to consider about a pair and respond to',
     required: true
   })
   c.inPorts.add('statements', {
     datatype: 'array', // rsf-types/Statement[]
-    description: 'the list of statements (as objects with property "text") to create all possible pairs out of, and make choices between',
+    description: 'the list of statements (as objects with property "text") to create all possible pairs out of, and relate',
     required: true
   })
   c.inPorts.add('max_time', {
@@ -165,7 +162,7 @@ const getComponent = (): NofloComponent => {
   })
 
   /* OUT PORTS */
-  c.outPorts.add('pairwise_vote', {
+  c.outPorts.add('pairwise_qual', {
     datatype: 'object' // rsf-types/PairwiseQualified
   })
   c.outPorts.add('results', {

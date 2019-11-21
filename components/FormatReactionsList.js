@@ -8,7 +8,7 @@ var process = function (input, output) {
     var reactions = input.getData('reactions');
     var anonymize = input.getData('anonymize');
     var formatted = reactions.reduce(function (memo, r) {
-        return memo + "\n" + r.statement.text + " : " + r.response + (anonymize ? '' : " : " + r.id);
+        return memo + "\n" + r.statement.text + " : " + r.response + " : " + r.responseTrigger + (anonymize || !r.contact ? '' : " : " + JSON.stringify(r.contact));
     }, '');
     output.send({
         formatted: formatted
