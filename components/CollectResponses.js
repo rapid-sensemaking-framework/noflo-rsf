@@ -81,7 +81,6 @@ var coreLogic = function (contactables, maxResponses, maxTime, prompt, statement
                         return personalResultsSoFar.length === maxResponses;
                     };
                     onPersonalComplete = function (personalResultsSoFar, contactable) {
-                        console.log('Personal Complete!');
                         contactable.speak(maxResponsesText);
                     };
                     convertToResult = function (msg, personalResultsSoFar, contactable) {
@@ -101,7 +100,6 @@ var coreLogic = function (contactables, maxResponses, maxTime, prompt, statement
                     return [4 /*yield*/, shared_1.collectFromContactables(contactables, maxTime, validate, onInvalid, isPersonalComplete, onPersonalComplete, convertToResult, onResult, isTotalComplete)];
                 case 1:
                     _a = _b.sent(), timeoutComplete = _a.timeoutComplete, results = _a.results;
-                    console.log('All Complete!');
                     return [4 /*yield*/, Promise.all(contactables.map(function (contactable) { return contactable.speak(timeoutComplete ? timeoutText : allCompletedText); }))];
                 case 2:
                     _b.sent();
