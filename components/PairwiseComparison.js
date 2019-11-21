@@ -40,104 +40,30 @@ var noflo = require("noflo");
 var rsf_contactable_1 = require("rsf-contactable");
 var shared_1 = require("../libs/shared");
 var defaultPairwiseVoteCb = function (pairwiseVote) { };
-var formatPairwiseChoice = function (numPerPerson, numSoFar, pairwiseChoice) {
-    return "(" + (numPerPerson - 1 - numSoFar) + " remaining)\nA) " + pairwiseChoice['A'].text + "\n1) " + pairwiseChoice['1'].text;
-};
-var coreLogic = function (contactables, statements, choice, maxTime, pairwiseVoteCb, maxResponsesText, allCompletedText, timeoutText, invalidResponseText) {
-    if (pairwiseVoteCb === void 0) { pairwiseVoteCb = defaultPairwiseVoteCb; }
-    if (maxResponsesText === void 0) { maxResponsesText = shared_1.DEFAULT_MAX_RESPONSES_TEXT; }
-    if (allCompletedText === void 0) { allCompletedText = shared_1.DEFAULT_ALL_COMPLETED_TEXT; }
-    if (timeoutText === void 0) { timeoutText = shared_1.DEFAULT_TIMEOUT_TEXT; }
-    if (invalidResponseText === void 0) { invalidResponseText = shared_1.DEFAULT_INVALID_RESPONSE_TEXT; }
+var coreLogic = function (contactables, statements, choice, maxTime, eachCb, maxResponsesText, allCompletedText, timeoutText, invalidResponseText) {
+    if (eachCb === void 0) { eachCb = defaultPairwiseVoteCb; }
     return __awaiter(void 0, void 0, void 0, function () {
-        var pairsTexts, validate, onInvalid, isPersonalComplete, onPersonalComplete, convertToResult, onResult, isTotalComplete, _a, timeoutComplete, results;
-        return __generator(this, function (_b) {
-            switch (_b.label) {
+        var validate, convertToPairwiseResult;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
                 case 0:
-                    pairsTexts = [];
-                    statements.forEach(function (statement, index) {
-                        for (var i = index + 1; i < statements.length; i++) {
-                            var pairedStatement = statements[i];
-                            // use A and 1 to try to minimize preference
-                            // bias for 1 vs 2, or A vs B
-                            pairsTexts.push({
-                                A: statement,
-                                1: pairedStatement
-                            });
-                        }
-                    });
-                    // initiate contact with each person
-                    // and set context, and "rules"
-                    contactables.forEach(function (contactable) { return __awaiter(void 0, void 0, void 0, function () {
-                        var first;
-                        return __generator(this, function (_a) {
-                            switch (_a.label) {
-                                case 0: return [4 /*yield*/, contactable.speak(shared_1.rulesText(maxTime))];
-                                case 1:
-                                    _a.sent();
-                                    return [4 /*yield*/, shared_1.timer(500)];
-                                case 2:
-                                    _a.sent();
-                                    return [4 /*yield*/, contactable.speak(choice)
-                                        // send the first one
-                                    ];
-                                case 3:
-                                    _a.sent();
-                                    if (!statements.length) return [3 /*break*/, 6];
-                                    return [4 /*yield*/, shared_1.timer(500)];
-                                case 4:
-                                    _a.sent();
-                                    first = formatPairwiseChoice(pairsTexts.length, 0, pairsTexts[0]);
-                                    return [4 /*yield*/, contactable.speak(first)];
-                                case 5:
-                                    _a.sent();
-                                    _a.label = 6;
-                                case 6: return [2 /*return*/];
-                            }
-                        });
-                    }); });
                     validate = function (text) {
-                        return text === '1' || text === 'A' || text === 'a';
+                        return text === '1' || text === '0';
                     };
-                    onInvalid = function (msg, contactable) {
-                        contactable.speak(invalidResponseText);
-                    };
-                    isPersonalComplete = function (personalResultsSoFar) {
-                        return personalResultsSoFar.length === pairsTexts.length;
-                    };
-                    onPersonalComplete = function (personalResultsSoFar, contactable) {
-                        contactable.speak(maxResponsesText);
-                    };
-                    convertToResult = function (msg, personalResultsSoFar, contactable) {
+                    convertToPairwiseResult = function (msg, personalResultsSoFar, contactable, pairsTexts) {
                         var responsesSoFar = personalResultsSoFar.length;
                         return {
                             choices: pairsTexts[responsesSoFar],
-                            choice: msg.toUpperCase(),
-                            id: contactable.id,
+                            choice: parseInt(msg),
+                            id: {
+                                type: '',
+                                id: contactable.id
+                            },
                             timestamp: Date.now()
                         };
                     };
-                    onResult = function (pairwiseVote, personalResultsSoFar, contactable) {
-                        // each time it gets one, send the next one
-                        // until they're all responded to!
-                        var responsesSoFar = personalResultsSoFar.length;
-                        if (pairsTexts[responsesSoFar]) {
-                            var next = formatPairwiseChoice(pairsTexts.length, responsesSoFar, pairsTexts[responsesSoFar]);
-                            contactable.speak(next);
-                        }
-                        pairwiseVoteCb(pairwiseVote);
-                    };
-                    isTotalComplete = function (allResultsSoFar) {
-                        // exit when everyone has responded to everything
-                        return allResultsSoFar.length === contactables.length * pairsTexts.length;
-                    };
-                    return [4 /*yield*/, shared_1.collectFromContactables(contactables, maxTime, validate, onInvalid, isPersonalComplete, onPersonalComplete, convertToResult, onResult, isTotalComplete)];
-                case 1:
-                    _a = _b.sent(), timeoutComplete = _a.timeoutComplete, results = _a.results;
-                    return [4 /*yield*/, Promise.all(contactables.map(function (contactable) { return contactable.speak(timeoutComplete ? timeoutText : allCompletedText); }))];
-                case 2:
-                    _b.sent();
-                    return [2 /*return*/, results];
+                    return [4 /*yield*/, shared_1.genericPairwise(contactables, statements, choice, maxTime, eachCb, validate, convertToPairwiseResult, maxResponsesText, allCompletedText, timeoutText, invalidResponseText)];
+                case 1: return [2 /*return*/, _a.sent()];
             }
         });
     });

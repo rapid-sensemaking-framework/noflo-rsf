@@ -16,7 +16,8 @@ import {
   rulesText,
   whichToInit,
   collectFromContactables,
-  timer
+  timer,
+  CollectResults
 } from '../libs/shared'
 import { ProcessHandler, NofloComponent } from '../libs/noflo-types'
 
@@ -74,14 +75,17 @@ const coreLogic = async (
   const onPersonalComplete = (personalResultsSoFar: Reaction[], contactable: Contactable): void => {
     contactable.speak(maxResponsesText)
   }
-  const convertToResult = (msg: string, personalResultsSoFar: Reaction[], contactable: any): Reaction => {
+  const convertToResult = (msg: string, personalResultsSoFar: Reaction[], contactable: Contactable): Reaction => {
     const matchedOption = matchOption(msg)
     const responsesSoFar = personalResultsSoFar.length
     return {
       statement: { ...statements[responsesSoFar] }, // clone
       response: matchedOption.text,
       responseTrigger: msg,
-      id: contactable.id,
+      id: {
+        type: "", // TODO: fix this with contactable.config()
+        id: contactable.id
+      },
       timestamp: Date.now()
     }
   }
@@ -99,7 +103,7 @@ const coreLogic = async (
     return allResultsSoFar.length === contactables.length * statements.length
   }
 
-  const { timeoutComplete, results }: { timeoutComplete: boolean, results: Reaction[] } = await collectFromContactables<Reaction>(
+  const collectResults: CollectResults<Reaction> = await collectFromContactables<Reaction>(
     contactables,
     maxTime,
     validate,
@@ -110,6 +114,7 @@ const coreLogic = async (
     onResult,
     isTotalComplete
   )
+  const { timeoutComplete, results } = collectResults
   await Promise.all(contactables.map((contactable: Contactable): Promise<void> => contactable.speak(timeoutComplete ? timeoutText : allCompletedText)))
   return results
 }

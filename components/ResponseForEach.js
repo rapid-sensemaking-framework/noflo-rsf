@@ -65,9 +65,9 @@ var coreLogic = function (contactables, statements, options, maxTime, reactionCb
     if (timeoutText === void 0) { timeoutText = shared_1.DEFAULT_TIMEOUT_TEXT; }
     if (invalidResponseText === void 0) { invalidResponseText = shared_1.DEFAULT_INVALID_RESPONSE_TEXT; }
     return __awaiter(void 0, void 0, void 0, function () {
-        var matchOption, validate, onInvalid, isPersonalComplete, onPersonalComplete, convertToResult, onResult, isTotalComplete, _a, timeoutComplete, results;
-        return __generator(this, function (_b) {
-            switch (_b.label) {
+        var matchOption, validate, onInvalid, isPersonalComplete, onPersonalComplete, convertToResult, onResult, isTotalComplete, collectResults, timeoutComplete, results;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
                 case 0:
                     // initiate contact with each person
                     // and set context, and "rules"
@@ -121,7 +121,10 @@ var coreLogic = function (contactables, statements, options, maxTime, reactionCb
                             statement: __assign({}, statements[responsesSoFar]),
                             response: matchedOption.text,
                             responseTrigger: msg,
-                            id: contactable.id,
+                            id: {
+                                type: "",
+                                id: contactable.id
+                            },
                             timestamp: Date.now()
                         };
                     };
@@ -140,10 +143,11 @@ var coreLogic = function (contactables, statements, options, maxTime, reactionCb
                     };
                     return [4 /*yield*/, shared_1.collectFromContactables(contactables, maxTime, validate, onInvalid, isPersonalComplete, onPersonalComplete, convertToResult, onResult, isTotalComplete)];
                 case 1:
-                    _a = _b.sent(), timeoutComplete = _a.timeoutComplete, results = _a.results;
+                    collectResults = _a.sent();
+                    timeoutComplete = collectResults.timeoutComplete, results = collectResults.results;
                     return [4 /*yield*/, Promise.all(contactables.map(function (contactable) { return contactable.speak(timeoutComplete ? timeoutText : allCompletedText); }))];
                 case 2:
-                    _b.sent();
+                    _a.sent();
                     return [2 /*return*/, results];
             }
         });

@@ -30,13 +30,13 @@ describe('PairwiseComparison', () => {
       const choice = 'Pick whichever you prefer!'
       coreLogic(contactables, statements, choice, maxSeconds).then(results => {
         expect(results.length).to.equal(3)
-        expect(results[0].choice).to.equal('1')
-        expect(results[1].choice).to.equal('A')
-        expect(results[2].choice).to.equal('1')
+        expect(results[0].choice).to.equal(1)
+        expect(results[1].choice).to.equal(0)
+        expect(results[2].choice).to.equal(1)
         done()
       })
       contactables[0].trigger('1')
-      contactables[0].trigger('A')
+      contactables[0].trigger('0')
       contactables[0].trigger('1')
     })
   })

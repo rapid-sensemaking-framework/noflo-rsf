@@ -2,39 +2,41 @@ import * as noflo from 'noflo'
 import { init as contactableInit, makeContactable, shutdown as contactableShutdown } from 'rsf-contactable'
 import {
   whichToInit,
-  PairwiseResultFn,
-  genericPairwise
+  genericPairwise,
+  ValidateFn,
+  PairwiseResultFn
 } from '../libs/shared'
-import { Contactable, Statement, ContactableConfig, PairwiseVote, PairwiseChoice, ContactableInitConfig, PairwiseQualified } from 'rsf-types'
+import { Contactable, Statement, ContactableConfig, PairwiseQualified, PairwiseChoice, ContactableInitConfig } from 'rsf-types'
 import { ProcessHandler, NofloComponent } from '../libs/noflo-types'
 
-const defaultPairwiseVoteCb = (pairwiseVote: PairwiseVote): void => { }
+const defaultPairwiseQualifiedCb = (pairwiseQualified: PairwiseQualified): void => { }
 
 const coreLogic = async (
   contactables: Contactable[],
   statements: Statement[],
   choice: string,
   maxTime: number,
-  eachCb: (pairwiseVote: PairwiseVote) => void = defaultPairwiseVoteCb,
+  eachCb: (pairwiseQualified: PairwiseQualified) => void = defaultPairwiseQualifiedCb,
   maxResponsesText: string,
   allCompletedText: string,
   timeoutText: string,
   invalidResponseText: string
-): Promise<PairwiseVote[]> => {
+): Promise<PairwiseQualified[]> => {
 
-  const validate = (text: string): boolean => {
-    return text === '1' || text === '0'
+  const validate: ValidateFn = (): boolean => {
+    return true
   }
-  const convertToPairwiseResult: PairwiseResultFn<PairwiseVote> = (
+
+  const convertToPairwiseResult: PairwiseResultFn<PairwiseQualified> = (
     msg: string,
-    personalResultsSoFar: PairwiseVote[],
+    personalResultsSoFar: PairwiseQualified[],
     contactable: Contactable,
     pairsTexts: PairwiseChoice[]
-  ): PairwiseVote => {
+  ): PairwiseQualified => {
     const responsesSoFar = personalResultsSoFar.length
     return {
       choices: pairsTexts[responsesSoFar],
-      choice: parseInt(msg),
+      quality: msg,
       id: {
         type: '',  // TODO: update this to use contactable.config()
         id: contactable.id
@@ -43,7 +45,7 @@ const coreLogic = async (
     }
   }
   
-  return await genericPairwise<PairwiseVote>(
+  return await genericPairwise<PairwiseQualified>(
     contactables,
     statements,
     choice,
@@ -87,13 +89,13 @@ const process: ProcessHandler = async (input, output) => {
   }
 
   try {
-    const results: PairwiseVote[] = await coreLogic(
+    const results: PairwiseQualified[] = await coreLogic(
       contactables,
       statements,
       choice,
       maxTime,
-      (pairwiseVote: PairwiseVote): void => {
-        output.send({ pairwise_vote: pairwiseVote })
+      (pairwiseQualified: PairwiseQualified): void => {
+        output.send({ pairwise_vote: pairwiseQualified })
       },
       maxResponsesText,
       allCompletedText,
@@ -164,10 +166,10 @@ const getComponent = (): NofloComponent => {
 
   /* OUT PORTS */
   c.outPorts.add('pairwise_vote', {
-    datatype: 'object' // rsf-types/PairwiseVote
+    datatype: 'object' // rsf-types/PairwiseQualified
   })
   c.outPorts.add('results', {
-    datatype: 'array' // rsf-types/PairwiseVote[]
+    datatype: 'array' // rsf-types/PairwiseQualified[]
   })
   c.outPorts.add('error', {
     datatype: 'all'

@@ -75,4 +75,32 @@ describe('CollectResponses', function () {
       contactables[0].trigger('hi')
     })
   })
+
+  context('when participants reach a set response cap', function () {
+    it('should stop accepting responses from them, but keep accepting responses from others', (done) => {
+      const mockMakeContactable = newMockMakeContactable(sinon.spy)
+      const contactables = [{ id: 'dude' }, { id: 'dudette' }].map(mockMakeContactable)
+      const maxResponses = 1
+      const maxSeconds = 1
+      const prompt = 'prompt'
+      coreLogic(contactables, maxResponses, maxSeconds, prompt).then((results) => {
+        const spoken = contactables[0].speak
+        expect(results.length).to.equal(2)
+        expect(results[0].text).to.equal('first response')
+        expect(results[1].text).to.equal('other first response')
+        expect(spoken.getCall(0).args[0]).to.equal('prompt')
+        expect(spoken.getCall(1).args[0]).to.equal('Contribute one response per message. You can contribute up to 1 responses. The process will stop automatically after 1 seconds.')
+        // reject them twice, each time they respond again, past the limit
+        expect(spoken.getCall(2).args[0]).to.equal('You\'ve reached the limit of responses. Thanks for participating. You will be notified when everyone has completed.')
+        expect(spoken.getCall(3).args[0]).to.equal('You\'ve reached the limit of responses. Thanks for participating. You will be notified when everyone has completed.')
+        done()
+      })
+      setTimeout(() => {
+        contactables[0].trigger('first response')
+        contactables[0].trigger('second second')
+        contactables[0].trigger('third response')
+        contactables[1].trigger('other first response')
+      }, 700)
+    })
+  })
 })

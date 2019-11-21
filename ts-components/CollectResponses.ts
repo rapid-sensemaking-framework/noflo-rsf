@@ -48,7 +48,13 @@ const coreLogic = async (
     contactable.speak(maxResponsesText)
   }
   const convertToResult = (msg: string, personalResultsSoFar: Statement[], contactable: Contactable) => {
-    return { text: msg, id: contactable.id, timestamp: Date.now() }
+    return {
+      text: msg,
+      id: { // TODO: convert to contactable.config()
+        type: "",
+        id: contactable.id
+      },
+      timestamp: Date.now() }
   }
   const onResult = statementCb
   const isTotalComplete = (allResultsSoFar: Statement[]) => {
