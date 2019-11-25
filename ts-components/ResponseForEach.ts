@@ -158,15 +158,16 @@ const process: ProcessHandler = async (input, output) => {
       timeoutText,
       invalidResponseText
     )
+    await contactableShutdown()
     output.send({
       results
     })
   } catch (e) {
+    await contactableShutdown()
     output.send({
       error: e
     })
   }
-  await contactableShutdown()
   output.done()
 }
 

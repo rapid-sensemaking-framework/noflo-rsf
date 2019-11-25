@@ -4,6 +4,10 @@ import { whichToInit } from '../libs/shared'
 import { ProcessHandler, NofloComponent } from '../libs/noflo-types'
 import { Contactable, ContactableConfig, ContactableInitConfig } from 'rsf-types'
 
+const coreLogic = (contactables: Contactable[], message: string) => {
+  return Promise.all(contactables.map(contactable => contactable.speak(message)))
+}
+
 const process: ProcessHandler = async (input, output) => {
   if (!input.hasData('message', 'contactable_configs', 'bot_configs')) {
     return
@@ -12,20 +16,16 @@ const process: ProcessHandler = async (input, output) => {
   const botConfigs: ContactableInitConfig = input.getData('bot_configs')
   const contactableConfigs: ContactableConfig[] = input.getData('contactable_configs')
 
-  let contactables: Contactable[]
   try {
     await contactableInit(whichToInit(contactableConfigs), botConfigs)
-    contactables = contactableConfigs.map(makeContactable)
+    const contactables: Contactable[] = contactableConfigs.map(makeContactable)
+    await coreLogic(contactables, message)
+    await contactableShutdown()
   } catch (e) {
     output.send({
       error: e
     })
-    output.done()
-    return
   }
-
-  await Promise.all(contactables.map(contactable => contactable.speak(message)))
-  await contactableShutdown()
   output.done()
 }
 
@@ -65,5 +65,6 @@ const getComponent = (): NofloComponent => {
 }
 
 export {
+  coreLogic,
   getComponent
 }

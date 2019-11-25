@@ -114,15 +114,16 @@ const process: ProcessHandler = async (input, output) => {
       allCompletedText,
       timeoutText
     )
+    await contactableShutdown()
     output.send({
       results
     })
   } catch (e) {
+    await contactableShutdown()
     output.send({
       error: e
     })
   }
-  await contactableShutdown()
   output.done()
 }
 

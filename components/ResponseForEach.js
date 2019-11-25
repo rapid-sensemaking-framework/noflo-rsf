@@ -185,25 +185,29 @@ var process = function (input, output) { return __awaiter(void 0, void 0, void 0
                 output.done();
                 return [2 /*return*/];
             case 4:
-                _a.trys.push([4, 6, , 7]);
+                _a.trys.push([4, 7, , 9]);
                 return [4 /*yield*/, coreLogic(contactables, statements, options, maxTime, function (reaction) {
                         output.send({ reaction: reaction });
                     }, maxResponsesText, allCompletedText, timeoutText, invalidResponseText)];
             case 5:
                 results = _a.sent();
+                return [4 /*yield*/, rsf_contactable_1.shutdown()];
+            case 6:
+                _a.sent();
                 output.send({
                     results: results
                 });
-                return [3 /*break*/, 7];
-            case 6:
+                return [3 /*break*/, 9];
+            case 7:
                 e_2 = _a.sent();
+                return [4 /*yield*/, rsf_contactable_1.shutdown()];
+            case 8:
+                _a.sent();
                 output.send({
                     error: e_2
                 });
-                return [3 /*break*/, 7];
-            case 7: return [4 /*yield*/, rsf_contactable_1.shutdown()];
-            case 8:
-                _a.sent();
+                return [3 /*break*/, 9];
+            case 9:
                 output.done();
                 return [2 /*return*/];
         }

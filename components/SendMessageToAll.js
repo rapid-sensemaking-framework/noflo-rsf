@@ -39,6 +39,10 @@ exports.__esModule = true;
 var noflo = require("noflo");
 var rsf_contactable_1 = require("rsf-contactable");
 var shared_1 = require("../libs/shared");
+var coreLogic = function (contactables, message) {
+    return Promise.all(contactables.map(function (contactable) { return contactable.speak(message); }));
+};
+exports.coreLogic = coreLogic;
 var process = function (input, output) { return __awaiter(void 0, void 0, void 0, function () {
     var message, botConfigs, contactableConfigs, contactables, e_1;
     return __generator(this, function (_a) {
@@ -52,25 +56,25 @@ var process = function (input, output) { return __awaiter(void 0, void 0, void 0
                 contactableConfigs = input.getData('contactable_configs');
                 _a.label = 1;
             case 1:
-                _a.trys.push([1, 3, , 4]);
+                _a.trys.push([1, 5, , 6]);
                 return [4 /*yield*/, rsf_contactable_1.init(shared_1.whichToInit(contactableConfigs), botConfigs)];
             case 2:
                 _a.sent();
                 contactables = contactableConfigs.map(rsf_contactable_1.makeContactable);
-                return [3 /*break*/, 4];
+                return [4 /*yield*/, coreLogic(contactables, message)];
             case 3:
+                _a.sent();
+                return [4 /*yield*/, rsf_contactable_1.shutdown()];
+            case 4:
+                _a.sent();
+                return [3 /*break*/, 6];
+            case 5:
                 e_1 = _a.sent();
                 output.send({
                     error: e_1
                 });
-                output.done();
-                return [2 /*return*/];
-            case 4: return [4 /*yield*/, Promise.all(contactables.map(function (contactable) { return contactable.speak(message); }))];
-            case 5:
-                _a.sent();
-                return [4 /*yield*/, rsf_contactable_1.shutdown()];
+                return [3 /*break*/, 6];
             case 6:
-                _a.sent();
                 output.done();
                 return [2 /*return*/];
         }
