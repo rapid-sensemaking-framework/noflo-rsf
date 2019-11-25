@@ -1,7 +1,7 @@
 "use strict";
 exports.__esModule = true;
 var noflo = require("noflo");
-var MAIN_INPUT_STRING = 'pairwise_qualifieds';
+var MAIN_INPUT_STRING = 'pairwise_quantifieds';
 var process = function (input, output) {
     if (!input.hasData(MAIN_INPUT_STRING)) {
         return;

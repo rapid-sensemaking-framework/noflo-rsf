@@ -4,7 +4,7 @@ import {
   NofloComponent, ProcessHandler
 } from '../libs/noflo-types'
 
-const MAIN_INPUT_STRING = 'pairwise_qualifieds'
+const MAIN_INPUT_STRING = 'pairwise_quantifieds'
 
 const process: ProcessHandler = (input, output) => {
   if (!input.hasData(MAIN_INPUT_STRING)) {
