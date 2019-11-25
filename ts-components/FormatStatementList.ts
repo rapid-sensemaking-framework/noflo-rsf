@@ -2,14 +2,17 @@ import * as noflo from 'noflo'
 import { NofloComponent, ProcessHandler } from '../libs/noflo-types'
 import { Statement } from 'rsf-types'
 
+const MAIN_INPUT_STRING = 'statements'
+
 const process: ProcessHandler = (input, output) => {
-  if (!input.hasData('statements')) {
+  if (!input.hasData(MAIN_INPUT_STRING)) {
     return
   }
-  const statements: Statement[] = input.getData('statements')
+  const statements: Statement[] = input.getData(MAIN_INPUT_STRING)
+  const anonymize: boolean = input.getData('anonymize')
   const formatted: string = statements.reduce((memo: string, s: Statement) => {
     return `${memo}
-${s.text}`
+${s.text}` + (anonymize || !s.contact ? '' : ` : ${JSON.stringify(s.contact)}`)
   }, '')
   output.send({
     formatted
@@ -25,10 +28,14 @@ const getComponent = (): NofloComponent => {
   c.icon = 'compress'
 
   /* IN PORTS */
-  c.inPorts.add('statements', {
+  c.inPorts.add(MAIN_INPUT_STRING, {
     datatype: 'array',
     description: 'the list of statements to format',
     required: true
+  })
+  c.inPorts.add('anonymize', {
+    datatype: 'boolean',
+    description: 'whether to remove the information associating statements with people'
   })
 
   /* OUT PORTS */

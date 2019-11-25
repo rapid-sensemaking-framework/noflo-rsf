@@ -1,20 +1,22 @@
 import * as noflo from 'noflo'
-import { Reaction } from 'rsf-types'
+import { PairwiseVote } from 'rsf-types'
 import {
   NofloComponent, ProcessHandler
 } from '../libs/noflo-types'
 
-const MAIN_INPUT_STRING = 'reactions'
+const MAIN_INPUT_STRING = 'pairwise_votes'
 
 const process: ProcessHandler = (input, output) => {
   if (!input.hasData(MAIN_INPUT_STRING)) {
     return
   }
-  const reactions: Reaction[] = input.getData(MAIN_INPUT_STRING)
+  const votes: PairwiseVote[] = input.getData(MAIN_INPUT_STRING)
   const anonymize: boolean = input.getData('anonymize')
-  const formatted: string = reactions.reduce((memo, r) => {
+  const formatted: string = votes.reduce((memo, v) => {
     return `${memo}
-${r.statement.text} : ${r.response} : ${r.responseTrigger}` + (anonymize || !r.contact ? '' : ` : ${JSON.stringify(r.contact)}`)
+0) ${v.choices[0].text}
+1) ${v.choices[1].text}
+choice: ${v.choice}` + (anonymize || !v.contact ? '' : ` : ${JSON.stringify(v.contact)}`)
   }, '')
   output.send({
     formatted
@@ -24,10 +26,10 @@ ${r.statement.text} : ${r.response} : ${r.responseTrigger}` + (anonymize || !r.c
 
 const getComponent = (): NofloComponent => {
   const c: NofloComponent = new noflo.Component()
-  c.description = 'Format a list of reactions to statements to a single string message'
+  c.description = 'Format a list of pairwise votes to a single string message'
   c.icon = 'compress'
   c.inPorts.add(MAIN_INPUT_STRING, {
-    datatype: 'array',
+    datatype: 'array', // rsf-types/PairwiseVote[]
     description: 'the list of reactions to format',
     required: true
   })

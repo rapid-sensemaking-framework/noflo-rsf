@@ -1,13 +1,15 @@
 "use strict";
 exports.__esModule = true;
 var noflo = require("noflo");
+var MAIN_INPUT_STRING = 'statements';
 var process = function (input, output) {
-    if (!input.hasData('statements')) {
+    if (!input.hasData(MAIN_INPUT_STRING)) {
         return;
     }
-    var statements = input.getData('statements');
+    var statements = input.getData(MAIN_INPUT_STRING);
+    var anonymize = input.getData('anonymize');
     var formatted = statements.reduce(function (memo, s) {
-        return memo + "\n" + s.text;
+        return memo + "\n" + s.text + (anonymize || !s.contact ? '' : " : " + JSON.stringify(s.contact));
     }, '');
     output.send({
         formatted: formatted
@@ -20,10 +22,14 @@ var getComponent = function () {
     c.description = 'Format a list of statements into a single string message, separated to new lines';
     c.icon = 'compress';
     /* IN PORTS */
-    c.inPorts.add('statements', {
+    c.inPorts.add(MAIN_INPUT_STRING, {
         datatype: 'array',
         description: 'the list of statements to format',
         required: true
+    });
+    c.inPorts.add('anonymize', {
+        datatype: 'boolean',
+        description: 'whether to remove the information associating statements with people'
     });
     /* OUT PORTS */
     c.outPorts.add('formatted', {
