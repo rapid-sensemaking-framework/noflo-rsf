@@ -35,6 +35,8 @@ describe('PairwiseComparison', () => {
         expect(results[2].choice).to.equal(1)
         done()
       })
+      // This is simulating people participating in a process through their chosen contactable
+      // eg. sending a message to the bot through telegram
       contactables[0].trigger('1')
       contactables[0].trigger('0')
       contactables[0].trigger('1')

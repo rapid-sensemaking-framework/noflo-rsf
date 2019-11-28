@@ -190,8 +190,9 @@ var genericPairwise = function (contactables, statements, contextMsg, maxTime, e
                         // until they're all responded to!
                         var responsesSoFar = personalResultsSoFar.length;
                         if (pairsTexts[responsesSoFar]) {
-                            var next = formatPairwiseChoice(pairsTexts.length, responsesSoFar, pairsTexts[responsesSoFar]);
-                            contactable.speak(next);
+                            var nextPair = pairsTexts[responsesSoFar];
+                            var nextPairFormatted = formatPairwiseChoice(pairsTexts.length, responsesSoFar, nextPair);
+                            contactable.speak(nextPairFormatted);
                         }
                         eachCb(el);
                     };

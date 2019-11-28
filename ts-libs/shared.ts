@@ -165,8 +165,9 @@ const genericPairwise = async <T>(
     // until they're all responded to!
     const responsesSoFar = personalResultsSoFar.length
     if (pairsTexts[responsesSoFar]) {
-      const next = formatPairwiseChoice(pairsTexts.length, responsesSoFar, pairsTexts[responsesSoFar])
-      contactable.speak(next)
+      const nextPair = pairsTexts[responsesSoFar]
+      const nextPairFormatted = formatPairwiseChoice(pairsTexts.length, responsesSoFar, nextPair)
+      contactable.speak(nextPairFormatted)
     }
     eachCb(el)
   }

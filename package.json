@@ -7,7 +7,7 @@
   },
   "description": "a collection of modules for rapid collective text-driven sensemaking",
   "scripts": {
-    "test": "mocha",
+    "test": "npm run build && mocha",
     "build": "tsc --build ts-components",
     "build-watch": "tsc --build --watch ts-components"
   },
