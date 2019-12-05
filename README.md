@@ -71,7 +71,7 @@ A live dashboard of events taking place in the process, and results coming in ar
 
 Once every step of the process has completed, the final results are saved to the computer that was hosting the process. From there, they could be uploaded to somewhere available online, or posted into a database for longevity.
 
-This app is currently a work in progress, under development at the [rsf-electron](https://github.com/rapid-sensemaking-framework/rsf-electron] repository. In the future it will be available for download there.
+This app is currently a work in progress, under development at the [rsf-electron](https://github.com/rapid-sensemaking-framework/rsf-electron) repository. In the future it will be available for download there.
 
 ## Principles
 
