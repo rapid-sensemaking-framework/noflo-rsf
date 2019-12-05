@@ -2,15 +2,19 @@
 exports.__esModule = true;
 var noflo = require("noflo");
 var MAIN_INPUT_STRING = 'statements';
+var coreLogic = function (statements, anonymize) {
+    return statements.reduce(function (memo, s) {
+        return memo + "\n" + s.text + (anonymize || !s.contact ? '' : " : " + s.contact.id + "@" + s.contact.type);
+    }, '');
+};
+exports.coreLogic = coreLogic;
 var process = function (input, output) {
     if (!input.hasData(MAIN_INPUT_STRING)) {
         return;
     }
     var statements = input.getData(MAIN_INPUT_STRING);
     var anonymize = input.getData('anonymize');
-    var formatted = statements.reduce(function (memo, s) {
-        return memo + "\n" + s.text + (anonymize || !s.contact ? '' : " : " + JSON.stringify(s.contact));
-    }, '');
+    var formatted = coreLogic(statements, anonymize);
     output.send({
         formatted: formatted
     });

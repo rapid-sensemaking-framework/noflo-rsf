@@ -4,16 +4,22 @@ import { Statement } from 'rsf-types'
 
 const MAIN_INPUT_STRING = 'statements'
 
+const coreLogic = (statements: Statement[], anonymize: boolean): string => {
+  return statements.reduce((memo: string, s: Statement) => {
+    return `${memo}
+${s.text}` + (anonymize || !s.contact ? '' : ` : ${s.contact.id}@${s.contact.type}`)
+  }, '')
+}
+
 const process: ProcessHandler = (input, output) => {
   if (!input.hasData(MAIN_INPUT_STRING)) {
     return
   }
   const statements: Statement[] = input.getData(MAIN_INPUT_STRING)
   const anonymize: boolean = input.getData('anonymize')
-  const formatted: string = statements.reduce((memo: string, s: Statement) => {
-    return `${memo}
-${s.text}` + (anonymize || !s.contact ? '' : ` : ${JSON.stringify(s.contact)}`)
-  }, '')
+  
+  const formatted = coreLogic(statements, anonymize)
+  
   output.send({
     formatted
   })
@@ -51,5 +57,6 @@ const getComponent = (): NofloComponent => {
 }
 
 export {
-  getComponent
+  getComponent,
+  coreLogic
 }
