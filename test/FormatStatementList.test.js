@@ -27,8 +27,8 @@ const statements = [
 ]
 
 describe('FormatStatementList', () => {
-  context('when given a list of statements, and an instruction to anonymize', function () {
-    it('should return a string that contains a list of those statements, unidentified', () => {
+  context('when given a list of Statements, and an instruction to anonymize', function () {
+    it('should return a string that contains a list of those Statements, unidentified', () => {
       const anonymize = true
       const result = coreLogic(statements, anonymize)
       expect(result).to.equal(`
@@ -38,8 +38,8 @@ c`)
     })
   })
 
-  context('when given a list of statements, and an instruction to not anonymize', function () {
-    it('should return a string that contains a list of those statements, identified ', () => {
+  context('when given a list of Statements, and an instruction to not anonymize', function () {
+    it('should return a string that contains a list of those Statements, identified ', () => {
       const anonymize = false
       const result = coreLogic(statements, anonymize)
       expect(result).to.equal(`
