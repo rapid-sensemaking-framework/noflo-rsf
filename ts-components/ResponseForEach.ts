@@ -24,7 +24,7 @@ import { ProcessHandler, NofloComponent } from '../libs/noflo-types'
 // define other constants or creator functions
 // of the strings for user interaction here
 const giveOptionsText = (options: Option[]) => {
-  return `The options for each statement are: ${options.map(o => `${o.text} (${o.triggers.join(', ')})`).join(', ')}.
+  return `The options for each item are: ${options.map(o => `${o.text} (${o.triggers.join(', ')})`).join(', ')}.
 To respond, type and send a message with one of the values within the round brackets () that corresponds with your choice.`
 }
 

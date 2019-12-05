@@ -79,7 +79,7 @@ describe('ResponseForEach', () => {
         expect(spoken.getCall(0).args[0]).to.equal(`Welcome.
 A process has begun in which you are invited to respond to each item in a list, one at a time, by responding with messages.
 The process is timed and will stop automatically after a few seconds.`)
-        expect(spoken.getCall(1).args[0]).to.equal(`The options for each statement are: Agree (a), Disagree (d).
+        expect(spoken.getCall(1).args[0]).to.equal(`The options for each item are: Agree (a), Disagree (d).
 To respond, type and send a message with one of the values within the round brackets () that corresponds with your choice.`)
         expect(spoken.getCall(2).args[0]).to.equal('(1 more remaining) great idea')
         expect(spoken.getCall(3).args[0]).to.equal('That\'s not a valid response, please try again.')

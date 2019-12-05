@@ -54,7 +54,7 @@ var shared_1 = require("../libs/shared");
 // define other constants or creator functions
 // of the strings for user interaction here
 var giveOptionsText = function (options) {
-    return "The options for each statement are: " + options.map(function (o) { return o.text + " (" + o.triggers.join(', ') + ")"; }).join(', ') + ".\nTo respond, type and send a message with one of the values within the round brackets () that corresponds with your choice.";
+    return "The options for each item are: " + options.map(function (o) { return o.text + " (" + o.triggers.join(', ') + ")"; }).join(', ') + ".\nTo respond, type and send a message with one of the values within the round brackets () that corresponds with your choice.";
 };
 var rulesText = function (maxTime) { return "Welcome.\nA process has begun in which you are invited to respond to each item in a list, one at a time, by responding with messages.\nThe process is timed and will stop automatically after " + moment.duration(maxTime, 'seconds').humanize() + "."; };
 // use of this trigger will allow any response to match
