@@ -1,4 +1,5 @@
 import * as noflo from 'noflo'
+import * as moment from 'moment'
 import { init as contactableInit, makeContactable, shutdown as contactableShutdown } from 'rsf-contactable'
 import {
   DEFAULT_ALL_COMPLETED_TEXT,
@@ -11,9 +12,9 @@ import { ContactableConfig, Contactable, Statement, ContactableInitConfig } from
 import { NofloComponent, ProcessHandler } from '../libs/noflo-types'
 
 const DEFAULT_MAX_RESPONSES_TEXT = `You've reached the limit of responses. Thanks for participating. You will be notified when everyone has completed.`
-const rulesText = (maxTime: number, maxResponses: number) => 'Contribute one response per message. ' +
-  `You can contribute up to ${maxResponses} responses. ` +
-  `The process will stop automatically after ${maxTime} seconds.`
+const rulesText = (maxTime: number, maxResponses: number) => 'Contribute one response per message. \n' +
+  `You can contribute ${maxResponses === Infinity ? 'unlimited' : `up to ${maxResponses}` } responses. \n` +
+  `The process will stop automatically after ${moment.duration(maxTime, 'seconds').humanize()}.`
 
 // a value that will mean any amount of responses can be collected
 // from each person, and that the process will guaranteed last until the maxTime comes to pass
@@ -34,9 +35,9 @@ const coreLogic = async (
   // initiate contact with each person
   // and set context, and "rules"
   contactables.forEach(async (contactable) => {
-    await contactable.speak(prompt)
-    await timer(500)
     await contactable.speak(rulesText(maxTime, maxResponses))
+    await timer(500)
+    await contactable.speak(prompt)
   })
 
   const validate = () => true

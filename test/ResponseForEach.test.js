@@ -76,7 +76,7 @@ describe('ResponseForEach', () => {
       const maxSeconds = 2
       coreLogic(contactables, statements, options, maxSeconds).then((results) => {
         const spoken = contactables[0].speak
-        expect(spoken.getCall(0).args[0]).to.equal('The process will stop automatically after 2 seconds.')
+        expect(spoken.getCall(0).args[0]).to.equal('The process will stop automatically after a few seconds.')
         expect(spoken.getCall(1).args[0]).to.equal('The options for each statement are: Agree (a), Disagree (d)')
         expect(spoken.getCall(2).args[0]).to.equal('(1 remaining) great idea')
         expect(spoken.getCall(3).args[0]).to.equal('That\'s not a valid response, please try again.')

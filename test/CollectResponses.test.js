@@ -67,8 +67,8 @@ describe('CollectResponses', function () {
       const prompt = 'prompt'
       coreLogic(contactables, maxResponses, maxSeconds, prompt).then(() => {
         const spoken = contactables[0].speak
-        expect(spoken.getCall(0).args[0]).to.equal('prompt')
-        expect(spoken.getCall(1).args[0]).to.equal('Contribute one response per message. You can contribute up to 3 responses. The process will stop automatically after 1 seconds.')
+        expect(spoken.getCall(0).args[0]).to.equal('Contribute one response per message. \nYou can contribute up to 3 responses. \nThe process will stop automatically after a few seconds.')
+        expect(spoken.getCall(1).args[0]).to.equal('prompt')
         expect(spoken.getCall(2).args[0]).to.equal('The max time has been reached. Stopping now. Thanks for participating.')
         done()
       })
@@ -88,8 +88,8 @@ describe('CollectResponses', function () {
         expect(results.length).to.equal(2)
         expect(results[0].text).to.equal('first response')
         expect(results[1].text).to.equal('other first response')
-        expect(spoken.getCall(0).args[0]).to.equal('prompt')
-        expect(spoken.getCall(1).args[0]).to.equal('Contribute one response per message. You can contribute up to 1 responses. The process will stop automatically after 2 seconds.')
+        expect(spoken.getCall(0).args[0]).to.equal('Contribute one response per message. \nYou can contribute up to 1 responses. \nThe process will stop automatically after a few seconds.')
+        expect(spoken.getCall(1).args[0]).to.equal('prompt')
         // let them know they've capped
         expect(spoken.getCall(2).args[0]).to.equal('You\'ve reached the limit of responses. Thanks for participating. You will be notified when everyone has completed.')
         // let them know everyone's done

@@ -47,6 +47,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 exports.__esModule = true;
+var moment = require("moment");
 var DEFAULT_ALL_COMPLETED_TEXT = "Everyone has completed. Thanks for participating.";
 exports.DEFAULT_ALL_COMPLETED_TEXT = DEFAULT_ALL_COMPLETED_TEXT;
 var DEFAULT_TIMEOUT_TEXT = "The max time has been reached. Stopping now. Thanks for participating.";
@@ -55,8 +56,7 @@ var DEFAULT_INVALID_RESPONSE_TEXT = "That's not a valid response, please try aga
 exports.DEFAULT_INVALID_RESPONSE_TEXT = DEFAULT_INVALID_RESPONSE_TEXT;
 var DEFAULT_MAX_RESPONSES_TEXT = "You've responded to everything. Thanks for participating. You will be notified when everyone has completed.";
 exports.DEFAULT_MAX_RESPONSES_TEXT = DEFAULT_MAX_RESPONSES_TEXT;
-// TODO: improve the human readable time
-var rulesText = function (maxTime) { return "The process will stop automatically after " + maxTime + " seconds."; };
+var rulesText = function (maxTime) { return "The process will stop automatically after " + moment.duration(maxTime).humanize() + "."; };
 exports.rulesText = rulesText;
 var whichToInit = function (contactableConfigs) {
     var specifyDefault = {

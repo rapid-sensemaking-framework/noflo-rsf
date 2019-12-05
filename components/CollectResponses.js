@@ -37,12 +37,13 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 exports.__esModule = true;
 var noflo = require("noflo");
+var moment = require("moment");
 var rsf_contactable_1 = require("rsf-contactable");
 var shared_1 = require("../libs/shared");
 var DEFAULT_MAX_RESPONSES_TEXT = "You've reached the limit of responses. Thanks for participating. You will be notified when everyone has completed.";
-var rulesText = function (maxTime, maxResponses) { return 'Contribute one response per message. ' +
-    ("You can contribute up to " + maxResponses + " responses. ") +
-    ("The process will stop automatically after " + maxTime + " seconds."); };
+var rulesText = function (maxTime, maxResponses) { return 'Contribute one response per message. \n' +
+    ("You can contribute " + (maxResponses === Infinity ? 'unlimited' : "up to " + maxResponses) + " responses. \n") +
+    ("The process will stop automatically after " + moment.duration(maxTime, 'seconds').humanize() + "."); };
 // a value that will mean any amount of responses can be collected
 // from each person, and that the process will guaranteed last until the maxTime comes to pass
 var UNLIMITED_CHAR = '*';
@@ -62,13 +63,13 @@ var coreLogic = function (contactables, maxResponses, maxTime, prompt, statement
                     contactables.forEach(function (contactable) { return __awaiter(void 0, void 0, void 0, function () {
                         return __generator(this, function (_a) {
                             switch (_a.label) {
-                                case 0: return [4 /*yield*/, contactable.speak(prompt)];
+                                case 0: return [4 /*yield*/, contactable.speak(rulesText(maxTime, maxResponses))];
                                 case 1:
                                     _a.sent();
                                     return [4 /*yield*/, shared_1.timer(500)];
                                 case 2:
                                     _a.sent();
-                                    return [4 /*yield*/, contactable.speak(rulesText(maxTime, maxResponses))];
+                                    return [4 /*yield*/, contactable.speak(prompt)];
                                 case 3:
                                     _a.sent();
                                     return [2 /*return*/];
