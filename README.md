@@ -55,15 +55,19 @@ Apart from a few integrations, such as ones that Loomio has with Slack, these pl
 
 For any good "conversation", there is always a frame. The conversation, at least loosely, has a direction that the people who will participate in it are agreeable to and interested in. Divergent phases and convergent phases of the conversation should nicely flow and blend.
 
-So **someone who has a frame for a conversation**, and **wants to foster engagement** pulls from a selection of available recipes for a social process, and stitches them together into a beautifully crafted flow. Things that this person would be tuning could include amount of time available for each part of the process. Loomio includes some wonderful [help text explaining best practices](https://help.loomio.org/en/user_manual/getting_started/decision_tools/) for using the powerful tools in the decision/polling toolbox of Loomio.
+So **someone who has a frame for a conversation**, and **wants to foster engagement** begins with a selection of available recipes for a social process. Things that this person would be tuning could include amount of time available for each part of the process. Loomio includes some wonderful [help text explaining best practices](https://help.loomio.org/en/user_manual/getting_started/decision_tools/) for using the powerful tools in the decision/polling toolbox of Loomio.
 
-Once they draft the flow, they setup either an opt-in process where participants will select themselves, or if they have verbal or written consent via a personal connection, they could input each participant. To input a participant just requires adding the relevant info for the contact method they want to connect via, such as email, text, or something else.
+![rsf-electron app screen for configuring a generate ideas flow](./screenshots/rsf-electron.png)
 
-Different stages of a process could have different participants. A different group might be included as the 'ideation' group than the 'evaluation' group.
+As they draft the flow, they setup either an opt-in process where participants will select themselves, or if they have verbal or written consent via a personal connection, they could input each participant. To input a participant just requires adding the relevant info for the contact method they want to connect via, such as email, text, or something else.
+
+![rsf-electron app screen for configuring participants](./screenshots/rsf-electron-configure-participants.png)
 
 Finally, kickoff the process...
 
-A live dashboard of events taking place in the process, and results coming in are viewable. There are options for people playing facilitator type roles to add the human touch of fostering the social intelligence, and getting to great outcomes.
+A live dashboard of events taking place in the process, and results coming in are viewable. 
+
+![rsf-electron app screen for flow dashboard](./screenshots/rsf-electron-flow-dashboard.png)
 
 Once every step of the process has completed, the final results can be saved to the computer that was hosting the process, uploaded somewhere digitally available, or posted into a database for longevity.
 
