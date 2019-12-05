@@ -8,7 +8,7 @@ Welcome to the Rapid Sensemaking Framework ecosystem entry point!
 - [Skip to `Principles`](#principles)
 - [Skip to `Using Flowhub for Deep Design`](#using-flowhub-for-deep-design)
 - [Skip to `RSF Components`](#rsf-components)
-- [Skip to `rsf-contactables`](#rsf-contactables)
+- [Skip to `RSF Contactables`](#rsf-contactables)
 
 
 ## What Is The "Rapid Sensemaking Framework"?
