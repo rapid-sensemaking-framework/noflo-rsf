@@ -32,6 +32,10 @@ const WILDCARD_TRIGGER = '*'
 
 const defaultReactionCb = (reaction: Reaction): void => { }
 
+const formatStatementText = (numPerPerson: number, numSoFar: number, statement: Statement): string => {
+  return `(${numPerPerson - 1 - numSoFar} more remaining) ${statement.text}`
+}
+
 const coreLogic = async (
   contactables: Contactable[],
   statements: Statement[],
@@ -52,7 +56,7 @@ const coreLogic = async (
     // send the first one
     if (statements.length) {
       await timer(500)
-      await contactable.speak(`(${statements.length - 1} remaining) ${statements[0].text}`)
+      await contactable.speak(formatStatementText(statements.length, 0, statements[0]))
     }
   })
 
@@ -87,12 +91,13 @@ const coreLogic = async (
     }
   }
   const onResult = (reaction: Reaction, personalResultsSoFar: Reaction[], contactable: Contactable): void => {
-    // each time it gets one, send the next one
+    // each time it gets a valid result, send the next one
     // until they're all responded to!
     const responsesSoFar = personalResultsSoFar.length
     if (statements[responsesSoFar]) {
-      const next = `(${statements.length - 1 - responsesSoFar} remaining) ${statements[responsesSoFar].text}`
-      contactable.speak(next)
+      const nextStatement = statements[responsesSoFar]
+      const nextStatementString = formatStatementText(statements.length, responsesSoFar, nextStatement)
+      contactable.speak(nextStatementString)
     }
     reactionCb(reaction)
   }

@@ -137,8 +137,8 @@
         "signature": "d62fa6fe33566fa743b3d6715a1a2fe46e937ba9d2ba158563c5744315d438a7"
       },
       "../ts-libs/shared.ts": {
-        "version": "f58f8ee4d67fb0ac8e4c20f1a4ebf2091dd80d5e2f00581e67190229ecc59859",
-        "signature": "262d0b8581ff185c5646ec4cee6a53193c0a4c68a3f6168ff5d96cd810b98c85"
+        "version": "d1ba4469f3ed46a9c33dd0abaf960ec11e1184e94c0171d81d9672ce0fc19649",
+        "signature": "9091789045049e82bdb0cca6cd2cea2bca99222905221341aa21d9d4e0ff7aa4"
       },
       "../node_modules/@types/node/globals.d.ts": {
         "version": "05c42320698cb6eb4052d68ef35a0f3b88291b9275f13e9a188b96119844c5b6",
@@ -1215,6 +1215,12 @@
         "../node_modules/@types/node/util.d.ts",
         "../node_modules/@types/node/ts3.2/util.d.ts"
       ],
+      "../node_modules/moment/moment.d.ts": [
+        "../node_modules/@types/node/fs.d.ts",
+        "../node_modules/@types/node/ts3.2/fs.d.ts",
+        "../node_modules/@types/node/util.d.ts",
+        "../node_modules/@types/node/ts3.2/util.d.ts"
+      ],
       "../ts-libs/shared.ts": [
         "../node_modules/rsf-types/index.ts"
       ],
@@ -1661,12 +1667,6 @@
         "../node_modules/@types/node/ts3.2/fs.d.ts",
         "../node_modules/@types/node/util.d.ts",
         "../node_modules/@types/node/ts3.2/util.d.ts"
-      ],
-      "../node_modules/moment/moment.d.ts": [
-        "../node_modules/@types/node/fs.d.ts",
-        "../node_modules/@types/node/ts3.2/fs.d.ts",
-        "../node_modules/@types/node/util.d.ts",
-        "../node_modules/@types/node/ts3.2/util.d.ts"
       ]
     },
     "semanticDiagnosticsPerFile": [
@@ -1703,6 +1703,7 @@
       "../node_modules/typescript/lib/lib.esnext.bigint.d.ts",
       "../ts-libs/noflo-types.ts",
       "../node_modules/rsf-types/index.ts",
+      "../node_modules/moment/moment.d.ts",
       "../node_modules/@types/node/globals.d.ts",
       "../node_modules/@types/node/assert.d.ts",
       "../node_modules/@types/node/async_hooks.d.ts",
@@ -1759,7 +1760,6 @@
       "../node_modules/@types/mongodb/index.d.ts",
       "../node_modules/@types/socket.io/index.d.ts",
       "../node_modules/@types/socket.io-client/index.d.ts",
-      "../node_modules/moment/moment.d.ts",
       "../ts-libs/shared.ts"
     ]
   },

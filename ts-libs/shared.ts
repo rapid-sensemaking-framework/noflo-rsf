@@ -105,7 +105,7 @@ const collectFromContactables = async <T>(
 }
 
 const formatPairwiseChoice: FormatPairwiseFn = (numPerPerson: number, numSoFar: number, pairwiseChoice: PairwiseChoice): string => {
-  return `(${numPerPerson - 1 - numSoFar} remaining)
+  return `(${numPerPerson - 1 - numSoFar} more remaining)
 0) ${pairwiseChoice[0].text}
 1) ${pairwiseChoice[1].text}`
 }
@@ -121,7 +121,8 @@ const genericPairwise = async <T>(
   maxResponsesText: string = DEFAULT_MAX_RESPONSES_TEXT,
   allCompletedText: string = DEFAULT_ALL_COMPLETED_TEXT,
   timeoutText: string = DEFAULT_TIMEOUT_TEXT,
-  invalidResponseText: string = DEFAULT_INVALID_RESPONSE_TEXT
+  invalidResponseText: string = DEFAULT_INVALID_RESPONSE_TEXT,
+  speechDelay: number = 500
 ): Promise<T[]> => {
   // create a list of all the pairs
   const pairsTexts: PairwiseChoice[] = []
@@ -141,11 +142,11 @@ const genericPairwise = async <T>(
   // and set context, and "rules"
   contactables.forEach(async (contactable: Contactable): Promise<void> => {
     await contactable.speak(rulesText(maxTime))
-    await timer(500)
+    await timer(speechDelay)
     await contactable.speak(contextMsg)
     // send the first one
     if (statements.length) {
-      await timer(500)
+      await timer(speechDelay)
       const first = formatPairwiseChoice(pairsTexts.length, 0, pairsTexts[0])
       await contactable.speak(first)
     }
@@ -196,7 +197,9 @@ const genericPairwise = async <T>(
     isTotalComplete
   )
   const { timeoutComplete, results } = collectResults
-  await Promise.all(contactables.map((contactable: Contactable): Promise<void> => contactable.speak(timeoutComplete ? timeoutText : allCompletedText)))
+  const closeFlowText = timeoutComplete ? timeoutText : allCompletedText
+  // send every participant a "process complete" message
+  await Promise.all(contactables.map((contactable: Contactable): Promise<void> => contactable.speak(closeFlowText)))
   return results
 }
 

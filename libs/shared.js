@@ -122,15 +122,16 @@ convertToResult, onResult, isTotalComplete) { return __awaiter(void 0, void 0, v
 }); };
 exports.collectFromContactables = collectFromContactables;
 var formatPairwiseChoice = function (numPerPerson, numSoFar, pairwiseChoice) {
-    return "(" + (numPerPerson - 1 - numSoFar) + " remaining)\n0) " + pairwiseChoice[0].text + "\n1) " + pairwiseChoice[1].text;
+    return "(" + (numPerPerson - 1 - numSoFar) + " more remaining)\n0) " + pairwiseChoice[0].text + "\n1) " + pairwiseChoice[1].text;
 };
-var genericPairwise = function (contactables, statements, contextMsg, maxTime, eachCb, validate, convertToPairwiseResult, maxResponsesText, allCompletedText, timeoutText, invalidResponseText) {
+var genericPairwise = function (contactables, statements, contextMsg, maxTime, eachCb, validate, convertToPairwiseResult, maxResponsesText, allCompletedText, timeoutText, invalidResponseText, speechDelay) {
     if (maxResponsesText === void 0) { maxResponsesText = DEFAULT_MAX_RESPONSES_TEXT; }
     if (allCompletedText === void 0) { allCompletedText = DEFAULT_ALL_COMPLETED_TEXT; }
     if (timeoutText === void 0) { timeoutText = DEFAULT_TIMEOUT_TEXT; }
     if (invalidResponseText === void 0) { invalidResponseText = DEFAULT_INVALID_RESPONSE_TEXT; }
+    if (speechDelay === void 0) { speechDelay = 500; }
     return __awaiter(void 0, void 0, void 0, function () {
-        var pairsTexts, onInvalid, isPersonalComplete, onPersonalComplete, onResult, isTotalComplete, convertToResult, collectResults, timeoutComplete, results;
+        var pairsTexts, onInvalid, isPersonalComplete, onPersonalComplete, onResult, isTotalComplete, convertToResult, collectResults, timeoutComplete, results, closeFlowText;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -155,7 +156,7 @@ var genericPairwise = function (contactables, statements, contextMsg, maxTime, e
                                 case 0: return [4 /*yield*/, contactable.speak(rulesText(maxTime))];
                                 case 1:
                                     _a.sent();
-                                    return [4 /*yield*/, timer(500)];
+                                    return [4 /*yield*/, timer(speechDelay)];
                                 case 2:
                                     _a.sent();
                                     return [4 /*yield*/, contactable.speak(contextMsg)
@@ -164,7 +165,7 @@ var genericPairwise = function (contactables, statements, contextMsg, maxTime, e
                                 case 3:
                                     _a.sent();
                                     if (!statements.length) return [3 /*break*/, 6];
-                                    return [4 /*yield*/, timer(500)];
+                                    return [4 /*yield*/, timer(speechDelay)];
                                 case 4:
                                     _a.sent();
                                     first = formatPairwiseChoice(pairsTexts.length, 0, pairsTexts[0]);
@@ -207,8 +208,11 @@ var genericPairwise = function (contactables, statements, contextMsg, maxTime, e
                 case 1:
                     collectResults = _a.sent();
                     timeoutComplete = collectResults.timeoutComplete, results = collectResults.results;
-                    return [4 /*yield*/, Promise.all(contactables.map(function (contactable) { return contactable.speak(timeoutComplete ? timeoutText : allCompletedText); }))];
+                    closeFlowText = timeoutComplete ? timeoutText : allCompletedText;
+                    // send every participant a "process complete" message
+                    return [4 /*yield*/, Promise.all(contactables.map(function (contactable) { return contactable.speak(closeFlowText); }))];
                 case 2:
+                    // send every participant a "process complete" message
                     _a.sent();
                     return [2 /*return*/, results];
             }

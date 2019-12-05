@@ -58,6 +58,9 @@ var giveOptionsText = function (options) {
 // use of this trigger will allow any response to match
 var WILDCARD_TRIGGER = '*';
 var defaultReactionCb = function (reaction) { };
+var formatStatementText = function (numPerPerson, numSoFar, statement) {
+    return "(" + (numPerPerson - 1 - numSoFar) + " more remaining) " + statement.text;
+};
 var coreLogic = function (contactables, statements, options, maxTime, reactionCb, maxResponsesText, allCompletedText, timeoutText, invalidResponseText) {
     if (reactionCb === void 0) { reactionCb = defaultReactionCb; }
     if (maxResponsesText === void 0) { maxResponsesText = shared_1.DEFAULT_MAX_RESPONSES_TEXT; }
@@ -89,7 +92,7 @@ var coreLogic = function (contactables, statements, options, maxTime, reactionCb
                                     return [4 /*yield*/, shared_1.timer(500)];
                                 case 4:
                                     _a.sent();
-                                    return [4 /*yield*/, contactable.speak("(" + (statements.length - 1) + " remaining) " + statements[0].text)];
+                                    return [4 /*yield*/, contactable.speak(formatStatementText(statements.length, 0, statements[0]))];
                                 case 5:
                                     _a.sent();
                                     _a.label = 6;
@@ -126,12 +129,13 @@ var coreLogic = function (contactables, statements, options, maxTime, reactionCb
                         };
                     };
                     onResult = function (reaction, personalResultsSoFar, contactable) {
-                        // each time it gets one, send the next one
+                        // each time it gets a valid result, send the next one
                         // until they're all responded to!
                         var responsesSoFar = personalResultsSoFar.length;
                         if (statements[responsesSoFar]) {
-                            var next = "(" + (statements.length - 1 - responsesSoFar) + " remaining) " + statements[responsesSoFar].text;
-                            contactable.speak(next);
+                            var nextStatement = statements[responsesSoFar];
+                            var nextStatementString = formatStatementText(statements.length, responsesSoFar, nextStatement);
+                            contactable.speak(nextStatementString);
                         }
                         reactionCb(reaction);
                     };

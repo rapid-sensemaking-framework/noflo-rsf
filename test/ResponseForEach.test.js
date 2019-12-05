@@ -78,9 +78,9 @@ describe('ResponseForEach', () => {
         const spoken = contactables[0].speak
         expect(spoken.getCall(0).args[0]).to.equal('The process will stop automatically after a few seconds.')
         expect(spoken.getCall(1).args[0]).to.equal('The options for each statement are: Agree (a), Disagree (d)')
-        expect(spoken.getCall(2).args[0]).to.equal('(1 remaining) great idea')
+        expect(spoken.getCall(2).args[0]).to.equal('(1 more remaining) great idea')
         expect(spoken.getCall(3).args[0]).to.equal('That\'s not a valid response, please try again.')
-        expect(spoken.getCall(4).args[0]).to.equal('(0 remaining) great idea 2')
+        expect(spoken.getCall(4).args[0]).to.equal('(0 more remaining) great idea 2')
         expect(spoken.getCall(5).args[0]).to.equal('You\'ve responded to everything. Thanks for participating. You will be notified when everyone has completed.')
         expect(spoken.getCall(6).args[0]).to.equal('Everyone has completed. Thanks for participating.')
         expect(results.length).to.equal(2)
