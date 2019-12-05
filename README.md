@@ -4,9 +4,9 @@
 
 Welcome to the Rapid Sensemaking Framework ecosystem entry point!
 
-- [Skip to `Non-technical Overview`](#non-technical-overview)
+- [Skip to `Using the RSF App`](#using-the-rsf-app)
 - [Skip to `Principles`](#principles)
-- [Skip to `Technical Overview`](#technical-overview)
+- [Skip to `Using Flowhub for Deep Design`](#using-flowhub-for-deep-design)
 - [Skip to `RSF Components`](#rsf-components)
 - [Skip to `rsf-contactables`](#rsf-contactables)
 
@@ -51,7 +51,7 @@ Apart from a few integrations, such as ones that Loomio has with Slack, these pl
 
 
 
-## Non-technical Overview
+## Using the RSF App
 
 For any good "conversation", there is always a frame. The conversation, at least loosely, has a direction that the people who will participate in it are agreeable to and interested in. Divergent phases and convergent phases of the conversation should nicely flow and blend.
 
@@ -69,7 +69,7 @@ A live dashboard of events taking place in the process, and results coming in ar
 
 ![rsf-electron app screen for flow dashboard](./screenshots/rsf-electron-flow-dashboard.png)
 
-Once every step of the process has completed, the final results can be saved to the computer that was hosting the process, uploaded somewhere digitally available, or posted into a database for longevity.
+Once every step of the process has completed, the final results are saved to the computer that was hosting the process. From there, they could be uploaded to somewhere available online, or posted into a database for longevity.
 
 
 ## Principles
@@ -77,7 +77,7 @@ Once every step of the process has completed, the final results can be saved to 
 The tools should offer participants in processes as much transparency into the process as makes sense for the use case. In most cases, all the participants should have the results of the entire process, rather than constrict the results to the facilitator. The process should benefit everyone, and be non value extractive in its approach to working with data.
 
 
-## Technical Overview
+## Using Flowhub for Deep Design
 
 - Use flowhub to design a process... you can actually run it that way too.
 - https://app.flowhub.io
