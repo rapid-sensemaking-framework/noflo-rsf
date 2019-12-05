@@ -124,6 +124,13 @@ exports.collectFromContactables = collectFromContactables;
 var formatPairwiseChoice = function (numPerPerson, numSoFar, pairwiseChoice) {
     return "(" + (numPerPerson - 1 - numSoFar) + " more remaining)\n0) " + pairwiseChoice[0].text + "\n1) " + pairwiseChoice[1].text;
 };
+// accomodates PairwiseVote, PairwiseQualified, PairwiseQuantified
+var formatPairwiseList = function (description, key, pairwiseList, anonymize) {
+    return pairwiseList.reduce(function (memo, el) {
+        return memo + "\n0) " + el.choices[0].text + "\n1) " + el.choices[1].text + "\n" + description + ": " + el[key] + (anonymize || !el.contact ? '' : " : " + el.contact.id + "@" + el.contact.type);
+    }, '');
+};
+exports.formatPairwiseList = formatPairwiseList;
 var genericPairwise = function (contactables, statements, contextMsg, maxTime, eachCb, validate, convertToPairwiseResult, maxResponsesText, allCompletedText, timeoutText, invalidResponseText, speechDelay) {
     if (maxResponsesText === void 0) { maxResponsesText = DEFAULT_MAX_RESPONSES_TEXT; }
     if (allCompletedText === void 0) { allCompletedText = DEFAULT_ALL_COMPLETED_TEXT; }

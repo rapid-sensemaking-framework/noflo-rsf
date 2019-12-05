@@ -1,16 +1,19 @@
 "use strict";
 exports.__esModule = true;
 var noflo = require("noflo");
+var shared_1 = require("../libs/shared");
 var MAIN_INPUT_STRING = 'pairwise_qualifieds';
+var coreLogic = function (list, anonymize) {
+    return shared_1.formatPairwiseList('response', 'quality', list, anonymize);
+};
+exports.coreLogic = coreLogic;
 var process = function (input, output) {
     if (!input.hasData(MAIN_INPUT_STRING)) {
         return;
     }
-    var votes = input.getData(MAIN_INPUT_STRING);
+    var responses = input.getData(MAIN_INPUT_STRING);
     var anonymize = input.getData('anonymize');
-    var formatted = votes.reduce(function (memo, v) {
-        return memo + "\n0) " + v.choices[0].text + "\n1) " + v.choices[1].text + "\nresponse: " + v.quality + (anonymize || !v.contact ? '' : " : " + JSON.stringify(v.contact));
-    }, '');
+    var formatted = coreLogic(responses, anonymize);
     output.send({
         formatted: formatted
     });

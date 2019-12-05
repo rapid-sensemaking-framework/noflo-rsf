@@ -1,4 +1,4 @@
-import { Contactable, ContactableConfig, ContactableSpecifyInit, Statement, PairwiseQualified, PairwiseChoice } from 'rsf-types'
+import { Contactable, ContactableConfig, ContactableSpecifyInit, Statement, PairwiseQualified, PairwiseChoice, PairwiseQuantified, PairwiseVote } from 'rsf-types'
 import * as moment from 'moment'
 
 const DEFAULT_ALL_COMPLETED_TEXT = `Everyone has completed. Thanks for participating.`
@@ -110,6 +110,16 @@ const formatPairwiseChoice: FormatPairwiseFn = (numPerPerson: number, numSoFar: 
 1) ${pairwiseChoice[1].text}`
 }
 
+// accomodates PairwiseVote, PairwiseQualified, PairwiseQuantified
+const formatPairwiseList = (description: string, key: string, pairwiseList: any[], anonymize: boolean): string => {
+  return pairwiseList.reduce((memo: string, el: any) => {
+    return `${memo}
+0) ${el.choices[0].text}
+1) ${el.choices[1].text}
+${description}: ${el[key]}` + (anonymize || !el.contact ? '' : ` : ${el.contact.id}@${el.contact.type}`)
+  }, '')
+}
+
 const genericPairwise = async <T>(
   contactables: Contactable[],
   statements: Statement[],
@@ -211,6 +221,7 @@ export {
   rulesText,
   whichToInit,
   timer,
+  formatPairwiseList,
   collectFromContactables,
   genericPairwise,
   CollectResults,

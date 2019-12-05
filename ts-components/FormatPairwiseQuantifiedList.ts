@@ -3,21 +3,23 @@ import { PairwiseQuantified } from 'rsf-types'
 import {
   NofloComponent, ProcessHandler
 } from '../libs/noflo-types'
+import {
+  formatPairwiseList
+} from '../libs/shared'
 
 const MAIN_INPUT_STRING = 'pairwise_quantifieds'
+
+const coreLogic = (list: PairwiseQuantified[], anonymize: boolean) => {
+  return formatPairwiseList('response', 'quantity', list, anonymize)
+}
 
 const process: ProcessHandler = (input, output) => {
   if (!input.hasData(MAIN_INPUT_STRING)) {
     return
   }
-  const votes: PairwiseQuantified[] = input.getData(MAIN_INPUT_STRING)
+  const responses: PairwiseQuantified[] = input.getData(MAIN_INPUT_STRING)
   const anonymize: boolean = input.getData('anonymize')
-  const formatted: string = votes.reduce((memo, v) => {
-    return `${memo}
-0) ${v.choices[0].text}
-1) ${v.choices[1].text}
-response: ${v.quantity}` + (anonymize || !v.contact ? '' : ` : ${JSON.stringify(v.contact)}`)
-  }, '')
+  const formatted = coreLogic(responses, anonymize)
   output.send({
     formatted
   })
@@ -45,5 +47,6 @@ const getComponent = (): NofloComponent => {
 }
 
 export {
+  coreLogic,
   getComponent
 }

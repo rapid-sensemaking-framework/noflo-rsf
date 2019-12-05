@@ -6,16 +6,20 @@ import {
 
 const MAIN_INPUT_STRING = 'reactions'
 
+const coreLogic = (reactions: Reaction[], anonymize: boolean): string => {
+  return reactions.reduce((memo, r) => {
+    return `${memo}
+${r.statement.text} : ${r.response} : ${r.responseTrigger}` + (anonymize || !r.contact ? '' : ` : ${r.contact.id}@${r.contact.type}`)
+  }, '')
+}
+
 const process: ProcessHandler = (input, output) => {
   if (!input.hasData(MAIN_INPUT_STRING)) {
     return
   }
   const reactions: Reaction[] = input.getData(MAIN_INPUT_STRING)
   const anonymize: boolean = input.getData('anonymize')
-  const formatted: string = reactions.reduce((memo, r) => {
-    return `${memo}
-${r.statement.text} : ${r.response} : ${r.responseTrigger}` + (anonymize || !r.contact ? '' : ` : ${JSON.stringify(r.contact)}`)
-  }, '')
+  const formatted = coreLogic(reactions, anonymize)
   output.send({
     formatted
   })
@@ -43,5 +47,6 @@ const getComponent = (): NofloComponent => {
 }
 
 export {
+  coreLogic,
   getComponent
 }
