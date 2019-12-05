@@ -1,4 +1,5 @@
 import * as noflo from 'noflo'
+import * as moment from 'moment'
 import {
   ContactableConfig,
   Contactable,
@@ -13,7 +14,6 @@ import {
   DEFAULT_INVALID_RESPONSE_TEXT,
   DEFAULT_MAX_RESPONSES_TEXT,
   DEFAULT_TIMEOUT_TEXT,
-  rulesText,
   whichToInit,
   collectFromContactables,
   timer,
@@ -24,8 +24,13 @@ import { ProcessHandler, NofloComponent } from '../libs/noflo-types'
 // define other constants or creator functions
 // of the strings for user interaction here
 const giveOptionsText = (options: Option[]) => {
-  return `The options for each statement are: ${options.map(o => `${o.text} (${o.triggers.join(', ')})`).join(', ')}`
+  return `The options for each statement are: ${options.map(o => `${o.text} (${o.triggers.join(', ')})`).join(', ')}.
+To respond, type and send a message with one of the values within the round brackets () that corresponds with your choice.`
 }
+
+const rulesText = (maxTime: number) => `Welcome.
+A process has begun in which you are invited to respond to each item in a list, one at a time, by responding with messages.
+The process is timed and will stop automatically after ${moment.duration(maxTime, 'seconds').humanize()}.`
 
 // use of this trigger will allow any response to match
 const WILDCARD_TRIGGER = '*'
@@ -45,17 +50,18 @@ const coreLogic = async (
   maxResponsesText: string = DEFAULT_MAX_RESPONSES_TEXT,
   allCompletedText: string = DEFAULT_ALL_COMPLETED_TEXT,
   timeoutText: string = DEFAULT_TIMEOUT_TEXT,
-  invalidResponseText: string = DEFAULT_INVALID_RESPONSE_TEXT
+  invalidResponseText: string = DEFAULT_INVALID_RESPONSE_TEXT,
+  speechDelay: number = 500
 ): Promise<Reaction[]> => {
   // initiate contact with each person
   // and set context, and "rules"
   contactables.forEach(async (contactable: Contactable): Promise<void> => {
     await contactable.speak(rulesText(maxTime))
-    await timer(500)
+    await timer(speechDelay)
     await contactable.speak(giveOptionsText(options))
     // send the first one
     if (statements.length) {
-      await timer(500)
+      await timer(speechDelay)
       await contactable.speak(formatStatementText(statements.length, 0, statements[0]))
     }
   })

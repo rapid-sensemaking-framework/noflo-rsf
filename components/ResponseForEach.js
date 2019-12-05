@@ -48,25 +48,28 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 exports.__esModule = true;
 var noflo = require("noflo");
+var moment = require("moment");
 var rsf_contactable_1 = require("rsf-contactable");
 var shared_1 = require("../libs/shared");
 // define other constants or creator functions
 // of the strings for user interaction here
 var giveOptionsText = function (options) {
-    return "The options for each statement are: " + options.map(function (o) { return o.text + " (" + o.triggers.join(', ') + ")"; }).join(', ');
+    return "The options for each statement are: " + options.map(function (o) { return o.text + " (" + o.triggers.join(', ') + ")"; }).join(', ') + ".\nTo respond, type and send a message with one of the values within the round brackets () that corresponds with your choice.";
 };
+var rulesText = function (maxTime) { return "Welcome.\nA process has begun in which you are invited to respond to each item in a list, one at a time, by responding with messages.\nThe process is timed and will stop automatically after " + moment.duration(maxTime, 'seconds').humanize() + "."; };
 // use of this trigger will allow any response to match
 var WILDCARD_TRIGGER = '*';
 var defaultReactionCb = function (reaction) { };
 var formatStatementText = function (numPerPerson, numSoFar, statement) {
     return "(" + (numPerPerson - 1 - numSoFar) + " more remaining) " + statement.text;
 };
-var coreLogic = function (contactables, statements, options, maxTime, reactionCb, maxResponsesText, allCompletedText, timeoutText, invalidResponseText) {
+var coreLogic = function (contactables, statements, options, maxTime, reactionCb, maxResponsesText, allCompletedText, timeoutText, invalidResponseText, speechDelay) {
     if (reactionCb === void 0) { reactionCb = defaultReactionCb; }
     if (maxResponsesText === void 0) { maxResponsesText = shared_1.DEFAULT_MAX_RESPONSES_TEXT; }
     if (allCompletedText === void 0) { allCompletedText = shared_1.DEFAULT_ALL_COMPLETED_TEXT; }
     if (timeoutText === void 0) { timeoutText = shared_1.DEFAULT_TIMEOUT_TEXT; }
     if (invalidResponseText === void 0) { invalidResponseText = shared_1.DEFAULT_INVALID_RESPONSE_TEXT; }
+    if (speechDelay === void 0) { speechDelay = 500; }
     return __awaiter(void 0, void 0, void 0, function () {
         var matchOption, validate, onInvalid, isPersonalComplete, onPersonalComplete, convertToResult, onResult, isTotalComplete, collectResults, timeoutComplete, results;
         return __generator(this, function (_a) {
@@ -77,10 +80,10 @@ var coreLogic = function (contactables, statements, options, maxTime, reactionCb
                     contactables.forEach(function (contactable) { return __awaiter(void 0, void 0, void 0, function () {
                         return __generator(this, function (_a) {
                             switch (_a.label) {
-                                case 0: return [4 /*yield*/, contactable.speak(shared_1.rulesText(maxTime))];
+                                case 0: return [4 /*yield*/, contactable.speak(rulesText(maxTime))];
                                 case 1:
                                     _a.sent();
-                                    return [4 /*yield*/, shared_1.timer(500)];
+                                    return [4 /*yield*/, shared_1.timer(speechDelay)];
                                 case 2:
                                     _a.sent();
                                     return [4 /*yield*/, contactable.speak(giveOptionsText(options))
@@ -89,7 +92,7 @@ var coreLogic = function (contactables, statements, options, maxTime, reactionCb
                                 case 3:
                                     _a.sent();
                                     if (!statements.length) return [3 /*break*/, 6];
-                                    return [4 /*yield*/, shared_1.timer(500)];
+                                    return [4 /*yield*/, shared_1.timer(speechDelay)];
                                 case 4:
                                     _a.sent();
                                     return [4 /*yield*/, contactable.speak(formatStatementText(statements.length, 0, statements[0]))];
