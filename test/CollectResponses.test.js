@@ -76,6 +76,21 @@ describe('CollectResponses', function () {
     })
   })
 
+  context('when allowing unlimited responses', function () {
+    it('should accurately convey that message to participants', (done) => {
+      const mockMakeContactable = newMockMakeContactable(sinon.spy)
+      const contactables = [{ id: 'dude' }].map(mockMakeContactable)
+      const maxResponses = Infinity
+      const maxSeconds = 1
+      const prompt = 'prompt'
+      coreLogic(contactables, maxResponses, maxSeconds, prompt).then(() => {
+        const spoken = contactables[0].speak
+        expect(spoken.getCall(0).args[0]).to.equal('Contribute one response per message. \nYou can contribute unlimited responses. \nThe process will stop automatically after a few seconds.')
+        done()
+      })
+    })
+  })
+
   context('when participants reach a set response cap', function () {
     it('should stop accepting responses from them, but keep accepting responses from others', (done) => {
       const mockMakeContactable = newMockMakeContactable(sinon.spy)
