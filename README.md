@@ -26,6 +26,8 @@ Inspirations and related projects include the likes of
 - [Pol.is](https://pol.is/home)
     - helps organizations understand themselves by visualizing what their members think. Get a clear picture of all the points of view to help move a conversation forward.
 - [Twitter Polls](https://help.twitter.com/en/using-twitter/twitter-polls)
+- [Slido](https://www.sli.do)
+    - Audience participation platform (corporate), Q&A and polling platform
 - [Groupmap](https://www.groupmap.com/)
     - capturing individual thinking, revealing the group perspective, all in real-time. Collaborative decision making.
 - [All Our Ideas](https://www.allourideas.org/)
