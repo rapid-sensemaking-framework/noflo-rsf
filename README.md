@@ -7,9 +7,9 @@ Welcome to the Rapid Sensemaking Framework ecosystem entry point!
 
 - [Skip to `Using the RSF App`](#using-the-rsf-app)
 - [Skip to `Principles`](#principles)
-- [Skip to `Using Flowhub for Deep Design`](#using-flowhub-for-deep-design)
 - [Skip to `RSF Components`](#rsf-components)
 - [Skip to `RSF Contactables`](#rsf-contactables)
+- [Skip to `Using Flowhub for Deep Design`](#using-flowhub-for-deep-design)
 
 
 ## What Is The "Rapid Sensemaking Framework"?
@@ -79,13 +79,6 @@ This app is currently a work in progress, under development at the [rsf-electron
 The tools should offer participants in processes as much transparency into the process as makes sense for the use case. In most cases, all the participants should have the results of the entire process, rather than constrict the results to the facilitator. The process should benefit everyone, and be non value extractive in its approach to working with data.
 
 
-## Using Flowhub for Deep Design
-
-- Use flowhub to design a process... you can actually run it that way too.
-- https://app.flowhub.io
-![picture of an rsf graph workflow in noflo](./screenshots/colored-rsf-graph.png)
-
-
 ## RSF Components
 
 Components are little modules of code. These operations can either be very quick, just performing a very simple transformation on data, requiring no human input, or they can involve lots of human input, and be medium to long running operations, meaning they could take days or weeks.
@@ -135,6 +128,12 @@ and what properties or values it returns as output, if its successful.
 
 By doing so, RSF Components can build up as a library over time, and where outputs of one component match the inputs of another,
 those components can be strung together into more complex sequences. They could start to be combined in many different orders and in many different ways. For example, the output of `CollectResponses` feeds nicely into the `statements` input of `ResponseForEach`.
+
+## Using Flowhub for Deep Design
+
+- Use flowhub to design a process... you can actually run it that way too.
+- https://app.flowhub.io
+![picture of an rsf graph workflow in noflo](./screenshots/colored-rsf-graph.png)
 
 ## RSF Contactables
 
