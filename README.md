@@ -103,7 +103,7 @@ At the time of writing, just a few components of interest have been developed, t
     - like PairwiseComparison, but allows for numerical quantified response to the relationship between the two compared elements
 - [ParticipantRegister](https://github.com/rapid-sensemaking-framework/noflo-rsf/blob/master/ts-components/ParticipantRegister.ts)
     - input: nothing, process: spin up a form on a webserver and collect peoples contact info that opt in to participate, output: a list of Contactable participantConfigs
-    - ![rsf collect participants v0.0.13 screenshot](./screenshots/rsf-collect-participants-v0.0.13.png)
+    - ![rsf collect participants screenshot](./screenshots/participant-register.png)
 - [FormatReactionsList](https://github.com/rapid-sensemaking-framework/noflo-rsf/blob/master/ts-components/FormatReactionsList.ts)
     - input: reactions list (from ResponseForEach), output: a string containing a nice, simple, human-readable version of the results
 - [FormatStatementList](https://github.com/rapid-sensemaking-framework/noflo-rsf/blob/master/ts-components/FormatStatementList.ts)
