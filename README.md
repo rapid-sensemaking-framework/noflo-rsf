@@ -62,17 +62,21 @@ For any good "conversation", there is always a frame. The conversation, at least
 
 So **someone who has a frame for a conversation**, and **wants to foster engagement** begins with a selection of available recipes for a social process. Things that this person would be tuning could include amount of time available for each part of the process. Loomio includes some wonderful [help text explaining best practices](https://help.loomio.org/en/user_manual/getting_started/decision_tools/) for using the powerful tools in the decision/polling toolbox of Loomio.
 
-![rsf-electron app screen for configuring a generate ideas flow](./screenshots/rsf-electron.png)
+![cosense app screen for configuring a generate ideas flow](./screenshots/rsf-electron.png)
 
 As they draft the flow, they setup either an opt-in process where participants will select themselves, or if they have verbal or written consent via a personal connection, they could input each participant. To input a participant just requires adding the relevant info for the contact method they want to connect via, such as email, text, or something else.
 
-![rsf-electron app screen for configuring participants](./screenshots/rsf-electron-configure-participants.png)
+#### Configure Public Link
+![cosense app screen for configuring public link](./screenshots/cosense-configure-public-link.png)
+
+#### Participant Registration at the Public Link
+![cosense app screen for configuring participants](./screenshots/participant-register.png)
 
 Finally, kickoff the process...
 
 A live dashboard of events taking place in the process, and results coming in are viewable. 
 
-![rsf-electron app screen for flow dashboard](./screenshots/rsf-electron-flow-dashboard.png)
+![cosense app screen for flow dashboard](./screenshots/cosense-flow-dashboard.png)
 
 Once every step of the process has completed, the final results are saved to the computer that was hosting the process. From there, they could be uploaded to somewhere available online, or posted into a database for longevity.
 
