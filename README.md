@@ -30,6 +30,7 @@ Inspirations and related projects include the likes of
     - Audience participation platform (corporate), Q&A and polling platform
 - [Teeming](https://www.teeming.ai/)
 - [Poll Everywhere](https://www.polleverywhere.com/)
+- [Pulse Sense Evolve](https://pulsesenseevolve.com/)
 - [Groupmap](https://www.groupmap.com/)
     - capturing individual thinking, revealing the group perspective, all in real-time. Collaborative decision making.
 - [All Our Ideas](https://www.allourideas.org/)
