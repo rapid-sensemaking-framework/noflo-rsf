@@ -1,6 +1,6 @@
 {
   "name": "noflo-rsf",
-  "version": "0.0.51",
+  "version": "0.0.52",
   "repository": {
     "type": "git",
     "url": "https://github.com/rapid-sensemaking-framework/noflo-rsf"
@@ -9,7 +9,8 @@
   "scripts": {
     "test": "npm run build && mocha",
     "build": "tsc --build ts-components",
-    "build-watch": "tsc --build --watch ts-components"
+    "build-watch": "tsc --build --watch ts-components",
+    "postinstall": "npm run build"
   },
   "author": "Connor Turland <connorturland@gmail.com>",
   "license": "AGPL-3.0",
