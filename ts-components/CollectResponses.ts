@@ -1,6 +1,10 @@
 import * as noflo from 'noflo'
 import * as moment from 'moment'
-import { init as contactableInit, makeContactable, shutdown as contactableShutdown } from 'rsf-contactable'
+import {
+  init as contactableInit,
+  makeContactable,
+  shutdown as contactableShutdown
+} from 'rsf-contactable'
 import {
   DEFAULT_ALL_COMPLETED_TEXT,
   DEFAULT_TIMEOUT_TEXT,
@@ -8,25 +12,37 @@ import {
   collectFromContactables,
   timer
 } from '../libs/shared'
-import { ContactableConfig, Contactable, Statement, ContactableInitConfig } from 'rsf-types'
+import {
+  ContactableConfig,
+  Contactable,
+  Statement,
+  ContactableInitConfig
+} from 'rsf-types'
 import { NofloComponent, ProcessHandler } from '../libs/noflo-types'
 
 const DEFAULT_MAX_RESPONSES_TEXT = `You've reached the limit of responses. Thanks for participating. You will be notified when everyone has completed.`
-const rulesText = (maxTime: number, maxResponses: number) => 'Contribute one response per message. \n' +
-  `You can contribute ${maxResponses === Infinity ? 'unlimited' : `up to ${maxResponses}` } responses. \n` +
-  `The process will stop automatically after ${moment.duration(maxTime, 'seconds').humanize()}.`
+const rulesText = (maxTime: number, maxResponses: number) =>
+  'Contribute one response per message. \n' +
+  `You can contribute ${
+    maxResponses === Infinity ? 'unlimited' : `up to ${maxResponses}`
+  } responses. \n` +
+  `The process will stop automatically after ${moment
+    .duration(maxTime, 'seconds')
+    .humanize()}.`
 
 // a value that will mean any amount of responses can be collected
 // from each person, and that the process will guaranteed last until the maxTime comes to pass
 const UNLIMITED_CHAR = '*'
 
-const defaultStatementCb = (statement: Statement): void => { }
+const defaultStatementCb = (statement: Statement): void => {}
 
 const coreLogic = async (
   contactables: Contactable[],
   maxResponses: number,
   maxTime: number,
   prompt: string,
+  anonymous: boolean = false,
+  share: boolean = false,
   statementCb: (statement: Statement) => void = defaultStatementCb,
   maxResponsesText = DEFAULT_MAX_RESPONSES_TEXT,
   allCompletedText = DEFAULT_ALL_COMPLETED_TEXT,
@@ -34,7 +50,7 @@ const coreLogic = async (
 ): Promise<Statement[]> => {
   // initiate contact with each person
   // and set context, and "rules"
-  contactables.forEach(async (contactable) => {
+  contactables.forEach(async contactable => {
     await contactable.speak(rulesText(maxTime, maxResponses))
     await timer(500)
     await contactable.speak(prompt)
@@ -45,16 +61,56 @@ const coreLogic = async (
   const isPersonalComplete = (personalResultsSoFar: Statement[]) => {
     return personalResultsSoFar.length === maxResponses
   }
-  const onPersonalComplete = (personalResultsSoFar: Statement[], contactable: Contactable) => {
+  const onPersonalComplete = (
+    personalResultsSoFar: Statement[],
+    contactable: Contactable
+  ) => {
     contactable.speak(maxResponsesText)
   }
-  const convertToResult = (msg: string, personalResultsSoFar: Statement[], contactable: Contactable): Statement => {
-    return {
+  const convertToResult = (
+    msg: string,
+    personalResultsSoFar: Statement[],
+    contactable: Contactable
+  ): Statement => {
+    const statement: Statement = {
       text: msg,
-      contact: contactable.config(),
-      timestamp: Date.now() }
+      timestamp: Date.now()
+    }
+    if (!anonymous) {
+      statement.contact = contactable.config()
+    }
+    return statement
   }
-  const onResult = statementCb
+  // capture and feed results, also sharing if configured to do so
+  const onResult = (
+    statement: Statement,
+    personalResultsSoFar: Statement[],
+    contactable: Contactable
+  ): void => {
+    if (share) {
+      // if not anonymous
+      // like "connor@telegram: hey there this is my idea"
+      // if anonymous
+      // like "new result: hey there this is my idea"
+      const participantString = `${contactable.id}@${contactable.config().type}`
+      const broadcastMessage = `${
+        anonymous ? 'new result' : participantString
+      }: ${statement.text}`
+
+      // send if it isn't themself who created this result
+      contactables
+        .filter(
+          eachContactable =>
+            `${eachContactable.id}@${eachContactable.config().type}` !==
+            `${contactable.id}@${contactable.config().type}`
+        )
+        .forEach(eachContactable => {
+          eachContactable.speak(broadcastMessage)
+        })
+    }
+    statementCb(statement)
+  }
+  // complete when participants reach their maximum number of responses (which can be unlimited/never)
   const isTotalComplete = (allResultsSoFar: Statement[]) => {
     return allResultsSoFar.length === contactables.length * maxResponses
   }
@@ -70,24 +126,44 @@ const coreLogic = async (
     onResult,
     isTotalComplete
   )
-  await Promise.all(contactables.map(contactable => contactable.speak(timeoutComplete ? timeoutText : allCompletedText)))
+  await Promise.all(
+    contactables.map(contactable =>
+      contactable.speak(timeoutComplete ? timeoutText : allCompletedText)
+    )
+  )
   return results
 }
 
 const process: ProcessHandler = async (input, output) => {
-
-  if (!input.hasData('max_responses', 'prompt', 'contactable_configs', 'max_time', 'bot_configs')) {
+  if (
+    !input.hasData(
+      'max_responses',
+      'prompt',
+      'contactable_configs',
+      'max_time',
+      'bot_configs'
+    )
+  ) {
     return
   }
 
   const maxResponsesInput = input.getData('max_responses')
-  const maxResponses: number = maxResponsesInput === UNLIMITED_CHAR ? Infinity : maxResponsesInput
+  const maxResponses: number =
+    maxResponsesInput === UNLIMITED_CHAR ? Infinity : maxResponsesInput
   const maxTime: number = input.getData('max_time')
   const prompt: string = input.getData('prompt')
+  const anonymous: boolean | undefined = input.getData('anonymous')
+  const share: boolean | undefined = input.getData('share')
   const botConfigs: ContactableInitConfig = input.getData('bot_configs')
-  const contactableConfigs: ContactableConfig[] = input.getData('contactable_configs')
-  const maxResponsesText: string | undefined = input.getData('max_responses_text')
-  const allCompletedText: string | undefined = input.getData('all_completed_text')
+  const contactableConfigs: ContactableConfig[] = input.getData(
+    'contactable_configs'
+  )
+  const maxResponsesText: string | undefined = input.getData(
+    'max_responses_text'
+  )
+  const allCompletedText: string | undefined = input.getData(
+    'all_completed_text'
+  )
   const timeoutText: string | undefined = input.getData('timeout_text')
 
   let contactables: Contactable[]
@@ -108,6 +184,8 @@ const process: ProcessHandler = async (input, output) => {
       maxResponses,
       maxTime,
       prompt,
+      anonymous,
+      share,
       (statement: Statement): void => {
         output.send({ statement })
       },
@@ -132,24 +210,39 @@ const getComponent = (): NofloComponent => {
   const c: NofloComponent = new noflo.Component()
 
   /* META */
-  c.description = 'For a prompt, collect statements numbering up to a given maximum (or unlimited) from a list of participants'
+  c.description =
+    'For a prompt, collect statements numbering up to a given maximum (or unlimited) from a list of participants'
   c.icon = 'compress'
 
   /* IN PORTS */
   c.inPorts.add('max_responses', {
     datatype: 'all', // string or number
-    description: 'the number of responses to stop collecting at, use "*" for any amount',
+    description:
+      'the number of responses to stop collecting at, use "*" for any amount',
     required: true
   })
   c.inPorts.add('max_time', {
     datatype: 'int',
-    description: 'the number of seconds to wait until stopping this process automatically',
+    description:
+      'the number of seconds to wait until stopping this process automatically',
     required: true
   })
   c.inPorts.add('prompt', {
     datatype: 'string',
     description: 'the text that prompts people, and sets the rules and context',
     required: true
+  })
+  c.inPorts.add('anonymous', {
+    datatype: 'bool',
+    description:
+      'whether metadata about who contributed the response should be kept and shared',
+    required: false
+  })
+  c.inPorts.add('share', {
+    datatype: 'bool',
+    description:
+      'whether results should be live shared with other participants',
+    required: false
   })
   c.inPorts.add('contactable_configs', {
     datatype: 'array', // rsf-types/ContactableConfig[]
@@ -163,15 +256,18 @@ const getComponent = (): NofloComponent => {
   })
   c.inPorts.add('max_responses_text', {
     datatype: 'string',
-    description: 'msg override: the message sent when participant hits response limit'
+    description:
+      'msg override: the message sent when participant hits response limit'
   })
   c.inPorts.add('all_completed_text', {
     datatype: 'string',
-    description: 'msg override: the message sent to all participants when the process completes, by completion by all participants'
+    description:
+      'msg override: the message sent to all participants when the process completes, by completion by all participants'
   })
   c.inPorts.add('timeout_text', {
     datatype: 'string',
-    description: 'msg override: the message sent to all participants when the process completes because the timeout is reached'
+    description:
+      'msg override: the message sent to all participants when the process completes because the timeout is reached'
   })
 
   /* OUT PORTS */
@@ -191,7 +287,4 @@ const getComponent = (): NofloComponent => {
   return c
 }
 
-export {
-  coreLogic,
-  getComponent
-}
+export { coreLogic, getComponent }

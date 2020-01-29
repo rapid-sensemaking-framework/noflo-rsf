@@ -1,13 +1,27 @@
-import { Contactable, ContactableConfig, ContactableSpecifyInit, Statement, PairwiseQualified, PairwiseChoice, PairwiseQuantified, PairwiseVote } from 'rsf-types'
+import {
+  Contactable,
+  ContactableConfig,
+  ContactableSpecifyInit,
+  Statement,
+  PairwiseQualified,
+  PairwiseChoice,
+  PairwiseQuantified,
+  PairwiseVote
+} from 'rsf-types'
 import * as moment from 'moment'
 
 const DEFAULT_ALL_COMPLETED_TEXT = `Everyone has completed. Thanks for participating.`
 const DEFAULT_TIMEOUT_TEXT = `The max time has been reached. Stopping now. Thanks for participating.`
 const DEFAULT_INVALID_RESPONSE_TEXT = `That's not a valid response, please try again.`
 const DEFAULT_MAX_RESPONSES_TEXT = `You've responded to everything. Thanks for participating. You will be notified when everyone has completed.`
-const rulesText = (maxTime: number) => `The process will stop automatically after ${moment.duration(maxTime, 'seconds').humanize()}.`
+const rulesText = (maxTime: number) =>
+  `The process will stop automatically after ${moment
+    .duration(maxTime, 'seconds')
+    .humanize()}.`
 
-const whichToInit = (contactableConfigs: ContactableConfig[]): ContactableSpecifyInit => {
+const whichToInit = (
+  contactableConfigs: ContactableConfig[]
+): ContactableSpecifyInit => {
   const specifyDefault: ContactableSpecifyInit = {
     doTelegram: false,
     doMattermost: false,
@@ -22,33 +36,56 @@ const whichToInit = (contactableConfigs: ContactableConfig[]): ContactableSpecif
   }, specifyDefault)
 }
 
-const timer = (ms: number): Promise<void> => new Promise((resolve) => { setTimeout(resolve, ms) })
+const timer = (ms: number): Promise<void> =>
+  new Promise(resolve => {
+    setTimeout(resolve, ms)
+  })
 
 interface CollectResults<T> {
-  timeoutComplete: boolean,
+  timeoutComplete: boolean
   results: T[]
 }
 
 type ValidateFn = (msg: string) => boolean
 
-type FormatPairwiseFn = (numPerPerson: number, numSoFar: number, pairwiseChoice: PairwiseChoice) => string
+type FormatPairwiseFn = (
+  numPerPerson: number,
+  numSoFar: number,
+  pairwiseChoice: PairwiseChoice
+) => string
 
-type PairwiseResultFn<T> = (msg: string, personalResultsSoFar: T[], contactable: Contactable, pairsTexts: PairwiseChoice[]) => T
+type PairwiseResultFn<T> = (
+  msg: string,
+  personalResultsSoFar: T[],
+  contactable: Contactable,
+  pairsTexts: PairwiseChoice[]
+) => T
 
-type ConvertToResultFn<T> = (msg: string, personalResultsSoFar: T[], contactable: Contactable) => T
+type ConvertToResultFn<T> = (
+  msg: string,
+  personalResultsSoFar: T[],
+  contactable: Contactable
+) => T
 
 type OnInvalidFn = (msg: string, contactable: Contactable) => void
 
 type IsPersonalCompleteFn<T> = (personalResultsSoFar: T[]) => boolean
 
-type OnPersonalCompleteFn<T> = (personalResultsSoFar: T[], contactable: Contactable) => void
+type OnPersonalCompleteFn<T> = (
+  personalResultsSoFar: T[],
+  contactable: Contactable
+) => void
 
-type OnResultFn<T> = (result: T, personalResultsSoFar: T[], contactable: Contactable) => void
+type OnResultFn<T> = (
+  result: T,
+  personalResultsSoFar: T[],
+  contactable: Contactable
+) => void
 
 type IsTotalCompleteFn<T> = (allResultsSoFar: T[]) => boolean
 
 const collectFromContactables = async <T>(
-  contactables: Contactable[], 
+  contactables: Contactable[],
   maxTime: number,
   validate: ValidateFn,
   onInvalid: OnInvalidFn,
@@ -58,7 +95,7 @@ const collectFromContactables = async <T>(
   onResult: OnResultFn<T>,
   isTotalComplete: IsTotalCompleteFn<T>
 ): Promise<CollectResults<T>> => {
-  return new Promise((resolve) => {
+  return new Promise(resolve => {
     // array to store the results
     const results: T[] = []
 
@@ -70,7 +107,6 @@ const collectFromContactables = async <T>(
       contactables.forEach(contactable => contactable.stopListening())
       resolve({ timeoutComplete: true, results })
     }, maxTime * 1000)
-
 
     contactables.forEach(contactable => {
       // keep track of the results from this person
@@ -104,19 +140,31 @@ const collectFromContactables = async <T>(
   })
 }
 
-const formatPairwiseChoice: FormatPairwiseFn = (numPerPerson: number, numSoFar: number, pairwiseChoice: PairwiseChoice): string => {
+const formatPairwiseChoice: FormatPairwiseFn = (
+  numPerPerson: number,
+  numSoFar: number,
+  pairwiseChoice: PairwiseChoice
+): string => {
   return `(${numPerPerson - 1 - numSoFar} more remaining)
 0) ${pairwiseChoice[0].text}
 1) ${pairwiseChoice[1].text}`
 }
 
 // accomodates PairwiseVote, PairwiseQualified, PairwiseQuantified
-const formatPairwiseList = (description: string, key: string, pairwiseList: any[], anonymize: boolean): string => {
+const formatPairwiseList = (
+  description: string,
+  key: string,
+  pairwiseList: any[],
+  anonymize: boolean
+): string => {
   return pairwiseList.reduce((memo: string, el: any) => {
-    return `${memo}
+    return (
+      `${memo}
 0) ${el.choices[0].text}
 1) ${el.choices[1].text}
-${description}: ${el[key]}` + (anonymize || !el.contact ? '' : ` : ${el.contact.id}@${el.contact.type}`)
+${description}: ${el[key]}` +
+      (anonymize || !el.contact ? '' : ` : ${el.contact.id}@${el.contact.type}`)
+    )
   }, '')
 }
 
@@ -150,17 +198,19 @@ const genericPairwise = async <T>(
 
   // initiate contact with each person
   // and set context, and "rules"
-  contactables.forEach(async (contactable: Contactable): Promise<void> => {
-    await contactable.speak(rulesText(maxTime))
-    await timer(speechDelay)
-    await contactable.speak(contextMsg)
-    // send the first one
-    if (statements.length) {
+  contactables.forEach(
+    async (contactable: Contactable): Promise<void> => {
+      await contactable.speak(rulesText(maxTime))
       await timer(speechDelay)
-      const first = formatPairwiseChoice(pairsTexts.length, 0, pairsTexts[0])
-      await contactable.speak(first)
+      await contactable.speak(contextMsg)
+      // send the first one
+      if (statements.length) {
+        await timer(speechDelay)
+        const first = formatPairwiseChoice(pairsTexts.length, 0, pairsTexts[0])
+        await contactable.speak(first)
+      }
     }
-  })
+  )
 
   const onInvalid = (msg: string, contactable: Contactable): void => {
     contactable.speak(invalidResponseText)
@@ -168,16 +218,27 @@ const genericPairwise = async <T>(
   const isPersonalComplete = (personalResultsSoFar: T[]): boolean => {
     return personalResultsSoFar.length === pairsTexts.length
   }
-  const onPersonalComplete = (personalResultsSoFar: T[], contactable: Contactable): void => {
+  const onPersonalComplete = (
+    personalResultsSoFar: T[],
+    contactable: Contactable
+  ): void => {
     contactable.speak(maxResponsesText)
   }
-  const onResult = (el: T, personalResultsSoFar: T[], contactable: Contactable): void => {
+  const onResult = (
+    el: T,
+    personalResultsSoFar: T[],
+    contactable: Contactable
+  ): void => {
     // each time it gets one, send the next one
     // until they're all responded to!
     const responsesSoFar = personalResultsSoFar.length
     if (pairsTexts[responsesSoFar]) {
       const nextPair = pairsTexts[responsesSoFar]
-      const nextPairFormatted = formatPairwiseChoice(pairsTexts.length, responsesSoFar, nextPair)
+      const nextPairFormatted = formatPairwiseChoice(
+        pairsTexts.length,
+        responsesSoFar,
+        nextPair
+      )
       contactable.speak(nextPairFormatted)
     }
     eachCb(el)
@@ -192,7 +253,12 @@ const genericPairwise = async <T>(
     personalResultsSoFar: T[],
     contactable: Contactable
   ): T => {
-    return convertToPairwiseResult(msg, personalResultsSoFar, contactable, pairsTexts)
+    return convertToPairwiseResult(
+      msg,
+      personalResultsSoFar,
+      contactable,
+      pairsTexts
+    )
   }
 
   const collectResults: CollectResults<T> = await collectFromContactables<T>(
@@ -209,7 +275,12 @@ const genericPairwise = async <T>(
   const { timeoutComplete, results } = collectResults
   const closeFlowText = timeoutComplete ? timeoutText : allCompletedText
   // send every participant a "process complete" message
-  await Promise.all(contactables.map((contactable: Contactable): Promise<void> => contactable.speak(closeFlowText)))
+  await Promise.all(
+    contactables.map(
+      (contactable: Contactable): Promise<void> =>
+        contactable.speak(closeFlowText)
+    )
+  )
   return results
 }
 
