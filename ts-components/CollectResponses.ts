@@ -233,13 +233,13 @@ const getComponent = (): NofloComponent => {
     required: true
   })
   c.inPorts.add('anonymous', {
-    datatype: 'bool',
+    datatype: 'boolean',
     description:
       'whether metadata about who contributed the response should be kept and shared',
     required: false
   })
   c.inPorts.add('share', {
-    datatype: 'bool',
+    datatype: 'boolean',
     description:
       'whether results should be live shared with other participants',
     required: false
