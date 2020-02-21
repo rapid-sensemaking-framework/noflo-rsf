@@ -5,19 +5,34 @@
 import * as noflo from 'noflo'
 import * as socketClient from 'socket.io-client'
 import { ProcessHandler, NofloComponent } from '../libs/noflo-types'
-import { ContactableConfig, ParticipantRegisterData } from 'rsf-types'
+import { ContactableConfig, ParticipantRegisterConfig } from 'rsf-types'
 
 const guidGenerator = () => {
-  const S4 = () => (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1)
-  return (S4() + S4() + "-" + S4() + "-" + S4() + "-" + S4() + "-" + S4() + S4() + S4())
+  const S4 = () =>
+    (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1)
+  return (
+    S4() +
+    S4() +
+    '-' +
+    S4() +
+    '-' +
+    S4() +
+    '-' +
+    S4() +
+    '-' +
+    S4() +
+    S4() +
+    S4()
+  )
 }
 
 const process: ProcessHandler = (input, output) => {
-
   // TODO set a timeout
 
   // Check preconditions on input data
-  if (!input.hasData('socket_url', 'max_time', 'max_participants', 'process_description')) {
+  if (
+    !input.hasData('socket_url', 'max_time', 'max_participants', 'description')
+  ) {
     return
   }
 
@@ -26,15 +41,15 @@ const process: ProcessHandler = (input, output) => {
   const socketUrl: string = input.getData('socket_url')
   const maxTime: number = input.getData('max_time')
   const maxParticipants: number = parseInt(input.getData('max_participants'))
-  const processDescription: string = input.getData('process_description')
+  const description: string = input.getData('description')
   // create a brand new id which will be used
   // in the url address on the site, where people will register
   const id = guidGenerator()
-  const participantRegisterData: ParticipantRegisterData = {
+  const participantRegisterData: ParticipantRegisterConfig = {
     id,
     maxParticipants,
     maxTime,
-    processDescription
+    description
   }
 
   const socket = socketClient(socketUrl)
@@ -43,6 +58,9 @@ const process: ProcessHandler = (input, output) => {
     output.send({
       register_url: `${httpUrl}/register/${id}`
     })
+    setTimeout(() => {
+      socket.emit('open_register', id)
+    }, 50)
   })
   // single one
   socket.on('participant_register_result', (result: ContactableConfig) => {
@@ -63,36 +81,41 @@ const getComponent = (): NofloComponent => {
   const c: NofloComponent = new noflo.Component()
 
   /* META */
-  c.description = 'Spins up a web server to collect participant configs that are rsf-contactable compatible'
+  c.description =
+    'Spins up a web server to collect participant configs that are rsf-contactable compatible'
   c.icon = 'compress'
 
   /* IN PORTS */
   c.inPorts.add('http_url', {
     datatype: 'string',
-    description: 'the http url used to determine the address for the register page',
+    description:
+      'the http url used to determine the address for the register page',
     required: true
   })
   c.inPorts.add('socket_url', {
     datatype: 'string',
-    description: 'the url with websocket protocol to connect to run this function',
+    description:
+      'the url with websocket protocol to connect to run this function',
     required: true
   })
   c.inPorts.add('max_time', {
     datatype: 'int',
-    description: 'the number of seconds to wait until stopping this process automatically',
+    description:
+      'the number of seconds to wait until stopping this process automatically',
     required: true
   })
   c.inPorts.add('max_participants', {
     datatype: 'int',
-    description: 'the number of participants to welcome to the process, default is unlimited',
+    description:
+      'the number of participants to welcome to the process, default is unlimited',
     required: true
   })
-  c.inPorts.add('process_description', {
+  c.inPorts.add('description', {
     datatype: 'string',
-    description: 'the text to display to potential participants explaining the process',
+    description:
+      'the text to display to potential participants explaining the process',
     required: true
   })
-
 
   /* OUT PORTS */
   c.outPorts.add('register_url', {
@@ -111,6 +134,4 @@ const getComponent = (): NofloComponent => {
   return c
 }
 
-export {
-  getComponent
-}
+export { getComponent }
