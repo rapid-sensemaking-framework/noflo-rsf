@@ -46,6 +46,9 @@ Inspirations and related projects include the likes of
 - [IdeaLoom](https://www.idealoom.org/)
     - sister project to Assembl
     - allows large communities to hold a meaningful conversation at scale, reach a common understanding, and develop solutions beyond what each participant could have envisioned
+- [Decider.app](https://thedecider.app/)
+    - Answer a few simple questions to explore better ways to make group decisions.
+    - Related is https://www.parabol.co/blog/async-decision-making-slack
 
 The basic tenets are
 - ideation
@@ -81,7 +84,7 @@ A live dashboard of events taking place in the process, and results coming in ar
 
 Once every step of the process has completed, the final results are saved to the computer that was hosting the process. From there, they could be uploaded to somewhere available online, or posted into a database for longevity.
 
-This app is currently a work in progress, under development at the [rsf-electron](https://github.com/rapid-sensemaking-framework/rsf-electron) repository. In the future it will be available for download there.
+This app is currently at a functional prototype readiness level, and under development at the [rsf-electron](https://github.com/rapid-sensemaking-framework/rsf-electron) repository, where you can download and test a release of the [app for Mac]((https://github.com/rapid-sensemaking-framework/rsf-electron/releases)!
 
 ## Principles
 
@@ -142,7 +145,9 @@ those components can be strung together into more complex sequences. They could 
 
 - Use flowhub to design a process... you can actually run it that way too.
 - https://app.flowhub.io
+- Check out [this section](https://github.com/rapid-sensemaking-framework/noflo-rapid-sensemaking-server#noflo--flowhub) for a guide on how to use Flowhub and RSF :)
 ![picture of an rsf graph workflow in noflo](./screenshots/colored-rsf-graph.png)
+
 
 ## RSF Contactables
 
@@ -186,6 +191,7 @@ Implementations under consideration:
 - rsf-emailable
 - rsf-matrix
 - rsf-twitter
+- rsf-keybase
 
 ### Challenges
 
