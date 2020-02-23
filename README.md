@@ -3,7 +3,7 @@
 
 # noflo-rsf
 
-Welcome to the Rapid Sensemaking Framework ecosystem entry point!
+Welcome to the Rapid Sensemaking Framework ecosystem overview!
 
 - [Skip to `Using the CoSense App`](#using-the-cosense-app)
 - [Skip to `Using Flowhub for Deep Design`](#using-flowhub-for-deep-design)
