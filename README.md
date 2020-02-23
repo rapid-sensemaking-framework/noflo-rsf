@@ -28,18 +28,16 @@ The basic tenets are
 
 Apart from a few integrations, such as ones that Loomio has with Slack, other platforms with similar goals require participants to join a new platform, and familiarize with a new tool. The RSF assumes the opposite, and brings the conversation to an already familiar space to participants: a chat platform they're already using. The process designer can even specify different people as reachable on DIFFERENT platforms, and the process can still be conducted.
 
-
 ## Using the CoSense App
 
 The CoSense app is currently at a functional prototype readiness level, and under development at the [cosense](https://github.com/rapid-sensemaking-framework/cosense) repository, where you can download and test a release of the [app for Mac](https://github.com/rapid-sensemaking-framework/cosense/releases)!
 
-
 ## Using Flowhub for Deep Design
 
-- Use flowhub to design a process... you can actually run it that way too.
-- https://app.flowhub.io
-- Check out [this section](https://github.com/rapid-sensemaking-framework/noflo-rapid-sensemaking-server#noflo--flowhub) for a guide on how to use Flowhub and RSF :)
-![picture of an rsf graph workflow in noflo](./screenshots/colored-rsf-graph.png)
+A technique called ["Flow-based programming"](https://en.wikipedia.org/wiki/Flow-based_programming) can also be used to work with RSF. Flows can be designed and run with [flowhub](https://app.flowhub.io).
+Check out [this README](https://github.com/rapid-sensemaking-framework/noflo-rapid-sensemaking-server#noflo--flowhub) for a guide on how to use Flowhub and RSF.
+
+> ![picture of an rsf graph workflow in noflo](./screenshots/colored-rsf-graph.png)
 
 ## Principles
 
@@ -83,6 +81,8 @@ Inspirations and related projects include the likes of
 Components are little modules of code. These operations can either be very quick, just performing a very simple transformation on data, requiring no human input, or they can involve lots of human input, and be medium to long running operations, meaning they could take days or weeks.
 
 A component can do whatever it takes to ingest and coordinate this human input, which will very likely involve standing up web servers, and other connection/protocol variants.
+
+The source code for the components is currently all in the [ts-components](./ts-components) folder of this repository.
 
 At the time of writing, just a few components of interest have been developed, that are made to be plug and play with one another.
 - [CollectResponses](https://github.com/rapid-sensemaking-framework/noflo-rsf/blob/master/ts-components/CollectResponses.ts)
