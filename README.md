@@ -31,7 +31,7 @@ Apart from a few integrations, such as ones that Loomio has with Slack, other pl
 
 ## Using the CoSense App
 
-The CoSense app is currently at a functional prototype readiness level, and under development at the [rsf-electron](https://github.com/rapid-sensemaking-framework/rsf-electron) repository, where you can download and test a release of the [app for Mac](https://github.com/rapid-sensemaking-framework/rsf-electron/releases)!
+The CoSense app is currently at a functional prototype readiness level, and under development at the [cosense](https://github.com/rapid-sensemaking-framework/cosense) repository, where you can download and test a release of the [app for Mac](https://github.com/rapid-sensemaking-framework/cosense/releases)!
 
 
 ## Using Flowhub for Deep Design
