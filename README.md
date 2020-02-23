@@ -5,11 +5,12 @@
 
 Welcome to the Rapid Sensemaking Framework ecosystem entry point!
 
-- [Skip to `Using the RSF App`](#using-the-rsf-app)
+- [Skip to `Using the CoSense App`](#using-the-cosense-app)
+- [Skip to `Using Flowhub for Deep Design`](#using-flowhub-for-deep-design)
 - [Skip to `Principles`](#principles)
+- [Skip to `Related Projects`](#related-projects)
 - [Skip to `RSF Components`](#rsf-components)
 - [Skip to `RSF Contactables`](#rsf-contactables)
-- [Skip to `Using Flowhub for Deep Design`](#using-flowhub-for-deep-design)
 
 
 ## What Is The "Rapid Sensemaking Framework"?
@@ -19,6 +20,32 @@ The rapid sensemaking framework is a set of tools designed to facilitate human c
 Common processes for gathering human expressions (be they ideas, questions, claims, votes, edits, etc) are encoded as pluggable open-source modules that can reach across the various digital devices and applications we commonly use.
 
 Skilled facilitators and process designers can use the rapid sensemaking framework to conduct and unfold processes for ideation, discussion, evaluation, and decision making.
+
+The basic tenets are
+- ideation
+- evaluation and ranking, sorting
+- selection, voting, consenting
+
+Apart from a few integrations, such as ones that Loomio has with Slack, other platforms with similar goals require participants to join a new platform, and familiarize with a new tool. The RSF assumes the opposite, and brings the conversation to an already familiar space to participants: a chat platform they're already using. The process designer can even specify different people as reachable on DIFFERENT platforms, and the process can still be conducted.
+
+
+## Using the CoSense App
+
+The CoSense app is currently at a functional prototype readiness level, and under development at the [rsf-electron](https://github.com/rapid-sensemaking-framework/rsf-electron) repository, where you can download and test a release of the [app for Mac](https://github.com/rapid-sensemaking-framework/rsf-electron/releases)!
+
+
+## Using Flowhub for Deep Design
+
+- Use flowhub to design a process... you can actually run it that way too.
+- https://app.flowhub.io
+- Check out [this section](https://github.com/rapid-sensemaking-framework/noflo-rapid-sensemaking-server#noflo--flowhub) for a guide on how to use Flowhub and RSF :)
+![picture of an rsf graph workflow in noflo](./screenshots/colored-rsf-graph.png)
+
+## Principles
+
+The tools should offer participants in processes as much transparency into the process as makes sense for the use case. In most cases, all the participants should have the results of the entire process, rather than constrict the results to the facilitator. The process should benefit everyone, and be non value extractive in its approach to working with data.
+
+## Related Projects
 
 Inspirations and related projects include the likes of
 - [Kialo](https://www.kialo.com/)
@@ -41,6 +68,7 @@ Inspirations and related projects include the likes of
     - "Real-Time Ideas Engine". For large groups to generate, prioritize and refine ideas.
 - [Loomio](https://www.loomio.org/)
     - helps people have discussions and make decisions together
+    - Loomio includes some wonderful [help text explaining best practices](https://help.loomio.org/en/user_manual/getting_started/decision_tools/) for using the powerful tools in the decision/polling toolbox of Loomio.
 - [Assembl](https://bluenove.com/en/offers/assembl/)
     - massive collective intelligence is the capacity to mobilize communities on a large scale (hundreds and thousands of participants) around key stakes and challenges to co-create new solutions in a short space of time
 - [IdeaLoom](https://www.idealoom.org/)
@@ -49,47 +77,6 @@ Inspirations and related projects include the likes of
 - [Decider.app](https://thedecider.app/)
     - Answer a few simple questions to explore better ways to make group decisions.
     - Related is https://www.parabol.co/blog/async-decision-making-slack
-
-The basic tenets are
-- ideation
-- evaluation and ranking, sorting
-- selection, voting, consenting
-
-
-Apart from a few integrations, such as ones that Loomio has with Slack, these platforms require participants to join a new platform, and familiarize with a new tool. The RSF assumes the opposite, and brings the conversation to an already familiar space to participants: a chat platform they're already using. The process designer can even specify different people as reachable on DIFFERENT platforms, and the process can still be conducted.
-
-
-
-## Using the RSF App
-
-For any good "conversation", there is always a frame. The conversation, at least loosely, has a direction that the people who will participate in it are agreeable to and interested in. Divergent phases and convergent phases of the conversation should nicely flow and blend.
-
-So **someone who has a frame for a conversation**, and **wants to foster engagement** begins with a selection of available recipes for a social process. Things that this person would be tuning could include amount of time available for each part of the process. Loomio includes some wonderful [help text explaining best practices](https://help.loomio.org/en/user_manual/getting_started/decision_tools/) for using the powerful tools in the decision/polling toolbox of Loomio.
-
-![cosense app screen for configuring a generate ideas flow](./screenshots/rsf-electron.png)
-
-As they draft the flow, they setup either an opt-in process where participants will select themselves, or if they have verbal or written consent via a personal connection, they could input each participant. To input a participant just requires adding the relevant info for the contact method they want to connect via, such as email, text, or something else.
-
-#### Configure Public Link
-![cosense app screen for configuring public link](./screenshots/cosense-configure-public-link.png)
-
-#### Participant Registration at the Public Link
-![cosense app screen for configuring participants](./screenshots/participant-register.png)
-
-Finally, kickoff the process...
-
-A live dashboard of events taking place in the process, and results coming in are viewable. 
-
-![cosense app screen for flow dashboard](./screenshots/cosense-flow-dashboard.png)
-
-Once every step of the process has completed, the final results are saved to the computer that was hosting the process. From there, they could be uploaded to somewhere available online, or posted into a database for longevity.
-
-This app is currently at a functional prototype readiness level, and under development at the [rsf-electron](https://github.com/rapid-sensemaking-framework/rsf-electron) repository, where you can download and test a release of the [app for Mac](https://github.com/rapid-sensemaking-framework/rsf-electron/releases)!
-
-## Principles
-
-The tools should offer participants in processes as much transparency into the process as makes sense for the use case. In most cases, all the participants should have the results of the entire process, rather than constrict the results to the facilitator. The process should benefit everyone, and be non value extractive in its approach to working with data.
-
 
 ## RSF Components
 
@@ -140,14 +127,6 @@ and what properties or values it returns as output, if its successful.
 
 By doing so, RSF Components can build up as a library over time, and where outputs of one component match the inputs of another,
 those components can be strung together into more complex sequences. They could start to be combined in many different orders and in many different ways. For example, the output of `CollectResponses` feeds nicely into the `statements` input of `ResponseForEach`.
-
-## Using Flowhub for Deep Design
-
-- Use flowhub to design a process... you can actually run it that way too.
-- https://app.flowhub.io
-- Check out [this section](https://github.com/rapid-sensemaking-framework/noflo-rapid-sensemaking-server#noflo--flowhub) for a guide on how to use Flowhub and RSF :)
-![picture of an rsf graph workflow in noflo](./screenshots/colored-rsf-graph.png)
-
 
 ## RSF Contactables
 
