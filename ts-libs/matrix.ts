@@ -8,7 +8,7 @@ import * as subject from 'callbag-subject'
 // asyncMap
 import * as concatMap from 'callbag-concat-map'
 // full stream replication / backfill
-import * as replay from 'callbag-replay-all'
+// import * as replay from 'callbag-replay-all'
 
 // merge a source of sources down into a single source
 import { mergeAll } from 'callbag-merge-all'
