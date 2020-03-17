@@ -37,8 +37,6 @@ The CoSense app is currently at a functional prototype readiness level, and unde
 A technique called ["Flow-based programming"](https://en.wikipedia.org/wiki/Flow-based_programming) can also be used to work with RSF. Flows can be designed and run with [flowhub](https://app.flowhub.io).
 Check out [this README](https://github.com/rapid-sensemaking-framework/noflo-rapid-sensemaking-server#noflo--flowhub) for a guide on how to use Flowhub and RSF.
 
-> ![picture of an rsf graph workflow in noflo](./screenshots/colored-rsf-graph.png)
-
 ## Principles
 
 The tools should offer participants in processes as much transparency into the process as makes sense for the use case. In most cases, all the participants should have the results of the entire process, rather than constrict the results to the facilitator. The process should benefit everyone, and be non value extractive in its approach to working with data.
