@@ -18,7 +18,7 @@
     "@types/mongodb": "^3.3.11",
     "@types/socket.io-client": "^1.4.32",
     "chai": "^4.2.0",
-    "mocha": "^6.2.2",
+    "mocha": "^10.2.0",
     "moment": "2.24.0",
     "mongodb": "^3.3.2",
     "noflo": "^1.1.3",
